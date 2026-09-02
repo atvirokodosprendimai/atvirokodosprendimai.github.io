@@ -1,13 +1,875 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QAM Stack</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QAM Stack — stop trusting your AI agent. Start verifying it.</title>
+<meta name="description" content="Three open-source tools that make Claude and other coding agents worth trusting: gates that fail loudly, memory that survives the session, and edits that report every hunk. Free, MIT, self-hostable.">
+<meta name="color-scheme" content="dark light">
+<meta property="og:title" content="QAM Stack — stop trusting your AI agent. Start verifying it.">
+<meta property="og:description" content="Gates that fail loudly. Memory that survives the session. Edits that report every hunk. Free and MIT.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ================= tokens ================= */
+:root{
+  --bg:#08090d; --bg-2:#0d1016; --panel:#11151e; --panel-2:#151a25;
+  --line:#222939; --line-2:#2f374a;
+  --ink:#eef1f7; --ink-2:#a6b0c3; --ink-3:#6c768a;
+  --q:#4fd6a6; --a:#7aa2ff; --m:#f5a45c;
+  --accent:var(--a);
+  --bad:#ff6b6b;
+  --glow:0 0 0 1px rgba(255,255,255,.03), 0 24px 70px -28px rgba(0,0,0,.85);
+  --grid:rgba(255,255,255,.035);
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --r:16px;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#fcfcfe; --bg-2:#f3f5f9; --panel:#ffffff; --panel-2:#f7f8fc;
+    --line:#e3e6ee; --line-2:#ccd2de;
+    --ink:#0d1119; --ink-2:#495366; --ink-3:#7b8496;
+    --q:#0b8a63; --a:#2b58d8; --m:#b26410; --bad:#c0392b;
+    --glow:0 0 0 1px rgba(0,0,0,.03), 0 20px 48px -28px rgba(20,32,64,.3);
+    --grid:rgba(12,22,44,.05);
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+h1,h2,h3,h4{line-height:1.12;letter-spacing:-.025em;margin:0;text-wrap:balance}
+p{margin:0}
+code{font-family:var(--mono);font-size:.9em}
+.wrap{width:min(1140px,100% - 2.5rem);margin-inline:auto}
+.skip{position:absolute;left:-9999px;top:0;z-index:100;background:var(--panel);
+  padding:.75rem 1.25rem;border:1px solid var(--line-2);border-radius:0 0 var(--r) 0}
+.skip:focus{left:0}
+:where(a,button,summary,[tabindex]):focus-visible{outline:2px solid var(--accent);
+  outline-offset:3px;border-radius:8px}
+
+/* ================= header ================= */
+header{position:sticky;top:0;z-index:50;backdrop-filter:blur(16px);
+  background:color-mix(in srgb,var(--bg) 80%,transparent);
+  border-bottom:1px solid transparent;transition:border-color .3s}
+header.stuck{border-bottom-color:var(--line)}
+.bar{display:flex;align-items:center;gap:1.25rem;height:66px}
+.brand{display:flex;align-items:center;gap:.6rem;font-weight:800;letter-spacing:-.035em;
+  font-size:1.06rem;text-decoration:none;margin-right:auto;white-space:nowrap}
+.dots{display:flex;gap:3px}
+.dots i{width:9px;height:9px;border-radius:3px;display:block}
+.dots i:nth-child(1){background:var(--q)}
+.dots i:nth-child(2){background:var(--a)}
+.dots i:nth-child(3){background:var(--m)}
+nav{display:flex;gap:1.5rem;align-items:center}
+nav a{color:var(--ink-2);text-decoration:none;font-size:.9rem;font-weight:500;transition:color .18s}
+nav a:hover{color:var(--ink)}
+.nav-cta{color:var(--bg)!important;background:var(--ink);border-radius:999px;
+  padding:.45rem 1.1rem;font-weight:600;transition:background .18s,color .18s}
+.nav-cta:hover{background:var(--accent);color:#fff!important}
+@media (max-width:820px){nav .hide-sm{display:none}}
+
+/* ================= buttons ================= */
+.btn{display:inline-flex;align-items:center;gap:.55rem;text-decoration:none;font-weight:600;
+  font-size:.95rem;padding:.8rem 1.5rem;border-radius:11px;border:1px solid var(--line-2);
+  background:var(--panel);color:var(--ink);cursor:pointer;
+  transition:transform .18s,border-color .18s,background .18s,color .18s}
+.btn:hover{transform:translateY(-2px);border-color:var(--accent)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink);
+  box-shadow:0 12px 30px -14px color-mix(in srgb,var(--a) 70%,transparent)}
+.btn.primary:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.big{font-size:1.02rem;padding:.95rem 1.9rem}
+@media (prefers-reduced-motion:reduce){.btn:hover{transform:none}}
+
+/* ================= hero ================= */
+.hero{position:relative;padding:clamp(3.5rem,10vw,7.5rem) 0 clamp(2.5rem,6vw,4rem);overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-45% -10% auto -10%;height:860px;pointer-events:none;
+  background:
+    radial-gradient(58% 55% at 20% 10%, color-mix(in srgb,var(--q) 24%,transparent), transparent 70%),
+    radial-gradient(55% 50% at 60% 0%,  color-mix(in srgb,var(--a) 30%,transparent), transparent 70%),
+    radial-gradient(48% 46% at 90% 24%, color-mix(in srgb,var(--m) 20%,transparent), transparent 70%);
+  filter:blur(34px);opacity:.6}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:68px 68px;
+  mask-image:radial-gradient(88% 68% at 50% 0%,#000,transparent 78%)}
+.hero>.wrap{position:relative;z-index:1}
+.eyebrow{display:inline-flex;align-items:center;gap:.55rem;font-family:var(--mono);
+  font-size:.74rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-2);
+  border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:.35rem .9rem}
+.eyebrow b{color:var(--q);font-weight:500}
+h1{font-size:clamp(2.5rem,7vw,4.5rem);font-weight:800;margin:1.5rem 0 0;max-width:17ch}
+.grad{background:linear-gradient(100deg,var(--q),var(--a) 52%,var(--m));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{margin-top:1.5rem;font-size:clamp(1.08rem,2.2vw,1.32rem);color:var(--ink-2);max-width:58ch}
+.lede strong{color:var(--ink);font-weight:600}
+.cta-row{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:2.3rem;align-items:center}
+.cta-note{font-size:.85rem;color:var(--ink-3)}
+.trust{display:flex;flex-wrap:wrap;gap:.5rem 1.6rem;margin-top:2.6rem;padding-top:1.6rem;
+  border-top:1px solid var(--line);font-size:.84rem;color:var(--ink-3);font-family:var(--mono)}
+.trust span{display:inline-flex;align-items:center;gap:.45rem}
+.trust span::before{content:"✓";color:var(--q);font-weight:700}
+
+/* ================= decoder cards ================= */
+.decoder{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:clamp(2.5rem,5vw,3.5rem)}
+@media (max-width:860px){.decoder{grid-template-columns:1fr}}
+.dec{position:relative;display:flex;gap:1rem;align-items:flex-start;padding:1.2rem 1.3rem;
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  text-decoration:none;overflow:hidden;transition:border-color .2s,transform .2s}
+.dec::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--c)}
+.dec:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--c) 55%,var(--line))}
+@media (prefers-reduced-motion:reduce){.dec:hover{transform:none}}
+.dec .letter{font-family:var(--mono);font-weight:700;font-size:2.1rem;line-height:1;color:var(--c)}
+.dec h3{font-size:1.02rem;font-weight:700}
+.dec p{font-size:.87rem;color:var(--ink-3);margin-top:.25rem}
+
+/* ================= sections ================= */
+section{padding:clamp(3.5rem,8vw,6.5rem) 0;position:relative}
+.rule{border:0;border-top:1px solid var(--line);margin:0}
+.kicker{font-family:var(--mono);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+h2{font-size:clamp(1.9rem,4.4vw,2.9rem);font-weight:800;margin-top:.9rem;max-width:19ch}
+.sub{margin-top:1.05rem;color:var(--ink-2);max-width:60ch;font-size:1.06rem}
+.center{text-align:center}
+.center h2,.center .sub{margin-inline:auto}
+
+/* ================= pain cards ================= */
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:2.75rem}
+@media (max-width:900px){.modes{grid-template-columns:1fr}}
+.mode{padding:1.7rem;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);
+  box-shadow:var(--glow)}
+.mode .num{font-family:var(--mono);font-size:.76rem;color:var(--bad);letter-spacing:.1em}
+.mode h3{margin-top:.9rem;font-size:1.2rem;font-weight:700}
+.mode p{margin-top:.75rem;color:var(--ink-2);font-size:.95rem}
+.mode .fix{margin-top:1.25rem;padding-top:1rem;border-top:1px dashed var(--line-2);
+  font-size:.88rem;color:var(--ink-3)}
+.mode .fix b{color:var(--c);font-weight:700}
+
+/* ================= before / after ================= */
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-top:2.75rem}
+@media (max-width:820px){.ba{grid-template-columns:1fr}}
+.col{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);overflow:hidden}
+.col.win{border-color:color-mix(in srgb,var(--q) 45%,var(--line));
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--q) 18%,transparent),var(--glow)}
+.col h3{padding:1.1rem 1.4rem;font-size:.95rem;font-weight:700;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:.6rem;font-family:var(--mono);letter-spacing:.02em}
+.col.lose h3{color:var(--bad)}
+.col.win h3{color:var(--q)}
+.col ul{list-style:none;margin:0;padding:.5rem 1.4rem 1.5rem}
+.col li{display:grid;grid-template-columns:1.4rem 1fr;gap:.5rem;padding:.85rem 0;
+  border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent);
+  font-size:.94rem;color:var(--ink-2)}
+.col li:last-child{border-bottom:0}
+.col li::before{font-family:var(--mono);font-weight:700}
+.col.lose li::before{content:"✕";color:var(--bad)}
+.col.win li::before{content:"✓";color:var(--q)}
+.col.win li{color:var(--ink)}
+
+/* ================= tool blocks ================= */
+.tool{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.02fr);gap:clamp(2rem,5vw,4rem);
+  align-items:start}
+@media (max-width:960px){.tool{grid-template-columns:1fr}}
+.tool-head{display:flex;align-items:center;gap:.9rem}
+.badge{width:46px;height:46px;flex:none;border-radius:13px;display:grid;place-items:center;
+  font-family:var(--mono);font-weight:700;font-size:1.35rem;color:var(--c);
+  background:color-mix(in srgb,var(--c) 14%,transparent);
+  border:1px solid color-mix(in srgb,var(--c) 38%,transparent)}
+.tool .name{font-family:var(--mono);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--c)}
+.tool h2{margin:.15rem 0 0;font-size:clamp(1.7rem,3.6vw,2.35rem);max-width:22ch}
+.tool .say{margin-top:1.4rem;font-size:1.07rem;color:var(--ink-2)}
+.tool .say strong{color:var(--ink);font-weight:600}
+.facts{list-style:none;padding:0;margin:1.7rem 0 0;display:grid;gap:.95rem}
+.facts li{display:grid;grid-template-columns:auto 1fr;gap:.75rem;align-items:start;
+  font-size:.95rem;color:var(--ink-2)}
+.facts li::before{content:"";width:7px;height:7px;margin-top:.55rem;border-radius:2px;
+  background:var(--c);transform:rotate(45deg)}
+.facts b{color:var(--ink);font-weight:600}
+.tool-cta{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.9rem}
+.repo{font-family:var(--mono);font-size:.78rem;color:var(--ink-3);margin-top:1.1rem}
+
+/* ================= code panel ================= */
+.panel{border:1px solid var(--line);border-radius:var(--r);background:var(--panel-2);
+  overflow:hidden;box-shadow:var(--glow)}
+.panel-bar{display:flex;align-items:center;gap:.6rem;padding:.65rem .9rem;
+  border-bottom:1px solid var(--line);background:var(--panel)}
+.panel-bar .tt{font-family:var(--mono);font-size:.74rem;color:var(--ink-3);margin-right:auto}
+.lights{display:flex;gap:5px}
+.lights i{width:9px;height:9px;border-radius:50%;background:var(--line-2);display:block}
+.copy{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-3);background:transparent;border:1px solid var(--line-2);border-radius:6px;
+  padding:.25rem .55rem;cursor:pointer;transition:color .15s,border-color .15s}
+.copy:hover{color:var(--ink);border-color:var(--ink-3)}
+.copy[data-done="1"]{color:var(--q);border-color:var(--q)}
+pre{margin:0;padding:1.15rem 1.25rem;overflow-x:auto;font-family:var(--mono);
+  font-size:.8rem;line-height:1.78;color:var(--ink-2);tab-size:2}
+pre .c{color:var(--ink-3)}
+pre .p{color:var(--accent)}
+pre .k{color:var(--ink);font-weight:500}
+pre .g{color:var(--q)}
+pre .w{color:var(--m)}
+pre .r{color:var(--bad)}
+
+/* ================= loop ================= */
+.loop{margin-top:2.75rem;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);
+  padding:clamp(1.4rem,4vw,2.5rem);box-shadow:var(--glow)}
+.loop svg{width:100%;height:auto;display:block;max-width:900px;margin-inline:auto}
+.loop figcaption{margin-top:1.25rem;color:var(--ink-3);font-size:.9rem;text-align:center;
+  max-width:64ch;margin-inline:auto}
+
+/* ================= install ================= */
+.install{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:2.5rem}
+@media (max-width:960px){.install{grid-template-columns:1fr}}
+.ins-card{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);
+  padding:1.5rem;display:flex;flex-direction:column;box-shadow:var(--glow)}
+.ins-card h3{font-size:1.05rem;font-weight:700;display:flex;align-items:center;gap:.55rem}
+.ins-card h3 i{width:9px;height:9px;border-radius:3px;background:var(--c);display:block}
+.ins-card .price{font-family:var(--mono);font-size:.76rem;color:var(--q);letter-spacing:.1em;
+  text-transform:uppercase;margin-top:.5rem}
+.ins-card > p{color:var(--ink-2);font-size:.92rem;margin-top:.7rem}
+.ins-card .panel{margin-top:1.1rem}
+.ins-card pre{font-size:.75rem}
+.ins-card .btn{margin-top:1.1rem;justify-content:center}
+
+/* ================= faq ================= */
+.faq{margin-top:2.5rem;display:grid;gap:.75rem;max-width:820px}
+details{border:1px solid var(--line);border-radius:12px;background:var(--panel);overflow:hidden}
+summary{cursor:pointer;padding:1.1rem 1.35rem;font-weight:600;font-size:1rem;
+  list-style:none;display:flex;align-items:center;gap:.85rem}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"+";font-family:var(--mono);color:var(--accent);font-weight:700;
+  font-size:1.15rem;flex:none;transition:transform .2s}
+details[open] summary::before{content:"−"}
+details p{padding:0 1.35rem 1.3rem 3.2rem;color:var(--ink-2);font-size:.95rem}
+
+/* ================= final cta ================= */
+.final{position:relative;overflow:hidden;border-radius:22px;border:1px solid var(--line);
+  background:var(--panel);padding:clamp(2.5rem,7vw,4.5rem) clamp(1.5rem,5vw,3rem);text-align:center;
+  box-shadow:var(--glow)}
+.final::before{content:"";position:absolute;inset:-60% -20% auto -20%;height:420px;pointer-events:none;
+  background:radial-gradient(50% 60% at 50% 0%, color-mix(in srgb,var(--a) 26%,transparent),transparent 70%);
+  filter:blur(28px)}
+.final > *{position:relative}
+.final h2{margin-inline:auto;max-width:18ch}
+
+/* ================= footer ================= */
+footer{border-top:1px solid var(--line);padding:3rem 0;color:var(--ink-3);font-size:.88rem;margin-top:4rem}
+.foot{display:flex;flex-wrap:wrap;gap:1.25rem 1.6rem;align-items:center}
+.foot a{text-decoration:none;color:var(--ink-2)}
+.foot a:hover{color:var(--ink)}
+.foot .sp{margin-left:auto}
+
+/* ================= reveal ================= */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+</style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header id="hdr">
+  <div class="wrap bar">
+    <a class="brand" href="#top"><span class="dots"><i></i><i></i><i></i></span> QAM&nbsp;Stack</a>
+    <nav aria-label="Primary">
+      <a class="hide-sm" href="#pain">Why</a>
+      <a class="hide-sm" href="#compare">Compare</a>
+      <a href="#quality">Quality</a>
+      <a href="#memory">Memory</a>
+      <a href="#mrw">MultiPath</a>
+      <a class="nav-cta" href="#install">Get it free</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<div id="top"></div>
+
+<!-- ================= HERO ================= -->
+<div class="hero">
+  <div class="wrap">
+    <span class="eyebrow"><b>◆</b> Three tools · one stack · MIT licensed</span>
+    <h1>Your agent says it&nbsp;shipped.<br><span class="grad">Now you can prove it.</span></h1>
+    <p class="lede">
+      Claude and its peers write code faster than you can review it — and fail
+      <strong>silently</strong> when they fail. The QAM Stack bolts three missing organs onto your
+      agent: <strong>gates that refuse</strong>, <strong>memory that survives the session</strong>,
+      and <strong>edits that report every hunk</strong>.
+    </p>
+    <div class="cta-row">
+      <a class="btn primary big" href="#install">Install free in 2 minutes →</a>
+      <a class="btn big" href="#compare">See the difference</a>
+      <span class="cta-note">No signup. No lock-in. Self-host the lot.</span>
+    </div>
+
+    <div class="trust">
+      <span>Open source, MIT</span>
+      <span>Works with Claude Code &amp; Codex</span>
+      <span>Self-hosted or hosted</span>
+      <span>Use one, or all three</span>
+    </div>
+
+    <div class="decoder">
+      <a class="dec rv" href="#quality" style="--c:var(--q)">
+        <span class="letter">Q</span>
+        <span><h3>Quality Harness</h3><p>Turns “looks good to me” into a binary that exits non-zero.</p></span>
+      </a>
+      <a class="dec rv" href="#memory" style="--c:var(--a)">
+        <span class="letter">A</span>
+        <span><h3>AI Agent Memory</h3><p>Your team stops re-explaining the same decision every session.</p></span>
+      </a>
+      <a class="dec rv" href="#mrw" style="--c:var(--m)">
+        <span class="letter">M</span>
+        <span><h3>MultiPath R/W</h3><p>Ten-file refactors in one call — and it tells you what missed.</p></span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<hr class="rule">
+
+<!-- ================= PAIN ================= -->
+<section id="pain">
+  <div class="wrap">
+    <p class="kicker rv">What it is costing you</p>
+    <h2 class="rv">Nobody bills you for the failures you never saw.</h2>
+    <p class="sub rv">
+      The expensive agent bug is not the one that crashes. It is the one that reports success —
+      and ships. Each tool in this stack exists because one of these happened for real.
+    </p>
+
+    <div class="modes">
+      <article class="mode rv" style="--c:var(--q)">
+        <p class="num">✕ COSTS YOU: REWORK</p>
+        <h3>A green that means nothing</h3>
+        <p>
+          The pipeline goes green in nine seconds because the guard step skipped. The suite passes
+          because a test asserts on a log message. You find out in production, or you find out never.
+        </p>
+        <p class="fix">Fixed by <b>Quality Harness</b> — gates are binaries, not paragraphs.</p>
+      </article>
+      <article class="mode rv" style="--c:var(--a)">
+        <p class="num">✕ COSTS YOU: TIME</p>
+        <h3>An agent that forgets everything</h3>
+        <p>
+          Every session starts from zero. The rejected approach gets proposed again. The decision you
+          spent an afternoon on gets quietly reversed, because Git keeps only what worked.
+        </p>
+        <p class="fix">Fixed by <b>AI Agent Memory</b> — the only source of cross-session <i>why</i>.</p>
+      </article>
+      <article class="mode rv" style="--c:var(--m)">
+        <p class="num">✕ COSTS YOU: TRUST</p>
+        <h3>An edit that changed nothing</h3>
+        <p>
+          Four replacements across four files. One matched nothing. The agent printed success and moved
+          on. A read that returns nothing is obvious; a write that does nothing is invisible.
+        </p>
+        <p class="fix">Fixed by <b>MultiPath R/W</b> — a verdict per hunk, all or nothing.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= COMPARE ================= -->
+<section id="compare">
+  <div class="wrap">
+    <p class="kicker rv">Before &amp; after</p>
+    <h2 class="rv">Same agent. Same model. Different outcome.</h2>
+    <p class="sub rv">
+      The stack does not make your agent smarter. It makes it <em>accountable</em> — which turns out
+      to be the part you were missing.
+    </p>
+
+    <div class="ba">
+      <div class="col lose rv">
+        <h3>WITHOUT THE STACK</h3>
+        <ul>
+          <li>“Done ✅” — with no evidence anyone can re-run</li>
+          <li>Decisions live in a chat log nobody will ever scroll back to</li>
+          <li>The same rejected design gets re-proposed next month</li>
+          <li>Multi-file edits succeed partially and report fully</li>
+          <li>You review the diff line by line because you cannot trust the summary</li>
+          <li>Every new session re-derives what last week already learned</li>
+        </ul>
+      </div>
+      <div class="col win rv">
+        <h3>WITH THE QAM STACK</h3>
+        <ul>
+          <li>“Done” means a gate exited 0 — and you can run it yourself</li>
+          <li>Decisions are records, with their rejected alternatives attached</li>
+          <li>The palace answers “we tried that, here is why it lost”</li>
+          <li>A ten-file edit lands atomically, or lands nowhere and says why</li>
+          <li>You review the receipt, not the whole diff</li>
+          <li>Session two starts where session one stopped</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= QUALITY ================= -->
+<section id="quality" style="--c:var(--q)">
+  <div class="wrap tool">
+    <div class="rv">
+      <div class="tool-head">
+        <span class="badge">Q</span>
+        <div>
+          <p class="name">Quality Harness</p>
+          <h2>Make “done” a thing a machine can check.</h2>
+        </div>
+      </div>
+      <p class="say">
+        A Claude Code plugin that turns decisions, specs and reviews into <strong>executable
+        records</strong>. Sixteen skills carry the workflow. <strong>Eleven binaries enforce it</strong> —
+        because a skill can be talked past, and a non-zero exit cannot.
+      </p>
+      <ul class="facts">
+        <li><span><b>Your architecture decisions get teeth.</b> <code>adr-write</code> proposes,
+          <code>adr-execute</code> works it task by task, <code>adr-verify</code> records the
+          tool-written evidence, <code>adr-retire</code> archives without erasing authority.</span></li>
+        <li><span><b>Gates that actually refuse.</b> <code>adr-lint</code> exits non-zero on a record
+          that claims done without proof. <code>adr-debt</code> sweeps a whole corpus for deferred
+          promises nobody kept.</span></li>
+        <li><span><b>Opinion kept out of the evidence chain.</b> <code>adr-judge</code> rates clarity
+          and <em>always</em> exits 0 by design, so a prose heuristic can never masquerade as a proof.</span></li>
+        <li><span><b>Reviews with a verdict, not vibes.</b> <code>review</code>,
+          <code>mutation-audit</code> (break a mechanism on purpose, see if any test notices),
+          <code>consensus</code>, plus cross-lineage <code>codex-review</code> for a second opinion
+          from a different model family.</span></li>
+      </ul>
+      <div class="tool-cta">
+        <a class="btn primary" href="#install">Install Quality Harness →</a>
+        <a class="btn" href="https://github.com/D3-lt/quality-harness">Browse the source</a>
+      </div>
+      <p class="repo">github.com/D3-lt/quality-harness · MIT</p>
+    </div>
+
+    <div class="panel rv">
+      <div class="panel-bar">
+        <span class="lights"><i></i><i></i><i></i></span>
+        <span class="tt">a claim that has to survive a binary</span>
+        <button class="copy" type="button">Copy</button>
+      </div>
+<pre><code><span class="c"># the skills do the thinking…</span>
+<span class="p">/quality-harness:adr-write</span>     <span class="c"># propose the decision</span>
+<span class="p">/quality-harness:adr-execute</span>   <span class="c"># work it, task by task</span>
+
+<span class="c"># …the binaries do the refusing</span>
+<span class="k">$</span> adr-lint docs/adr/ADR-045.md
+<span class="r">ADR-045 T3: marked done, no evidence line</span>
+<span class="k">$</span> <span class="k">echo</span> $?
+<span class="r">1</span>          <span class="c"># your agent does not get to move on</span>
+
+<span class="c"># fix it, then prove it</span>
+<span class="k">$</span> adr-verify docs/adr/ADR-045.md
+<span class="g">T3 ✓ go test ./internal/... exit 0 · 99 assertions</span>
+<span class="k">$</span> <span class="k">echo</span> $?
+<span class="g">0</span>          <span class="c"># now "done" is a fact</span></code></pre>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= MEMORY ================= -->
+<section id="memory" style="--c:var(--a)">
+  <div class="wrap tool">
+    <div class="rv">
+      <div class="tool-head">
+        <span class="badge">A</span>
+        <div>
+          <p class="name">AI Agent Memory</p>
+          <h2>Stop paying for the same context twice.</h2>
+        </div>
+      </div>
+      <p class="say">
+        A memory palace your whole team writes to and reads from across sessions, served over
+        <strong>MCP</strong>. Your repo shows what the code does <em>now</em>. It cannot show what was
+        rejected, what was abandoned, or what last week's agent got wrong. <strong>This does.</strong>
+      </p>
+      <ul class="facts">
+        <li><span><b>Every agent shares one brain.</b> Claude, Codex, your CI bot — same palace, same
+          decisions, no re-briefing.</span></li>
+        <li><span><b>Organised so recall stays sharp.</b> Wings are projects, rooms are aspects
+          (<code>decisions</code>, <code>incidents</code>, <code>reviews</code>), drawers are verbatim
+          memories. Craft that outlives any one repo lives in a shared wing every project reads.</span></li>
+        <li><span><b>A temporal knowledge graph, not a note pile.</b> Facts as subject → predicate →
+          object with validity windows; superseding one ends the old value and starts the new in a
+          single transaction, so no query ever sees both or neither.</span></li>
+        <li><span><b>It tells you what it did not tell you.</b> Truncation, staleness and three
+          distinct kinds of empty answer come back as fields — a fragment can never pass for a whole
+          memory.</span></li>
+        <li><span><b>Your conventions, served live.</b> Team skills authored once and loaded by every
+          agent, so a stale local copy never wins the argument.</span></li>
+        <li><span><b>Your data, your infrastructure.</b> Run it hosted, or bring the whole thing up
+          with Docker Compose behind your own firewall.</span></li>
+      </ul>
+      <div class="tool-cta">
+        <a class="btn primary" href="https://aiagentmemory.dev">Start free at aiagentmemory.dev →</a>
+        <a class="btn" href="#install">Self-host it</a>
+      </div>
+      <p class="repo">aiagentmemory.dev · MCP server · hosted or self-hosted</p>
+    </div>
+
+    <div class="panel rv">
+      <div class="panel-bar">
+        <span class="lights"><i></i><i></i><i></i></span>
+        <span class="tt">recall before you act · record before you stop</span>
+        <button class="copy" type="button">Copy</button>
+      </div>
+<pre><code><span class="c"># session 47, three weeks after the decision</span>
+<span class="p">am_search</span>(<span class="g">"why is the retry budget 3 and not 5"</span>)
+
+  <span class="c">→ wing_orders · room decisions · 2026-08-19</span>
+  <span class="c">  "5 was tried and reverted: the downstream</span>
+  <span class="c">   rate limiter counts attempts, not requests.</span>
+  <span class="c">   Rejected alternative: exponential backoff —</span>
+  <span class="c">   the SLA window is shorter than the tail."</span>
+
+<span class="w">↑ that answer exists in no commit, no ticket,</span>
+<span class="w">  and no amount of reading the code recovers it.</span>
+
+<span class="c"># before the session ends</span>
+<span class="p">am_diary_write</span>(...)   <span class="c"># the narrative</span>
+<span class="p">am_add_drawer</span>(...)    <span class="c"># the lookup</span>
+<span class="p">am_kg_add</span>(...)        <span class="c"># the edge that makes it findable</span></code></pre>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= MRW ================= -->
+<section id="mrw" style="--c:var(--m)">
+  <div class="wrap tool">
+    <div class="rv">
+      <div class="tool-head">
+        <span class="badge">M</span>
+        <div>
+          <p class="name">MultiPath Read/Write</p>
+          <h2>Ten-file edits in one call. With receipts.</h2>
+        </div>
+      </div>
+      <p class="say">
+        <code>mrw</code> reads many file ranges and applies many edits <strong>in one call</strong> —
+        all or nothing, with a verdict per hunk. One small Go binary. No server, no daemon, nothing to
+        operate — so <strong>a hook can name it and read its receipt</strong>.
+      </p>
+      <ul class="facts">
+        <li><span><b>Fewer calls, smaller context, faster turns.</b> On a four-site, four-file edit:
+          8 tool calls and ~39&nbsp;KB the conventional way versus 2 calls and ~3.8&nbsp;KB with
+          <code>mrw</code> — and the saving grows with every extra site.</span></li>
+        <li><span><b>Partial success is impossible.</b> One failed hunk aborts the plan; its siblings
+          report <code>skipped</code> and your working tree is untouched.</span></li>
+        <li><span><b>A receipt, not a summary.</b> Every hunk reports applied or refused, and the
+          <code>--json</code> output names each file touched — including the ones whose edits failed.</span></li>
+        <li><span><b>It refuses to clobber.</b> A SHA-256 read-before-modify ledger, written on read
+          <em>and</em> on write, so a file changed behind the agent's back gets refused instead of
+          overwritten.</span></li>
+        <li><span><b>The check rides along.</b> <code>mrw check</code> scopes your project's own test
+          command to what you touched, and separate exit codes distinguish <i>the write failed</i>
+          from <i>the check failed</i> from <i>the check could not run</i>.</span></li>
+      </ul>
+      <div class="tool-cta">
+        <a class="btn primary" href="#install">Grab the binary →</a>
+        <a class="btn" href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite">Browse the source</a>
+      </div>
+      <p class="repo">github.com/atvirokodosprendimai/tool-multipathreadwrite · Go · MIT</p>
+    </div>
+
+    <div class="panel rv">
+      <div class="panel-bar">
+        <span class="lights"><i></i><i></i><i></i></span>
+        <span class="tt">the failure you would otherwise never see</span>
+        <button class="copy" type="button">Copy</button>
+      </div>
+<pre><code><span class="k">$</span> mrw read internal/store.go:40-88 cmd/main.go:1-30 \
+      internal/check.go:210-240        <span class="c"># 3 files, 1 call</span>
+
+<span class="k">$</span> mrw write --check ./... &lt;&lt;'PLAN'
+internal/store.go anchor=func (s *Store) Put lines=12
+  ...replacement...
+cmd/main.go anchor=const version lines=1
+  ...replacement...
+PLAN
+
+<span class="g">applied  internal/store.go    1 hunk</span>
+<span class="r">refused  cmd/main.go          anchor matched 0 lines</span>
+<span class="w">skipped  internal/check.go    plan aborted</span>
+<span class="k">$</span> <span class="k">echo</span> $?
+<span class="r">1</span>
+
+<span class="c"># nothing was written. no half-applied refactor.</span>
+<span class="c"># any other tool would have said "success".</span></code></pre>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= LOOP ================= -->
+<section id="loop">
+  <div class="wrap center">
+    <p class="kicker rv">Better together</p>
+    <h2 class="rv">Three tools. One compounding loop.</h2>
+    <p class="sub rv">
+      Each is useful alone. Together they close the circle: memory says what was already decided, the
+      harness defines what “done” means <em>before</em> work starts, mrw makes the edit auditable, and
+      what the session learns goes straight back into memory.
+    </p>
+
+    <figure class="loop rv">
+      <svg viewBox="0 0 900 250" role="img" aria-labelledby="loopttl loopdesc">
+        <title id="loopttl">The QAM working cycle</title>
+        <desc id="loopdesc">Recall from memory, decide with the harness, edit with mrw, verify with the
+          harness gates, then write back to memory — which feeds the next session's recall.</desc>
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+        <g font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle">
+          <g>
+            <rect x="10"  y="70" width="150" height="62" rx="12" fill="none" stroke="var(--a)" stroke-width="1.5"/>
+            <text x="85"  y="95"  fill="var(--a)" font-size="11">A · memory</text>
+            <text x="85"  y="115" fill="var(--ink)">recall the why</text>
+          </g>
+          <g>
+            <rect x="195" y="70" width="150" height="62" rx="12" fill="none" stroke="var(--q)" stroke-width="1.5"/>
+            <text x="270" y="95"  fill="var(--q)" font-size="11">Q · harness</text>
+            <text x="270" y="115" fill="var(--ink)">decide + spec</text>
+          </g>
+          <g>
+            <rect x="380" y="70" width="150" height="62" rx="12" fill="none" stroke="var(--m)" stroke-width="1.5"/>
+            <text x="455" y="95"  fill="var(--m)" font-size="11">M · mrw</text>
+            <text x="455" y="115" fill="var(--ink)">edit + receipt</text>
+          </g>
+          <g>
+            <rect x="565" y="70" width="150" height="62" rx="12" fill="none" stroke="var(--q)" stroke-width="1.5"/>
+            <text x="640" y="95"  fill="var(--q)" font-size="11">Q · gates</text>
+            <text x="640" y="115" fill="var(--ink)">verify, or fail</text>
+          </g>
+          <g>
+            <rect x="750" y="70" width="140" height="62" rx="12" fill="none" stroke="var(--a)" stroke-width="1.5"/>
+            <text x="820" y="95"  fill="var(--a)" font-size="11">A · memory</text>
+            <text x="820" y="115" fill="var(--ink)">write back</text>
+          </g>
+          <g stroke="var(--ink-3)" stroke-width="1.5" fill="none" color="var(--ink-3)" marker-end="url(#ar)">
+            <path d="M162 101 H190"/>
+            <path d="M347 101 H375"/>
+            <path d="M532 101 H560"/>
+            <path d="M717 101 H745"/>
+            <path d="M820 134 V180 Q820 196 804 196 H101 Q85 196 85 180 V138"/>
+          </g>
+          <text x="455" y="216" fill="var(--ink-3)" font-size="11">…and the next session starts here, not from zero</text>
+        </g>
+      </svg>
+      <figcaption>
+        A verified change that is never written back is memory lost — so the loop closes where it opened.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= INSTALL ================= -->
+<section id="install">
+  <div class="wrap">
+    <p class="kicker rv">Get started</p>
+    <h2 class="rv">Free, open, and yours. Pick where it hurts most.</h2>
+    <p class="sub rv">
+      Nothing here depends on the other two — install one this afternoon and feel the difference by
+      tomorrow. The stack is simply what you end up with.
+    </p>
+
+    <div class="install">
+      <div class="ins-card rv" style="--c:var(--q)">
+        <h3><i></i> Quality Harness</h3>
+        <p class="price">Free · MIT</p>
+        <p>For teams that keep shipping “done” work that was not done.</p>
+        <div class="panel">
+          <div class="panel-bar"><span class="tt">claude code plugin</span>
+            <button class="copy" type="button">Copy</button></div>
+<pre><code><span class="k">$</span> git clone https://github.com/\
+    D3-lt/quality-harness
+<span class="k">$</span> claude
+<span class="p">/plugin marketplace add</span> ./quality-harness
+<span class="p">/plugin install</span> quality-harness</code></pre>
+        </div>
+        <a class="btn" href="https://github.com/D3-lt/quality-harness">View on GitHub →</a>
+      </div>
+
+      <div class="ins-card rv" style="--c:var(--a)">
+        <h3><i></i> AI Agent Memory</h3>
+        <p class="price">Hosted or self-hosted</p>
+        <p>For teams re-explaining the same context to an agent every single day.</p>
+        <div class="panel">
+          <div class="panel-bar"><span class="tt">mcp server</span>
+            <button class="copy" type="button">Copy</button></div>
+<pre><code><span class="c"># hosted — one command</span>
+<span class="k">$</span> claude mcp add --transport http \
+    agentsmemory https://aiagentmemory.dev/mcp
+
+<span class="c"># or run it yourself</span>
+<span class="k">$</span> docker compose up -d
+<span class="k">$</span> aiagentmemory install --agent both</code></pre>
+        </div>
+        <a class="btn" href="https://aiagentmemory.dev">Open aiagentmemory.dev →</a>
+      </div>
+
+      <div class="ins-card rv" style="--c:var(--m)">
+        <h3><i></i> MultiPath R/W</h3>
+        <p class="price">Free · MIT · one binary</p>
+        <p>For anyone whose agent burns context re-reading files it already read.</p>
+        <div class="panel">
+          <div class="panel-bar"><span class="tt">single go binary</span>
+            <button class="copy" type="button">Copy</button></div>
+<pre><code><span class="k">$</span> go install github.com/\
+    atvirokodosprendimai/\
+    tool-multipathreadwrite/cmd/mrw@latest
+<span class="k">$</span> mrw --version
+<span class="g">mrw version v0.0.11</span></code></pre>
+        </div>
+        <a class="btn" href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite">View on GitHub →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= FAQ ================= -->
+<section id="faq">
+  <div class="wrap">
+    <p class="kicker rv">Straight answers</p>
+    <h2 class="rv">The questions you were about to ask.</h2>
+
+    <div class="faq">
+      <details class="rv"><summary>Do I have to adopt all three?</summary>
+        <p>No. They share a philosophy, not a runtime. Each installs on its own and is useful on its
+        own — most people start with whichever failure is costing them most this week.</p></details>
+
+      <details class="rv"><summary>Is this Claude-only?</summary>
+        <p>No. Agent Memory is an MCP server and its installer wires both <code>CLAUDE.md</code> and
+        <code>AGENTS.md</code>, so Claude Code and Codex read the same protocol. <code>mrw</code> is a
+        plain CLI binary any agent or human can run. Quality Harness ships as a Claude Code plugin,
+        but its gates are standalone binaries you can call from any pipeline.</p></details>
+
+      <details class="rv"><summary>Does my code or memory leave my machine?</summary>
+        <p>Only if you choose that. <code>mrw</code> is a local binary and the Quality Harness gates
+        are local binaries. Agent Memory runs hosted if you want zero ops, or entirely on your own
+        infrastructure with Docker Compose if you do not.</p></details>
+
+      <details class="rv"><summary>Will this slow my agent down?</summary>
+        <p>The opposite, in the cases that matter. Batched reads and writes cut tool calls and context
+        spend, and recalled memory replaces whole rounds of re-derivation. What does cost you time is
+        a gate refusing bad work — which is time you were going to spend anyway, later, in production.</p></details>
+
+      <details class="rv"><summary>What does it cost?</summary>
+        <p>The tools are open source and MIT licensed. Self-hosting costs you whatever the box costs.
+        The hosted memory service is there for teams that would rather not run one.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FINAL CTA ================= -->
+<section>
+  <div class="wrap">
+    <div class="final rv">
+      <p class="kicker">Two minutes from here</p>
+      <h2>Give your agent something to be held to.</h2>
+      <p class="sub center" style="max-width:52ch">
+        Install one tool today. Keep the one that earns its place — that is what open source is for.
+      </p>
+      <div class="cta-row" style="justify-content:center">
+        <a class="btn primary big" href="#install">Install the QAM Stack →</a>
+        <a class="btn big" href="https://github.com/atvirokodosprendimai">See all the repos</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="#top" style="margin-right:0"><span class="dots"><i></i><i></i><i></i></span> QAM&nbsp;Stack</a>
+    <span>by <a href="https://github.com/atvirokodosprendimai">Atviro Kodo Sprendimai</a></span>
+    <span class="sp"></span>
     <a href="https://github.com/D3-lt/quality-harness">Quality Harness</a>
     <a href="https://aiagentmemory.dev">AI Agent Memory</a>
-    <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite">MultiPath read writer</a>
+    <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite">MultiPath R/W</a>
+    <a href="/">↑ atvirokodosprendimai</a>
+  </div>
+</footer>
+
+<script>
+// Reveal on scroll. Additive only — without IntersectionObserver everything is shown at once,
+// and prefers-reduced-motion disables the transform in CSS.
+(function () {
+  var els = document.querySelectorAll('.rv');
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(function (el) { el.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  els.forEach(function (el, i) {
+    // stagger siblings so a grid animates as a row rather than as one slab
+    el.style.transitionDelay = (i % 3) * 70 + 'ms';
+    io.observe(el);
+  });
+})();
+
+// Header hairline only once the page has scrolled off the top.
+(function () {
+  var hdr = document.getElementById('hdr');
+  var onScroll = function () { hdr.classList.toggle('stuck', window.scrollY > 8); };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+})();
+
+// Copy buttons: the button sits in the panel bar, the code is its panel's <pre>.
+(function () {
+  document.querySelectorAll('.copy').forEach(function (btn) {
+    var pre = btn.closest('.panel').querySelector('pre');
+    btn.setAttribute('aria-label', 'Copy code to clipboard');
+    btn.addEventListener('click', function () {
+      var text = pre.innerText;
+      var done = function (ok) {
+        btn.textContent = ok ? 'Copied' : 'Failed';
+        btn.dataset.done = ok ? '1' : '';
+        setTimeout(function () { btn.textContent = 'Copy'; btn.dataset.done = ''; }, 1600);
+      };
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
+      } else {
+        // file:// and plain http have no async clipboard — fall back to a throwaway textarea
+        var ta = document.createElement('textarea');
+        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+        document.body.removeChild(ta);
+        done(ok);
+      }
+    });
+  });
+})();
+</script>
 </body>
 </html>
