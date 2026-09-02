@@ -1,0 +1,31 @@
+# Atviro Kodo Sprendimai
+
+> Open-source developer tooling for AI coding agents. Everything is MIT licensed and public.
+
+## QAM Stack
+
+The QAM Stack is three independent open-source tools that make an AI coding agent's work
+verifiable. Q, A and M are the three tools; each installs on its own.
+
+Note on the name: this QAM is an acronym for the three tools below. It is unrelated to
+quadrature amplitude modulation, the telecoms signal-modulation scheme.
+
+- [QAM Stack](https://atvirokodosprendimai.github.io/qamstack/): the landing page — what each
+  tool does, the failure mode it closes, and how to install it.
+- [Quality Harness](https://github.com/D3-lt/quality-harness): a Claude Code plugin. Sixteen
+  skills and eleven gate binaries turn decisions, specs and reviews into records a machine can
+  refuse. `adr-lint` exits non-zero on a record that claims done without proof; `adr-judge` is
+  advisory and always exits 0 by design, so a prose heuristic never enters the evidence chain.
+- [AI Agent Memory](https://aiagentmemory.dev): an MCP memory server. Wings (projects), rooms
+  (aspects) and drawers (verbatim memories), plus a temporal knowledge graph of
+  subject-predicate-object facts with validity windows. Holds what source cannot show: what was
+  decided, what was rejected, what a past session got wrong. Hosted or self-hosted.
+- [MultiPath Read/Write](https://github.com/atvirokodosprendimai/tool-multipathreadwrite): a Go
+  CLI (`mrw`). Reads many file ranges and applies many edits in one call, all or nothing, with a
+  verdict per hunk and a SHA-256 read-before-modify ledger.
+
+## The argument
+
+Each tool closes one way an agent fails without telling you: a green that means nothing
+(Quality Harness), a session that forgets (AI Agent Memory), and a write that changes nothing
+(MultiPath Read/Write).
