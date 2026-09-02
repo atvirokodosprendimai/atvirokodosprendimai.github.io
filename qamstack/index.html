@@ -191,11 +191,6 @@ h2{font-family:var(--serif);font-size:clamp(1.6rem,3.4vw,2.15rem);font-weight:60
 .code-bar{display:flex;align-items:center;gap:.5rem;padding:.55rem .85rem;
   border-bottom:1px solid var(--line);background:var(--panel)}
 .code-bar .tt{font-family:var(--mono);font-size:.71rem;color:var(--ink-3);margin-right:auto}
-.copy{font-family:var(--mono);font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;
-  color:var(--ink-3);background:transparent;border:1px solid var(--line-2);border-radius:5px;
-  padding:.2rem .5rem;cursor:pointer}
-.copy:hover{color:var(--ink);border-color:var(--ink-3)}
-.copy[data-done="1"]{color:var(--sage);border-color:var(--sage)}
 pre{margin:0;padding:1rem 1.1rem;overflow-x:auto;font-family:var(--mono);
   font-size:.775rem;line-height:1.72;color:var(--ink-2);tab-size:2;flex:1}
 pre code{background:none;border:0;padding:0;font-size:inherit}
@@ -461,7 +456,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
           </div>
         </div>
         <div class="code">
-          <div class="code-bar"><span class="tt">failure 01, now</span><button class="copy" type="button">Copy</button></div>
+          <div class="code-bar"><span class="tt">failure 01, now</span></div>
 <pre><code><span class="k">$</span> adr-lint docs/adr/ADR-045.md
 <span class="r">T3: marked done, no evidence line</span>
 <span class="k">$</span> <span class="k">echo</span> $?
@@ -495,7 +490,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
           </div>
         </div>
         <div class="code">
-          <div class="code-bar"><span class="tt">failure 02, one month later</span><button class="copy" type="button">Copy</button></div>
+          <div class="code-bar"><span class="tt">failure 02, one month later</span></div>
 <pre><code><span class="p">am_search</span>(<span class="g">"why retry budget 3 not 5"</span>)
 
 <span class="c">→ wing_orders · decisions · 2026-08-19</span>
@@ -529,7 +524,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
           </div>
         </div>
         <div class="code">
-          <div class="code-bar"><span class="tt">failure 03, now</span><button class="copy" type="button">Copy</button></div>
+          <div class="code-bar"><span class="tt">failure 03, now</span></div>
 <pre><code><span class="k">$</span> mrw write --check ./... plan.txt
 
 <span class="g">applied  internal/store.go   1 hunk</span>
@@ -826,32 +821,6 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
   window.addEventListener('scroll', onScroll, { passive: true });
 })();
 
-// Copy buttons: button lives in the code bar, target is the sibling <pre>.
-(function () {
-  document.querySelectorAll('.copy').forEach(function (btn) {
-    var pre = btn.closest('.code').querySelector('pre');
-    btn.setAttribute('aria-label', 'Copy code to clipboard');
-    btn.addEventListener('click', function () {
-      var text = pre.innerText;
-      var done = function (ok) {
-        btn.textContent = ok ? 'Copied' : 'Failed';
-        btn.dataset.done = ok ? '1' : '';
-        setTimeout(function () { btn.textContent = 'Copy'; btn.dataset.done = ''; }, 1600);
-      };
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
-      } else {
-        var ta = document.createElement('textarea');
-        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-        document.body.appendChild(ta); ta.select();
-        var ok = false;
-        try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
-        document.body.removeChild(ta);
-        done(ok);
-      }
-    });
-  });
-})();
 </script>
 </body>
 </html>
