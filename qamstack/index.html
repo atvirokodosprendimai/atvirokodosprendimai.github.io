@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>QAM Stack — open-source tools that make AI coding agents verifiable</title>
-<meta name="description" content="The QAM Stack: three free, open-source tools for Claude Code — Quality Harness (gates), AI Agent Memory (MCP memory) and MultiPath Read/Write (atomic edits). Benchmarked, not asserted.">
+<title>QAM Stack: open-source tools that make AI coding agents verifiable</title>
+<meta name="description" content="The QAM Stack: three free, open-source tools for Claude Code. Quality Harness (gates), AI Agent Memory (MCP memory) and MultiPath Read/Write (atomic edits). Benchmarked, not asserted.">
 <meta name="google-site-verification" content="MRV_NrMibEH9FsMK9cVgU-DAMapSRnQVXVz1Up2Scko" />
 <link rel="canonical" href="https://atvirokodosprendimai.github.io/qamstack/">
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
@@ -12,19 +12,19 @@
 <meta name="theme-color" content="#faf9f5" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#16161a" media="(prefers-color-scheme: dark)">
 <meta property="og:site_name" content="Atviro Kodo Sprendimai">
-<meta property="og:title" content="QAM Stack — open-source tools that make AI coding agents verifiable">
+<meta property="og:title" content="QAM Stack: open-source tools that make AI coding agents verifiable">
 <meta property="og:description" content="Gates that exit non-zero. Memory that survives the session. Edits with a receipt. Three open-source tools for Claude Code and Codex.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://atvirokodosprendimai.github.io/qamstack/">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="QAM Stack — open-source tools that make AI coding agents verifiable">
+<meta name="twitter:title" content="QAM Stack: open-source tools that make AI coding agents verifiable">
 <meta name="twitter:description" content="Gates that exit non-zero. Memory that survives the session. Edits with a receipt. Free and open source.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-/* ============ tokens — warm paper, soft pastels ============ */
+/* ============ tokens: warm paper, soft pastels ============ */
 :root{
   --bg:#faf9f5; --bg-2:#f3f1ea; --panel:#ffffff; --panel-2:#f7f5ef;
   --line:#e6e2d7; --line-2:#d5d0c1;
@@ -294,7 +294,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
       <span>Plugin, MCP server, single binary</span>
       <span>Claude Code &amp; Codex</span>
       <span>Hosted or self-hosted</span>
-      <span>Independent — take one or all three</span>
+      <span>Independent: take one or all three</span>
     </div>
   </div>
 </div>
@@ -307,21 +307,21 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
     <p class="sub rv">
       <strong>The QAM Stack is three independent open-source tools that make an AI coding agent's work
       verifiable.</strong> Each came from one real failure where an agent reported success and had done
-      nothing. None of them makes the model smarter — they make it accountable.
+      nothing. None of them makes the model smarter; they make it accountable.
     </p>
 
     <div class="rows rv">
       <div class="row" style="--c:var(--sage);--cbg:var(--sage-bg)">
         <div class="what"><b>01</b> CI green in 9 seconds. The guard step had skipped.</div>
-        <div class="fix"><span class="tag">Q</span><b>Quality Harness</b> — gates are binaries that exit non-zero.</div>
+        <div class="fix"><span class="tag">Q</span><b>Quality Harness</b>: gates are binaries that exit non-zero.</div>
       </div>
       <div class="row" style="--c:var(--blue);--cbg:var(--blue-bg)">
         <div class="what"><b>02</b> A reverted design proposed again a month later.</div>
-        <div class="fix"><span class="tag">A</span><b>AI Agent Memory</b> — decisions and rejects outlive the session.</div>
+        <div class="fix"><span class="tag">A</span><b>AI Agent Memory</b>: decisions and rejects outlive the session.</div>
       </div>
       <div class="row" style="--c:var(--clay);--cbg:var(--clay-bg)">
         <div class="what"><b>03</b> Four edits sent. One matched nothing. Exit 0.</div>
-        <div class="fix"><span class="tag">M</span><b>MultiPath R/W</b> — per-hunk verdict, all-or-nothing plan.</div>
+        <div class="fix"><span class="tag">M</span><b>MultiPath R/W</b>: per-hunk verdict, all-or-nothing plan.</div>
       </div>
     </div>
   </div>
@@ -344,30 +344,30 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
       <p class="note">Lower is better. Baseline reads whole files; mrw reads addressed ranges.</p>
       <svg viewBox="0 0 800 260" role="img" aria-labelledby="c1t c1d">
         <title id="c1t">Input bytes, baseline versus mrw, across three task shapes</title>
-        <desc id="c1d">Shape A: baseline 100,718 bytes versus mrw 2,951 — 34.1 times less. Shape B:
-          baseline 20,630 versus mrw 1,329 — 15.5 times less. Shape C: baseline 12,881 versus mrw
-          15,765 — 1.2 times more, mrw loses on this shape.</desc>
+        <desc id="c1d">Shape A: baseline 100,718 bytes versus mrw 2,951 (34.1 times less). Shape B:
+          baseline 20,630 versus mrw 1,329 (15.5 times less). Shape C: baseline 12,881 versus mrw
+          15,765 (1.2 times more; mrw loses on this shape).</desc>
         <g font-family="JetBrains Mono, monospace" font-size="12">
           <!-- A -->
           <text x="0" y="24" fill="var(--ink)" font-weight="700">A · 4 sites, 4 files</text>
           <rect x="0" y="34" width="640" height="16" rx="4" fill="var(--rose)" opacity=".85" class="grow"/>
           <text x="650" y="47" fill="var(--ink-2)">100,718 B</text>
           <rect x="0" y="56" width="18.8" height="16" rx="4" fill="var(--sage)" class="grow"/>
-          <text x="34" y="69" fill="var(--ink)" font-weight="700">2,951 B — 34.1× less</text>
+          <text x="34" y="69" fill="var(--ink)" font-weight="700">2,951 B (34.1× less)</text>
 
           <!-- B -->
           <text x="0" y="112" fill="var(--ink)" font-weight="700">B · 2 sites, 2 files</text>
           <rect x="0" y="122" width="131" height="16" rx="4" fill="var(--rose)" opacity=".85" class="grow"/>
           <text x="141" y="135" fill="var(--ink-2)">20,630 B</text>
           <rect x="0" y="144" width="8.4" height="16" rx="4" fill="var(--sage)" class="grow"/>
-          <text x="24" y="157" fill="var(--ink)" font-weight="700">1,329 B — 15.5× less</text>
+          <text x="24" y="157" fill="var(--ink)" font-weight="700">1,329 B (15.5× less)</text>
 
           <!-- C -->
           <text x="0" y="200" fill="var(--ink)" font-weight="700">C · 1 site, whole small file</text>
           <rect x="0" y="210" width="82" height="16" rx="4" fill="var(--rose)" opacity=".85" class="grow"/>
           <text x="92" y="223" fill="var(--ink-2)">12,881 B</text>
           <rect x="0" y="232" width="100" height="16" rx="4" fill="var(--clay)" class="grow"/>
-          <text x="110" y="245" fill="var(--ink)" font-weight="700">15,765 B — 1.2× MORE. mrw loses here.</text>
+          <text x="110" y="245" fill="var(--ink)" font-weight="700">15,765 B (1.2× MORE). mrw loses here.</text>
         </g>
       </svg>
       <div class="legend">
@@ -424,7 +424,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
     <p class="caveat rv">
       <b>Read shape C before you believe shape A.</b> On one site in a small file you need whole, mrw
       costs 1.2× more bytes and wins nothing. The ratio in A climbs as files grow, because the baseline
-      column counts the whole file while mrw counts one function — so it is a curve, not a constant.
+      column counts the whole file while mrw counts one function, so it is a curve, not a constant.
       Measure your own shape.
     </p>
   </div>
@@ -448,11 +448,11 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
             <div><p class="nm">Quality Harness</p><h3>Gates, not vibes</h3></div>
           </div>
           <p class="one">A Claude Code plugin: 16 skills, 11 gate binaries. Skills carry the workflow.
-            Binaries enforce it — a skill can be argued with, an exit code cannot.</p>
+            Binaries enforce it: a skill can be argued with, an exit code cannot.</p>
           <div class="gain"><b>For you:</b> Claude cannot mark work done without evidence you can re-run.</div>
           <ul class="facts">
             <li><span><b><code>adr-lint</code></b> exits 1 on a record that claims done with no evidence line.</span></li>
-            <li><span><b><code>adr-judge</code></b> always exits 0, by design — advice never enters the evidence chain.</span></li>
+            <li><span><b><code>adr-judge</code></b> always exits 0, by design, so advice never enters the evidence chain.</span></li>
             <li><span><b><code>mutation-audit</code></b> breaks a mechanism to see if any test notices.</span></li>
           </ul>
           <div class="links">
@@ -482,12 +482,12 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
             <div><p class="nm">AI Agent Memory</p><h3>The reasoning survives</h3></div>
           </div>
           <p class="one">An MCP server your agents read and write. Code shows what it does now. It cannot
-            show what was rejected — a fix looks identical to code that was always right.</p>
+            show what was rejected: a fix looks identical to code that was always right.</p>
           <div class="gain"><b>For you:</b> stop re-briefing Claude every morning.</div>
           <ul class="facts">
-            <li><span><b>Shared</b> across Claude, Codex and CI — one memory, not one per session.</span></li>
-            <li><span><b>Temporal graph</b> — superseding a fact ends the old and starts the new in one transaction.</span></li>
-            <li><span><b>Skills</b> — team conventions stored once, loaded live by every agent, every session.</span></li>
+            <li><span><b>Shared</b> across Claude, Codex and CI: one memory, not one per session.</span></li>
+            <li><span><b>Temporal graph</b>: superseding a fact ends the old and starts the new in one transaction.</span></li>
+            <li><span><b>Skills</b>: team conventions stored once, loaded live by every agent, every session.</span></li>
           </ul>
           <div class="links">
             <a class="btn" href="https://aiagentmemory.dev">aiagentmemory.dev</a>
@@ -501,7 +501,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
 <span class="c">→ wing_orders · decisions · 2026-08-19</span>
 <span class="c">  "5 tried and reverted: the downstream</span>
 <span class="c">   limiter counts attempts, not requests.</span>
-<span class="c">   Rejected: backoff — SLA window is</span>
+<span class="c">   Rejected: backoff, the SLA window is</span>
 <span class="c">   shorter than the tail."</span>
 
 <span class="w">In no commit. In no ticket.</span></code></pre>
@@ -516,11 +516,11 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
             <div><p class="nm">MultiPath Read/Write</p><h3>Edits with a receipt</h3></div>
           </div>
           <p class="one">One Go binary. Many ranges read, many edits applied, one call, all or nothing,
-            a verdict per hunk. No server, no daemon — a hook can name it and read its output.</p>
+            a verdict per hunk. No server, no daemon: a hook can name it and read its output.</p>
           <div class="gain"><b>For you:</b> a half-applied refactor stops being possible. See the benchmark above.</div>
           <ul class="facts">
-            <li><span><b>Atomic</b> — one failed hunk aborts the plan, tree untouched.</span></li>
-            <li><span><b>Checksum ledger</b> — a file changed behind Claude's back is refused, not clobbered.</span></li>
+            <li><span><b>Atomic</b>: one failed hunk aborts the plan, tree untouched.</span></li>
+            <li><span><b>Checksum ledger</b>: a file changed behind Claude's back is refused, not clobbered.</span></li>
             <li><span><b><code>--check</code></b> runs your tests scoped to what changed; exit codes separate the causes.</span></li>
           </ul>
           <div class="links">
@@ -604,7 +604,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
     <div class="faq">
       <details class="rv"><summary>Do I have to adopt all three?</summary>
         <p>No. They share a philosophy, not a runtime. Each installs on its own and is useful on its
-        own — most people start with whichever failure is costing them most this week.</p></details>
+        own; most people start with whichever failure is costing them most this week.</p></details>
 
       <details class="rv"><summary>Is this Claude-only?</summary>
         <p>No. Quality Harness ships as a Claude Code plugin, but its gates are standalone binaries you
@@ -619,7 +619,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
 
       <details class="rv"><summary>Will this slow my agent down?</summary>
         <p>The opposite, in the cases that matter. The one thing that costs you time is a gate refusing
-        bad work — and that is time you were going to spend anyway, later, in production. Recalled
+        bad work, and that is time you were going to spend anyway, later, in production. Recalled
         memory replaces whole rounds of re-derivation, and batched reads and writes cut tool calls and
         context spend.</p></details>
 
@@ -631,7 +631,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         <p>Three independent open-source tools for AI coding agents: Quality Harness (gates that exit
         non-zero on unproved work), AI Agent Memory (an MCP server that remembers decisions across
         sessions) and MultiPath Read/Write (batched, atomic, receipted file edits). Q, A and M. They
-        share a philosophy — make silent failure loud — not a runtime.</p></details>
+        share a philosophy (make silent failure loud), not a runtime.</p></details>
     </div>
   </div>
 </section>
@@ -690,7 +690,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
       "@type": "WebPage",
       "@id": "https://atvirokodosprendimai.github.io/qamstack/#page",
       "url": "https://atvirokodosprendimai.github.io/qamstack/",
-      "name": "QAM Stack — open-source tools that make AI coding agents verifiable",
+      "name": "QAM Stack: open-source tools that make AI coding agents verifiable",
       "description": "The QAM Stack is three independent open-source tools that make an AI coding agent's work verifiable: Quality Harness, AI Agent Memory and MultiPath Read/Write.",
       "isPartOf": { "@id": "https://atvirokodosprendimai.github.io/#site" },
       "about": { "@id": "https://atvirokodosprendimai.github.io/qamstack/#stack" },
@@ -767,7 +767,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         {
           "@type": "Question",
           "name": "Do I have to adopt all three?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. They share a philosophy, not a runtime. Each installs on its own and is useful on its own — most people start with whichever failure is costing them most this week." }
+          "acceptedAnswer": { "@type": "Answer", "text": "No. They share a philosophy, not a runtime. Each installs on its own and is useful on its own; most people start with whichever failure is costing them most this week." }
         },
         {
           "@type": "Question",
@@ -782,7 +782,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         {
           "@type": "Question",
           "name": "Will this slow my agent down?",
-          "acceptedAnswer": { "@type": "Answer", "text": "The opposite, in the cases that matter. The one thing that costs you time is a gate refusing bad work — and that is time you were going to spend anyway, later, in production. Recalled memory replaces whole rounds of re-derivation, and batched reads and writes cut tool calls and context spend." }
+          "acceptedAnswer": { "@type": "Answer", "text": "The opposite, in the cases that matter. The one thing that costs you time is a gate refusing bad work, and that is time you were going to spend anyway, later, in production. Recalled memory replaces whole rounds of re-derivation, and batched reads and writes cut tool calls and context spend." }
         },
         {
           "@type": "Question",
@@ -792,7 +792,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         {
           "@type": "Question",
           "name": "What exactly is the QAM Stack?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Three independent open-source tools for AI coding agents: Quality Harness (gates that exit non-zero on unproved work), AI Agent Memory (an MCP server that remembers decisions across sessions) and MultiPath Read/Write (batched, atomic, receipted file edits). Q, A and M. They share a philosophy — make silent failure loud — not a runtime." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Three independent open-source tools for AI coding agents: Quality Harness (gates that exit non-zero on unproved work), AI Agent Memory (an MCP server that remembers decisions across sessions) and MultiPath Read/Write (batched, atomic, receipted file edits). Q, A and M. They share a philosophy (make silent failure loud), not a runtime." }
         }
       ]
     }
