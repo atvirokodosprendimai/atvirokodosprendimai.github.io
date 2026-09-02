@@ -487,7 +487,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
           <ul class="facts">
             <li><span><b>Shared</b> across Claude, Codex and CI — one memory, not one per session.</span></li>
             <li><span><b>Temporal graph</b> — superseding a fact ends the old and starts the new in one transaction.</span></li>
-            <li><span><b>Honest reads</b> — truncation and three kinds of empty answer come back as fields.</span></li>
+            <li><span><b>Skills</b> — team conventions stored once, loaded live by every agent, every session.</span></li>
           </ul>
           <div class="links">
             <a class="btn" href="https://aiagentmemory.dev">aiagentmemory.dev</a>
@@ -561,10 +561,8 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         <p class="verb">Install a plugin</p>
         <h3><i></i>Quality Harness</h3>
         <p class="t">≈60 seconds</p>
-<pre><code><span class="k">$</span> git clone https://github.com/\
-   D3-lt/quality-harness
-<span class="p">/plugin marketplace add</span> ./quality-harness
-<span class="p">/plugin install</span> quality-harness</code></pre>
+<pre><code><span class="p">/plugin marketplace add</span> D3-lt/quality-harness
+<span class="p">/plugin install</span> quality-harness@quality-harness</code></pre>
         <a class="btn" href="https://github.com/D3-lt/quality-harness">GitHub →</a>
       </div>
 
@@ -634,10 +632,6 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         non-zero on unproved work), AI Agent Memory (an MCP server that remembers decisions across
         sessions) and MultiPath Read/Write (batched, atomic, receipted file edits). Q, A and M. They
         share a philosophy — make silent failure loud — not a runtime.</p></details>
-
-      <details class="rv"><summary>Is this related to quadrature amplitude modulation?</summary>
-        <p>No. That QAM is a signal modulation scheme used in telecoms. This QAM is an acronym for the
-        three tools on this page: Quality Harness, Agent Memory, MultiPath Read/Write.</p></details>
     </div>
   </div>
 </section>
@@ -799,11 +793,6 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
           "@type": "Question",
           "name": "What exactly is the QAM Stack?",
           "acceptedAnswer": { "@type": "Answer", "text": "Three independent open-source tools for AI coding agents: Quality Harness (gates that exit non-zero on unproved work), AI Agent Memory (an MCP server that remembers decisions across sessions) and MultiPath Read/Write (batched, atomic, receipted file edits). Q, A and M. They share a philosophy — make silent failure loud — not a runtime." }
-        },
-        {
-          "@type": "Question",
-          "name": "Is this related to quadrature amplitude modulation?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. That QAM is a signal modulation scheme used in telecoms. This QAM is an acronym for the three tools on this page: Quality Harness, Agent Memory, MultiPath Read/Write." }
         }
       ]
     }
