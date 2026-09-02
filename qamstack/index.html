@@ -311,17 +311,17 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
     </p>
 
     <div class="rows rv">
-      <div class="row" style="--c:var(--clay);--cbg:var(--clay-bg)">
-        <div class="what"><b>01</b> Four edits sent. One matched nothing. Exit 0.</div>
-        <div class="fix"><span class="tag">M</span><b>MultiPath R/W</b> — per-hunk verdict, all-or-nothing plan.</div>
-      </div>
       <div class="row" style="--c:var(--sage);--cbg:var(--sage-bg)">
-        <div class="what"><b>02</b> CI green in 9 seconds. The guard step had skipped.</div>
+        <div class="what"><b>01</b> CI green in 9 seconds. The guard step had skipped.</div>
         <div class="fix"><span class="tag">Q</span><b>Quality Harness</b> — gates are binaries that exit non-zero.</div>
       </div>
       <div class="row" style="--c:var(--blue);--cbg:var(--blue-bg)">
-        <div class="what"><b>03</b> A reverted design proposed again a month later.</div>
+        <div class="what"><b>02</b> A reverted design proposed again a month later.</div>
         <div class="fix"><span class="tag">A</span><b>AI Agent Memory</b> — decisions and rejects outlive the session.</div>
+      </div>
+      <div class="row" style="--c:var(--clay);--cbg:var(--clay-bg)">
+        <div class="what"><b>03</b> Four edits sent. One matched nothing. Exit 0.</div>
+        <div class="fix"><span class="tag">M</span><b>MultiPath R/W</b> — per-hunk verdict, all-or-nothing plan.</div>
       </div>
     </div>
 
@@ -465,7 +465,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
           </div>
         </div>
         <div class="code">
-          <div class="code-bar"><span class="tt">failure 02, now</span><button class="copy" type="button">Copy</button></div>
+          <div class="code-bar"><span class="tt">failure 01, now</span><button class="copy" type="button">Copy</button></div>
 <pre><code><span class="k">$</span> adr-lint docs/adr/ADR-045.md
 <span class="r">T3: marked done, no evidence line</span>
 <span class="k">$</span> <span class="k">echo</span> $?
@@ -499,7 +499,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
           </div>
         </div>
         <div class="code">
-          <div class="code-bar"><span class="tt">failure 03, one month later</span><button class="copy" type="button">Copy</button></div>
+          <div class="code-bar"><span class="tt">failure 02, one month later</span><button class="copy" type="button">Copy</button></div>
 <pre><code><span class="p">am_search</span>(<span class="g">"why retry budget 3 not 5"</span>)
 
 <span class="c">→ wing_orders · decisions · 2026-08-19</span>
@@ -533,7 +533,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
           </div>
         </div>
         <div class="code">
-          <div class="code-bar"><span class="tt">failure 01, now</span><button class="copy" type="button">Copy</button></div>
+          <div class="code-bar"><span class="tt">failure 03, now</span><button class="copy" type="button">Copy</button></div>
 <pre><code><span class="k">$</span> mrw write --check ./... plan.txt
 
 <span class="g">applied  internal/store.go   1 hunk</span>
@@ -557,7 +557,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
 <section id="start">
   <div class="wrap">
     <p class="kicker rv">Install</p>
-    <h2 class="rv">A plugin, a binary, a subscription. You're off.</h2>
+    <h2 class="rv">A plugin, a subscription, a binary. You're off.</h2>
     <p class="sub rv">No framework, no config language, no migration. Take one.</p>
 
     <div class="steps">
@@ -613,20 +613,21 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         own — most people start with whichever failure is costing them most this week.</p></details>
 
       <details class="rv"><summary>Is this Claude-only?</summary>
-        <p>No. Agent Memory is an MCP server and its installer wires both <code>CLAUDE.md</code> and
-        <code>AGENTS.md</code>, so Claude Code and Codex read the same protocol. <code>mrw</code> is a
-        plain CLI binary any agent or human can run. Quality Harness ships as a Claude Code plugin,
-        but its gates are standalone binaries you can call from any pipeline.</p></details>
+        <p>No. Quality Harness ships as a Claude Code plugin, but its gates are standalone binaries you
+        can call from any pipeline. Agent Memory is an MCP server and its installer wires both
+        <code>CLAUDE.md</code> and <code>AGENTS.md</code>, so Claude Code and Codex read the same
+        protocol. <code>mrw</code> is a plain CLI binary any agent or human can run.</p></details>
 
       <details class="rv"><summary>Does my code or memory leave my machine?</summary>
-        <p>Only if you choose that. <code>mrw</code> is a local binary and the Quality Harness gates
-        are local binaries. Agent Memory runs hosted if you want zero ops, or entirely on your own
-        infrastructure with Docker Compose if you do not.</p></details>
+        <p>Only if you choose that. The Quality Harness gates are local binaries. Agent Memory runs
+        hosted if you want zero ops, or entirely on your own infrastructure with Docker Compose if you
+        do not. <code>mrw</code> is a local binary.</p></details>
 
       <details class="rv"><summary>Will this slow my agent down?</summary>
-        <p>The opposite, in the cases that matter. Batched reads and writes cut tool calls and context
-        spend, and recalled memory replaces whole rounds of re-derivation. What does cost you time is
-        a gate refusing bad work — which is time you were going to spend anyway, later, in production.</p></details>
+        <p>The opposite, in the cases that matter. The one thing that costs you time is a gate refusing
+        bad work — and that is time you were going to spend anyway, later, in production. Recalled
+        memory replaces whole rounds of re-derivation, and batched reads and writes cut tool calls and
+        context spend.</p></details>
 
       <details class="rv"><summary>What does it cost?</summary>
         <p>The tools are open source. Self-hosting costs you whatever the box costs. The hosted memory
@@ -723,7 +724,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
     {
       "@type": "ItemList",
       "name": "The three QAM Stack tools",
-      "itemListOrder": "https://schema.org/ItemListUnordered",
+      "itemListOrder": "https://schema.org/ItemListOrderAscending",
       "numberOfItems": 3,
       "itemListElement": [
         {
@@ -781,17 +782,17 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         {
           "@type": "Question",
           "name": "Is this Claude-only?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. Agent Memory is an MCP server and its installer wires both CLAUDE.md and AGENTS.md, so Claude Code and Codex read the same protocol. mrw is a plain CLI binary any agent or human can run. Quality Harness ships as a Claude Code plugin, but its gates are standalone binaries you can call from any pipeline." }
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Quality Harness ships as a Claude Code plugin, but its gates are standalone binaries you can call from any pipeline. Agent Memory is an MCP server and its installer wires both CLAUDE.md and AGENTS.md, so Claude Code and Codex read the same protocol. mrw is a plain CLI binary any agent or human can run." }
         },
         {
           "@type": "Question",
           "name": "Does my code or memory leave my machine?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Only if you choose that. mrw is a local binary and the Quality Harness gates are local binaries. Agent Memory runs hosted if you want zero ops, or entirely on your own infrastructure with Docker Compose if you do not." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Only if you choose that. The Quality Harness gates are local binaries. Agent Memory runs hosted if you want zero ops, or entirely on your own infrastructure with Docker Compose if you do not. mrw is a local binary." }
         },
         {
           "@type": "Question",
           "name": "Will this slow my agent down?",
-          "acceptedAnswer": { "@type": "Answer", "text": "The opposite, in the cases that matter. Batched reads and writes cut tool calls and context spend, and recalled memory replaces whole rounds of re-derivation. What does cost you time is a gate refusing bad work — which is time you were going to spend anyway, later, in production." }
+          "acceptedAnswer": { "@type": "Answer", "text": "The opposite, in the cases that matter. The one thing that costs you time is a gate refusing bad work — and that is time you were going to spend anyway, later, in production. Recalled memory replaces whole rounds of re-derivation, and batched reads and writes cut tool calls and context spend." }
         },
         {
           "@type": "Question",
