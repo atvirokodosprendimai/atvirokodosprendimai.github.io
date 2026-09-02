@@ -1,6 +1,6 @@
 # Atviro Kodo Sprendimai
 
-> Open-source developer tooling for AI coding agents. Everything is MIT licensed and public.
+> Open-source developer tooling for AI coding agents. Everything we build is public.
 
 ## QAM Stack
 
