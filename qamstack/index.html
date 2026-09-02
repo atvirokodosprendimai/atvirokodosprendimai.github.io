@@ -3,12 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>QAM Stack — stop trusting your AI agent. Start verifying it.</title>
-<meta name="description" content="Three open-source tools that make Claude and other coding agents worth trusting: gates that fail loudly, memory that survives the session, and edits that report every hunk. Free, MIT, self-hostable.">
+<title>QAM Stack — open-source tools that make AI coding agents verifiable</title>
+<meta name="description" content="The QAM Stack: three free MIT tools that make AI coding agents verifiable — Quality Harness, AI Agent Memory and MultiPath Read/Write. For Claude Code and Codex.">
+<link rel="canonical" href="https://atvirokodosprendimai.github.io/qamstack/">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
 <meta name="color-scheme" content="dark light">
-<meta property="og:title" content="QAM Stack — stop trusting your AI agent. Start verifying it.">
-<meta property="og:description" content="Gates that fail loudly. Memory that survives the session. Edits that report every hunk. Free and MIT.">
+<meta name="theme-color" content="#08090d" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fcfcfe" media="(prefers-color-scheme: light)">
+<meta property="og:site_name" content="Atviro Kodo Sprendimai">
+<meta property="og:title" content="QAM Stack — open-source tools that make AI coding agents verifiable">
+<meta property="og:description" content="Gates that fail loudly. Memory that survives the session. Edits that report every hunk. Three MIT-licensed tools for Claude Code and Codex.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://atvirokodosprendimai.github.io/qamstack/">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="QAM Stack — open-source tools that make AI coding agents verifiable">
+<meta name="twitter:description" content="Gates that fail loudly. Memory that survives the session. Edits that report every hunk. Free and MIT.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -293,8 +303,8 @@ footer{border-top:1px solid var(--line);padding:3rem 0;color:var(--ink-3);font-s
 <!-- ================= HERO ================= -->
 <div class="hero">
   <div class="wrap">
-    <span class="eyebrow"><b>◆</b> Three tools · one stack · MIT licensed</span>
-    <h1>Your agent says it&nbsp;shipped.<br><span class="grad">Now you can prove it.</span></h1>
+    <span class="eyebrow"><b>◆</b> The QAM Stack · three tools · MIT licensed</span>
+    <h1><span style="display:block;font-family:var(--mono);font-size:.26em;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-bottom:1rem">The QAM Stack</span>Your agent says it&nbsp;shipped.<br><span class="grad">Now you can prove it.</span></h1>
     <p class="lede">
       Claude and its peers write code faster than you can review it — and fail
       <strong>silently</strong> when they fail. The QAM Stack bolts three missing organs onto your
@@ -330,6 +340,34 @@ footer{border-top:1px solid var(--line);padding:3rem 0;color:var(--ink-3);font-s
     </div>
   </div>
 </div>
+
+<hr class="rule">
+
+<!-- ================= WHAT IS IT (answer-first, for search + AI answers) ================= -->
+<section id="what">
+  <div class="wrap">
+    <p class="kicker rv">Plain answer</p>
+    <h2 class="rv">What is the QAM Stack?</h2>
+    <p class="sub rv">
+      <strong>The QAM Stack is three independent open-source tools that make an AI coding agent's work
+      verifiable</strong> — Quality Harness, AI Agent Memory and MultiPath Read/Write. Q, A and M.
+      Each is MIT licensed, each installs on its own, and each closes one of the ways an agent fails
+      without telling you.
+    </p>
+    <ul class="facts rv" style="--c:var(--a);max-width:64ch">
+      <li><span><b>Q — Quality Harness.</b> A Claude Code plugin: sixteen skills and eleven gate
+        binaries that turn decisions, specs and reviews into records a machine can refuse.</span></li>
+      <li><span><b>A — AI Agent Memory.</b> An MCP memory server: decisions, rejected alternatives and
+        incidents that persist across sessions and across agents.</span></li>
+      <li><span><b>M — MultiPath Read/Write.</b> A Go CLI (<code>mrw</code>): many file ranges read and
+        many edits applied in one call, atomically, with a verdict per hunk.</span></li>
+    </ul>
+    <p class="rv" style="margin-top:1.75rem;font-size:.92rem;color:var(--ink-3);max-width:64ch">
+      Looking for <i>quadrature amplitude modulation</i>? That is a different QAM — this page is about
+      developer tooling for AI coding agents.
+    </p>
+  </div>
+</section>
 
 <hr class="rule">
 
@@ -424,13 +462,16 @@ footer{border-top:1px solid var(--line);padding:3rem 0;color:var(--ink-3);font-s
         <span class="badge">Q</span>
         <div>
           <p class="name">Quality Harness</p>
-          <h2>Make “done” a thing a machine can check.</h2>
+          <h2>Your model passes SWE-bench.<br>Your codebase is not a benchmark.</h2>
         </div>
       </div>
       <p class="say">
-        A Claude Code plugin that turns decisions, specs and reviews into <strong>executable
-        records</strong>. Sixteen skills carry the workflow. <strong>Eleven binaries enforce it</strong> —
-        because a skill can be talked past, and a non-zero exit cannot.
+        A benchmark hands an agent a clean repo, one failing test and exactly one right answer.
+        Your Monday hands it ambiguity, legacy and nobody watching. <strong>Quality Harness is the
+        part that makes it scream when it gets that wrong</strong> — a Claude Code plugin that turns
+        decisions, specs and reviews into <strong>executable records</strong>. Sixteen skills carry
+        the workflow. <strong>Eleven binaries enforce it</strong>, because a skill can be talked past
+        and a non-zero exit cannot.
       </p>
       <ul class="facts">
         <li><span><b>Your architecture decisions get teeth.</b> <code>adr-write</code> proposes,
@@ -778,6 +819,16 @@ PLAN
       <details class="rv"><summary>What does it cost?</summary>
         <p>The tools are open source and MIT licensed. Self-hosting costs you whatever the box costs.
         The hosted memory service is there for teams that would rather not run one.</p></details>
+
+      <details class="rv"><summary>What exactly is the QAM Stack?</summary>
+        <p>Three independent open-source tools for AI coding agents: Quality Harness (gates that exit
+        non-zero on unproved work), AI Agent Memory (an MCP server that remembers decisions across
+        sessions) and MultiPath Read/Write (batched, atomic, receipted file edits). Q, A and M. They
+        share a philosophy — make silent failure loud — not a runtime.</p></details>
+
+      <details class="rv"><summary>Is this related to quadrature amplitude modulation?</summary>
+        <p>No. That QAM is a signal modulation scheme used in telecoms. This QAM is an acronym for the
+        three tools on this page: Quality Harness, Agent Memory, MultiPath Read/Write.</p></details>
     </div>
   </div>
 </section>
@@ -870,6 +921,148 @@ PLAN
     });
   });
 })();
+</script>
+<!-- Structured data. Every claim below is also visible on the page, in the same words:
+     the FAQ entries mirror the <details> blocks verbatim. Structured data must never
+     assert something a reader cannot find. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://atvirokodosprendimai.github.io/#org",
+      "name": "Atviro Kodo Sprendimai",
+      "url": "https://atvirokodosprendimai.github.io/",
+      "sameAs": ["https://github.com/atvirokodosprendimai"]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://atvirokodosprendimai.github.io/#site",
+      "url": "https://atvirokodosprendimai.github.io/",
+      "name": "Atviro Kodo Sprendimai",
+      "publisher": { "@id": "https://atvirokodosprendimai.github.io/#org" },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://atvirokodosprendimai.github.io/qamstack/#page",
+      "url": "https://atvirokodosprendimai.github.io/qamstack/",
+      "name": "QAM Stack — open-source tools that make AI coding agents verifiable",
+      "description": "The QAM Stack is three independent open-source tools that make an AI coding agent's work verifiable: Quality Harness, AI Agent Memory and MultiPath Read/Write.",
+      "isPartOf": { "@id": "https://atvirokodosprendimai.github.io/#site" },
+      "about": { "@id": "https://atvirokodosprendimai.github.io/qamstack/#stack" },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Atviro Kodo Sprendimai", "item": "https://atvirokodosprendimai.github.io/" },
+        { "@type": "ListItem", "position": 2, "name": "QAM Stack", "item": "https://atvirokodosprendimai.github.io/qamstack/" }
+      ]
+    },
+    {
+      "@type": "DefinedTerm",
+      "@id": "https://atvirokodosprendimai.github.io/qamstack/#stack",
+      "name": "QAM Stack",
+      "alternateName": "Quality Harness, Agent Memory, MultiPath Read/Write",
+      "description": "Three independent open-source tools that make an AI coding agent's work verifiable: Quality Harness, AI Agent Memory and MultiPath Read/Write.",
+      "url": "https://atvirokodosprendimai.github.io/qamstack/"
+    },
+    {
+      "@type": "ItemList",
+      "name": "The three QAM Stack tools",
+      "itemListOrder": "https://schema.org/ItemListUnordered",
+      "numberOfItems": 3,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Quality Harness",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "macOS, Linux, Windows",
+            "url": "https://github.com/D3-lt/quality-harness",
+            "license": "https://opensource.org/licenses/MIT",
+            "description": "A Claude Code plugin: sixteen skills and eleven gate binaries that turn decisions, specs and reviews into records a machine can refuse.",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "AI Agent Memory",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "macOS, Linux, Windows",
+            "url": "https://aiagentmemory.dev",
+            "description": "An MCP memory server: decisions, rejected alternatives and incidents that persist across sessions and across agents. Hosted or self-hosted.",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "MultiPath Read/Write",
+            "alternateName": "mrw",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "macOS, Linux, Windows",
+            "url": "https://github.com/atvirokodosprendimai/tool-multipathreadwrite",
+            "license": "https://opensource.org/licenses/MIT",
+            "description": "A Go CLI: many file ranges read and many edits applied in one call, atomically, with a verdict per hunk.",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://atvirokodosprendimai.github.io/qamstack/#faq",
+      "isPartOf": { "@id": "https://atvirokodosprendimai.github.io/qamstack/#page" },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Do I have to adopt all three?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. They share a philosophy, not a runtime. Each installs on its own and is useful on its own — most people start with whichever failure is costing them most this week." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this Claude-only?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Agent Memory is an MCP server and its installer wires both CLAUDE.md and AGENTS.md, so Claude Code and Codex read the same protocol. mrw is a plain CLI binary any agent or human can run. Quality Harness ships as a Claude Code plugin, but its gates are standalone binaries you can call from any pipeline." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does my code or memory leave my machine?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Only if you choose that. mrw is a local binary and the Quality Harness gates are local binaries. Agent Memory runs hosted if you want zero ops, or entirely on your own infrastructure with Docker Compose if you do not." }
+        },
+        {
+          "@type": "Question",
+          "name": "Will this slow my agent down?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The opposite, in the cases that matter. Batched reads and writes cut tool calls and context spend, and recalled memory replaces whole rounds of re-derivation. What does cost you time is a gate refusing bad work — which is time you were going to spend anyway, later, in production." }
+        },
+        {
+          "@type": "Question",
+          "name": "What does it cost?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The tools are open source and MIT licensed. Self-hosting costs you whatever the box costs. The hosted memory service is there for teams that would rather not run one." }
+        },
+        {
+          "@type": "Question",
+          "name": "What exactly is the QAM Stack?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Three independent open-source tools for AI coding agents: Quality Harness (gates that exit non-zero on unproved work), AI Agent Memory (an MCP server that remembers decisions across sessions) and MultiPath Read/Write (batched, atomic, receipted file edits). Q, A and M. They share a philosophy — make silent failure loud — not a runtime." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this related to quadrature amplitude modulation?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. That QAM is a signal modulation scheme used in telecoms. This QAM is an acronym for the three tools on this page: Quality Harness, Agent Memory, MultiPath Read/Write." }
+        }
+      ]
+    }
+  ]
+}
 </script>
 </body>
 </html>
