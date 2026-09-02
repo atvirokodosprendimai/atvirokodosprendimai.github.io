@@ -10,7 +10,7 @@ verifiable. Q, A and M are the three tools; each installs on its own.
 Note on the name: this QAM is an acronym for the three tools below. It is unrelated to
 quadrature amplitude modulation, the telecoms signal-modulation scheme.
 
-- [QAM Stack](https://atvirokodosprendimai.github.io/qamstack/): the landing page — what each
+- [QAM Stack](https://atvirokodosprendimai.github.io/qamstack/): the landing page, with what each
   tool does, the failure mode it closes, and how to install it.
 - [Quality Harness](https://github.com/D3-lt/quality-harness): a Claude Code plugin. Sixteen
   skills and eleven gate binaries turn decisions, specs and reviews into records a machine can
