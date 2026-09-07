@@ -18,9 +18,9 @@ quadrature amplitude modulation, the telecoms signal-modulation scheme.
   problem each tool solves, the measurement behind the one claim that carries a number, and how
   to install each.
 - [Quality Harness](https://github.com/D3-lt/quality-harness): a Claude Code plugin that carries a
-  full delivery cycle rather than a single check. Spec, decision record, execution, review and
-  postmortem are each a stage with its own gate, so the cycle leaves records instead of assertions
-  and "done" becomes something a machine can refuse. A task
+  full delivery cycle. Spec, decision record, execution, review and postmortem are each a stage
+  with its own gate, so the cycle leaves a record at every step and "done" becomes something a
+  machine can refuse. A task
   marked done without tool-written evidence behind it fails the check, and the check is an
   ordinary program you can run yourself to see the same answer. `adr-lint` exits non-zero on a
   task that claims done without tool-written evidence; `adr-judge` is advisory and never fails
