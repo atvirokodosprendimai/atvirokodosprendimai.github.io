@@ -47,7 +47,6 @@ a page at a time, and a plan editing lines you have not read is refused until yo
 
 All figures below are from `scripts/measure.sh` at commit 8487013. Ratios are as the script
 prints them. The span rows are shape E in that script, so they reproduce like every other row.
-prints them.
 
     shape                          whole files    windowed        mrw     calls
     A  4 edits, 4 large files          145,952       2,254      2,918     8 -> 2
