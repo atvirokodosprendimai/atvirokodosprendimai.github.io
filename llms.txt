@@ -69,8 +69,9 @@ The overhead against a windowed read of the SAME span is flat and does not grow,
     2,000 lines    1,060,000     106,000      120,053     8.83x less  1.13x more
     20,000 lines   1,060,000   1,060,000    1,200,054     1.13x MORE  1.13x more
 
-The fixture is 20,000 identical 53-byte lines, synthetic and uniform on purpose so the per-line
-gutter is isolated from variation in line length.
+The fixture is 20,000 distinct lines of one shared length, 53 bytes each. Uniform length is the
+point: it isolates the per-line gutter from variation in line length, while the content stays
+distinct so the file reads like real source.
 
 ⚠ The whole-file column is the file's RAW bytes. A real Read tool numbers every line, so a genuine
 whole-file read is LARGER than 1,060,000 and nearer mrw's own 1,200,054. That baseline is the
