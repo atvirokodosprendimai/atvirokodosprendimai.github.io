@@ -79,10 +79,10 @@ this bias itself.
 
 That 13 percent is the line-number gutter, which is what makes a served line addressable by a
 later write; the per-file header and receipt are fixed costs that amortise away. So the larger
-ratios are a small-payload artefact rather than a scaling property. Shape D is 55 files of ONE
-line each, so 55 headers and 55 receipts are charged against 782 bytes of payload. In absolute
-terms the worst case across all five shapes is about 4 KB more, in a row whose whole-file
-baseline is 897,917 bytes.
+ratios are a small-payload artefact rather than a scaling property. Shape D is one line in every
+Go file, so one header and one receipt per file are charged against a payload of a few hundred
+bytes. In absolute terms the worst case across all five shapes is about 4 KB more, and it is the
+row whose whole-file baseline is the largest in the table.
 
 So the saving tracks how much of the file you were never going to read: 175.15x less at 100 lines
 of that file, 8.83x at 2,000, and a 1.13x LOSS once the span is the whole file. It does not decay
@@ -90,9 +90,9 @@ gently, it collapses at the point where you stop leaving anything unread.
 
 On a single edit to a small file you need in full, mrw costs more and saves no steps.
 
-Shape D grows with the repository it is measured in: 27 files when first measured, 55 now, and
-its baseline climbed with it. mrw stayed at two calls throughout. Re-run it rather than quoting
-this table.
+Shape D grows with the repository it is measured in: its file list is `git ls-files '*.go'`, so it
+was 27 files when first measured and is whatever that command returns today. Its baseline climbs
+with it. mrw stayed at two calls throughout. Re-run it rather than quoting this table.
 
 There is no measured token saving for AI Agent Memory, and none is claimed.
 
@@ -119,7 +119,7 @@ job that runs for days:
   recall it.
 - Quality Harness makes "done" keep needing proof across days, because the evidence is written
   down.
-- MultiPath Read/Write does the edits in one pass, so a change across 55 files is two steps.
+- MultiPath Read/Write does the edits in one pass, so a change across many files is still two steps.
 
 One command wires Claude Code, Codex, Cursor and Claude Desktop to the same memory, so you can
 start in one and continue in another. The memory is what moves between them: Codex does not
