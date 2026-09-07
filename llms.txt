@@ -4,25 +4,144 @@
 
 ## QAM Stack
 
-The QAM Stack is three independent open-source tools that make an AI coding agent's work
-verifiable. Q, A and M are the three tools; each installs on its own.
+Three things go wrong when you build with an AI coding agent. It reports a job finished when
+nothing checked it. It forgets what you decided, so you re-explain the project every session.
+And it opens files one at a time, which burns context and usage.
+
+The QAM Stack is three separate open-source tools, one for each. Q, A and M are the three tools;
+each installs on its own and is useful on its own.
 
 Note on the name: this QAM is an acronym for the three tools below. It is unrelated to
 quadrature amplitude modulation, the telecoms signal-modulation scheme.
 
-- [QAM Stack](https://atvirokodosprendimai.github.io/qamstack/): the landing page, with what each
-  tool does, the failure mode it closes, and how to install it.
-- [Quality Harness](https://github.com/D3-lt/quality-harness): a Claude Code plugin. Sixteen
-  skills and eleven gate binaries turn decisions, specs and reviews into records a machine can
-  refuse. `adr-lint` exits non-zero on a record that claims done without proof; `adr-judge` is
-  advisory and always exits 0 by design, so a prose heuristic never enters the evidence chain.
+- [QAM Stack](https://atvirokodosprendimai.github.io/qamstack/): the landing page, with the
+  problem each tool solves, the measurement behind the one claim that carries a number, and how
+  to install each.
+- [Quality Harness](https://github.com/D3-lt/quality-harness): a Claude Code plugin that carries a
+  full delivery cycle rather than a single check. Spec, decision record, execution, review and
+  postmortem are each a stage with its own gate, so the cycle leaves records instead of assertions
+  and "done" becomes something a machine can refuse. A task
+  marked done without tool-written evidence behind it fails the check, and the check is an
+  ordinary program you can run yourself to see the same answer. `adr-lint` exits non-zero on a
+  task that claims done without tool-written evidence; `adr-judge` is advisory and never fails
+  your build, so a prose heuristic never enters the evidence chain (its only non-zero exit is a
+  broken invocation). `mutation-audit` breaks a mechanism on purpose to find tests that assert
+  nothing.
 - [AI Agent Memory](https://aiagentmemory.dev): an MCP memory server. Wings (projects), rooms
   (aspects) and drawers (verbatim memories), plus a temporal knowledge graph of
   subject-predicate-object facts with validity windows. Holds what source cannot show: what was
-  decided, what was rejected, what a past session got wrong. Hosted or self-hosted.
+  decided, what was rejected, what a past session got wrong. One memory for every agent holding
+  the workspace token, with the installer wiring Claude Code, Codex, Cursor and Claude Desktop.
+  Correcting a memory ends the old one, and the wrong version stops surfacing in search. A memory
+  can be pinned to the code it describes, and search marks it stale when that code moves. Hosted or self-hosted.
 - [MultiPath Read/Write](https://github.com/atvirokodosprendimai/tool-multipathreadwrite): a Go
   CLI (`mrw`). Reads many file ranges and applies many edits in one call, all or nothing, with a
   verdict per hunk and a SHA-256 read-before-modify ledger.
+
+## The one measured claim
+
+`mrw` takes 2 tool calls however many places you touch, as long as what you read comes back in
+one answer. On a change touching 54 files that is 2 calls against 108. Three conditions break
+it: an oversized search returns an index of files with no content, an oversized read comes back
+a page at a time, and a plan editing lines you have not read is refused until you read them.
+
+All figures below are from `scripts/measure.sh` at commit 2487949. Ratios are as the script
+prints them.
+
+    shape                          whole files    windowed        mrw     calls
+    A  4 edits, 4 large files          145,952       2,254      2,918     8 -> 2
+    B  2 edits, 2 mid files             20,145         866      1,329     4 -> 2
+    C  1 edit, small file whole         12,396      12,396     15,133     2 -> 2
+    D  1 edit in every Go file, 54     855,932         770      4,729   108 -> 2
+
+Against reading whole files, mrw sends 50 to 181 times less. Against a windowed read it sends
+more, with a premise worth stating: that baseline is computed from mrw's own output, so it is a
+reader that already knows which line in each file to open, and the search that knowledge requires
+is charged to its call count rather than its bytes. It is a floor, not a strategy.
+
+The overhead against a windowed read of the SAME span is flat and does not grow, measured on one
+1.06 MB file:
+
+    span          whole file    windowed          mrw   vs whole   vs windowed
+    100 lines      1,060,000       5,300        6,052   175.1x less   1.14x more
+    2,000 lines    1,060,000     106,000      120,053     8.8x less   1.13x more
+    19,999 lines   1,060,000   1,059,947    1,199,994     1.13x MORE  1.13x more
+
+The fixture is 20,000 identical 53-byte lines, synthetic and uniform on purpose so the per-line
+gutter is isolated from variation in line length. The last row is 19,999 lines, not 20,000.
+
+⚠ The whole-file column is the file's RAW bytes. A real Read tool numbers every line, so a genuine
+whole-file read is LARGER than 1,060,000 and nearer mrw's own 1,200,054. That baseline is the
+charitable version of what mrw is being compared against, not the harsh one, and measure.sh states
+this bias itself.
+
+That 13 percent is the line-number gutter, which is what makes a served line addressable by a
+later write; the per-file header and receipt are fixed costs that amortise away. So the larger
+ratios are a small-payload artefact rather than a scaling property. Shape D is 54 files of ONE
+line each, so 54 headers and 54 receipts are charged against 770 bytes of payload. In absolute
+terms the worst case across all four shapes is about 4 KB more, in a row that saves 855,932 bytes
+against the whole-file baseline.
+
+So the saving tracks how much of the file you were never going to read: 175.1x less at 100 lines
+of that file, 8.8x at 2,000, and a 1.13x LOSS once the span is the whole file. It does not decay
+gently, it collapses at the point where you stop leaving anything unread.
+
+On a single edit to a small file you need in full, mrw costs more and saves no steps.
+
+Shape D grows with the repository it is measured in: 27 files when first measured, 54 now, and
+its baseline climbed with it. mrw stayed at two calls throughout. Re-run it rather than quoting
+this table.
+
+There is no measured token saving for AI Agent Memory, and none is claimed.
+
+## Hosted or self-hosted, and why the choice is not even
+
+AI Agent Memory is the only one of the three with a deployment choice; the Quality Harness gates
+and `mrw` are local programs either way.
+
+Self-hosting is Docker plus the models that do the embedding and the reranking. Compose overlays
+can run those for you, so the cost is hardware and a one-time model download. The server also runs WITHOUT them: memories are stored and lexical search works,
+and recall becomes semantic once an embedder is present, so a bare install is degraded rather
+than broken. Choose self-hosted if you have the hardware for the models, hosted if you would
+rather not host them. It is the same server either way.
+
+One capability does split them: the claude.ai browser connector needs a publicly reachable HTTPS
+endpoint, so a self-hosted server on localhost cannot be added as one.
+
+## Using them together
+
+Each one installs and works alone. Taken together they cover one
+job that runs for days:
+
+- AI Agent Memory carries the decisions, so the reasoning is written down and the next session can
+  recall it.
+- Quality Harness makes "done" keep needing proof across days, because the evidence is written
+  down.
+- MultiPath Read/Write does the edits in one pass, so a change across 52 files is two steps.
+
+One command wires Claude Code, Codex, Cursor and Claude Desktop to the same memory, so you can
+start in one and continue in another. The memory is what moves between them: Codex does not
+resume Claude's session, it recalls what Claude wrote down. The
+automatic recall after a compaction is a Claude Code hook, so Cursor and Claude Desktop get the
+memory and the MCP tools without that part.
+
+## MCP, and which clients each tool reaches
+
+All three ship an MCP server, but transport differs and the distinction matters. "All three have
+MCP" is true; "all three can be registered with claude.ai" is not.
+
+- Quality Harness: an MCP server over stdio, reaching Claude Desktop and any stdio client, not
+  claude.ai in the browser. Its MCP surface is read-only by construction: the gates that would run
+  a command supplied by the corpus are deliberately absent, and a test keeps them absent.
+- AI Agent Memory: HTTP. The server implements the claude.ai remote-connector OAuth handshake and
+  that flow is tested against Claude's own callback URL. Setup is a connector credential created in
+  the dashboard, and a self-hosted server must be publicly reachable over
+  HTTPS before the browser can reach it. A full round trip, written in a terminal and read in the
+  browser, has not been recorded.
+- MultiPath Read/Write: the same binary speaks MCP as a subcommand, `mrw mcp`, over newline
+  delimited JSON-RPC on stdin and stdout. It serves ONE fixed checkout on the machine it runs on
+  and reads and writes files there, so a client with no filesystem has nothing for it to act on.
+  It reaches Claude Desktop and any stdio client, not claude.ai in the browser.
 
 ## The argument
 
