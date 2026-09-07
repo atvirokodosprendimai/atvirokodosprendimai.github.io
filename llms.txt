@@ -54,7 +54,8 @@ prints them. The span rows are shape E in that script, so they reproduce like ev
     C  1 edit, small file whole         12,396      12,396     15,133     2 -> 2
     D  1 edit in every Go file, 54     855,932         770      4,729   108 -> 2
 
-Against reading whole files, mrw sends 50 to 181 times less. Against a windowed read it sends
+Against reading whole files, mrw sends 15 to 181 times less on shapes A, B and D. Shape C loses:
+one small file you need in full costs 1.2x more. Against a windowed read it sends
 more, with a premise worth stating: that baseline is computed from mrw's own output, so it is a
 reader that already knows which line in each file to open, and the search that knowledge requires
 is charged to its call count rather than its bytes. It is a floor, not a strategy.
