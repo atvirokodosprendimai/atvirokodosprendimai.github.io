@@ -662,11 +662,11 @@ tool-multipathreadwrite/cmd/mrw@latest
 
     <div class="stats">
       <div class="stat rv" style="--c:var(--sage)">
-        <p class="big"><s>108</s> → 2</p>
-        <p class="cap">Tool calls for one change across 54 files. Add more files and only the
+        <p class="big"><s>110</s> → 2</p>
+        <p class="cap">Tool calls for one change across 55 files. Add more files and only the
           first number grows.</p>
         <p class="mean">A call is one round trip: Claude asks for something, waits, reads the
-          reply. Editing 54 files usually means a hundred of those. This is two, and it stays
+          reply. Editing 55 files usually means a hundred of those. This is two, and it stays
           two however many files you add.</p>
       </div>
       <div class="stat rv" style="--c:var(--blue)">
@@ -750,7 +750,7 @@ cd tool-multipathreadwrite &amp;&amp; ./scripts/measure.sh</code></pre>
 
       <details class="rv"><summary>What does MultiPath Read/Write do, exactly?</summary>
         <p>One binary. It reads many file ranges and applies many edits in a single call, all or nothing, with a verdict for every edit and a checksum ledger, so a file changed behind Claude's back is refused.</p>
-        <p>That is two calls however many files you touch. On a change across 54 files: 2 calls against 108.</p>
+        <p>That is two calls however many files you touch. On a change across 55 files: 2 calls against 110.</p>
         <p>Skip it for one edit to a small file you need in full: it sends more and saves you no steps. One line in your <code>CLAUDE.md</code> routes around that case.</p>
       </details>
 
@@ -999,7 +999,7 @@ cd tool-multipathreadwrite &amp;&amp; ./scripts/measure.sh</code></pre>
           "name": "What does MultiPath Read/Write do, exactly?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "One binary. It reads many file ranges and applies many edits in a single call, all or nothing, with a verdict for every edit and a checksum ledger, so a file changed behind Claude's back is refused. That is two calls however many files you touch. On a change across 54 files: 2 calls against 108. Skip it for one edit to a small file you need in full: it sends more and saves you no steps. One line in your CLAUDE.md routes around that case."
+            "text": "One binary. It reads many file ranges and applies many edits in a single call, all or nothing, with a verdict for every edit and a checksum ledger, so a file changed behind Claude's back is refused. That is two calls however many files you touch. On a change across 55 files: 2 calls against 110. Skip it for one edit to a small file you need in full: it sends more and saves you no steps. One line in your CLAUDE.md routes around that case."
           }
         },
         {

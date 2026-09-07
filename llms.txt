@@ -41,7 +41,7 @@ quadrature amplitude modulation, the telecoms signal-modulation scheme.
 ## The one measured claim
 
 `mrw` takes 2 tool calls however many places you touch, as long as what you read comes back in
-one answer. On a change touching 54 files that is 2 calls against 108. Three conditions break
+one answer. On a change touching 55 files that is 2 calls against 110. Three conditions break
 it: an oversized search returns an index of files with no content, an oversized read comes back
 a page at a time, and a plan editing lines you have not read is refused until you read them.
 
@@ -50,12 +50,12 @@ one decimal for shapes A to D, two for shape E, where the third digit is the fin
 are shape E in that script, so they reproduce like every other row.
 
     shape                          whole files    windowed        mrw     calls
-    A  4 edits, 4 large files          145,952       2,254      2,918     8 -> 2
+    A  4 edits, 4 large files          147,971       2,254      2,918     8 -> 2
     B  2 edits, 2 mid files             20,145         866      1,329     4 -> 2
     C  1 edit, small file whole         12,396      12,396     15,133     2 -> 2
-    D  1 edit in every Go file, 54     855,932         770      4,729   108 -> 2
+    D  1 edit in every Go file, 55     897,917         782      4,814   110 -> 2
 
-Against reading whole files, mrw sends 15 to 181 times less on shapes A, B and D. Shape C loses:
+Against reading whole files, mrw sends 15 to 186.5 times less on shapes A, B and D. Shape C loses:
 one small file you need in full costs 1.2x more. Against a windowed read it sends
 more, with a premise worth stating: that baseline is computed from mrw's own output, so it is a
 reader that already knows which line in each file to open, and the search that knowledge requires
@@ -79,10 +79,10 @@ this bias itself.
 
 That 13 percent is the line-number gutter, which is what makes a served line addressable by a
 later write; the per-file header and receipt are fixed costs that amortise away. So the larger
-ratios are a small-payload artefact rather than a scaling property. Shape D is 54 files of ONE
-line each, so 54 headers and 54 receipts are charged against 770 bytes of payload. In absolute
-terms the worst case across all five shapes is about 4 KB more, in a row that saves 855,932 bytes
-against the whole-file baseline.
+ratios are a small-payload artefact rather than a scaling property. Shape D is 55 files of ONE
+line each, so 55 headers and 55 receipts are charged against 782 bytes of payload. In absolute
+terms the worst case across all five shapes is about 4 KB more, in a row whose whole-file
+baseline is 897,917 bytes.
 
 So the saving tracks how much of the file you were never going to read: 175.15x less at 100 lines
 of that file, 8.83x at 2,000, and a 1.13x LOSS once the span is the whole file. It does not decay
@@ -90,7 +90,7 @@ gently, it collapses at the point where you stop leaving anything unread.
 
 On a single edit to a small file you need in full, mrw costs more and saves no steps.
 
-Shape D grows with the repository it is measured in: 27 files when first measured, 54 now, and
+Shape D grows with the repository it is measured in: 27 files when first measured, 55 now, and
 its baseline climbed with it. mrw stayed at two calls throughout. Re-run it rather than quoting
 this table.
 
@@ -119,7 +119,7 @@ job that runs for days:
   recall it.
 - Quality Harness makes "done" keep needing proof across days, because the evidence is written
   down.
-- MultiPath Read/Write does the edits in one pass, so a change across 52 files is two steps.
+- MultiPath Read/Write does the edits in one pass, so a change across 55 files is two steps.
 
 One command wires Claude Code, Codex, Cursor and Claude Desktop to the same memory, so you can
 start in one and continue in another. The memory is what moves between them: Codex does not
