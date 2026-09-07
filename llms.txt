@@ -45,8 +45,9 @@ one answer. On a change touching 54 files that is 2 calls against 108. Three con
 it: an oversized search returns an index of files with no content, an oversized read comes back
 a page at a time, and a plan editing lines you have not read is refused until you read them.
 
-All figures below are from `scripts/measure.sh` at commit 8487013. Ratios are as the script
-prints them. The span rows are shape E in that script, so they reproduce like every other row.
+All figures below are from `scripts/measure.sh` at v1.6.0. Ratios are as the script prints them:
+one decimal for shapes A to D, two for shape E, where the third digit is the finding. The span rows
+are shape E in that script, so they reproduce like every other row.
 
     shape                          whole files    windowed        mrw     calls
     A  4 edits, 4 large files          145,952       2,254      2,918     8 -> 2
@@ -63,9 +64,9 @@ is charged to its call count rather than its bytes. It is a floor, not a strateg
 The overhead against a windowed read of the SAME span is flat and does not grow, measured on one
 1.06 MB file:
 
-    span          whole file    windowed          mrw   vs whole   vs windowed
-    100 lines      1,060,000       5,300        6,052   175.1x less   1.14x more
-    2,000 lines    1,060,000     106,000      120,053     8.8x less   1.13x more
+    span          whole file    windowed          mrw       vs whole  vs windowed
+    100 lines      1,060,000       5,300        6,052   175.15x less  1.14x more
+    2,000 lines    1,060,000     106,000      120,053     8.83x less  1.13x more
     20,000 lines   1,060,000   1,060,000    1,200,054     1.13x MORE  1.13x more
 
 The fixture is 20,000 identical 53-byte lines, synthetic and uniform on purpose so the per-line
@@ -83,8 +84,8 @@ line each, so 54 headers and 54 receipts are charged against 770 bytes of payloa
 terms the worst case across all five shapes is about 4 KB more, in a row that saves 855,932 bytes
 against the whole-file baseline.
 
-So the saving tracks how much of the file you were never going to read: 175.1x less at 100 lines
-of that file, 8.8x at 2,000, and a 1.13x LOSS once the span is the whole file. It does not decay
+So the saving tracks how much of the file you were never going to read: 175.15x less at 100 lines
+of that file, 8.83x at 2,000, and a 1.13x LOSS once the span is the whole file. It does not decay
 gently, it collapses at the point where you stop leaving anything unread.
 
 On a single edit to a small file you need in full, mrw costs more and saves no steps.
