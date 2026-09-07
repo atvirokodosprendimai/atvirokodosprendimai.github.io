@@ -585,8 +585,8 @@ tool-multipathreadwrite/cmd/mrw@latest
           <p class="caps"><span class="key">MCP over stdio</span><span>Claude Code</span><span>Claude Desktop</span><span>Any pipeline</span></p>
         </div>
         <ul class="slist">
-          <li><span>A full cycle, not one check: write the spec, record the decision, execute it, review it, write up what broke. Each stage leaves the next one something to read.</span></li>
-          <li><span>A task marked done without tool-written evidence fails the check, and the check is a program, so Claude reads a verdict rather than doing the work.</span></li>
+          <li><span>Five stages, each with its own gate: write the spec, record the decision, execute it, review it, write up what broke. Each stage leaves the next one something to read.</span></li>
+          <li><span>A task marked done without tool-written evidence fails the check. The check is an ordinary program, so what reaches Claude is its verdict.</span></li>
           <li><span>A check that cannot fail is a defect. <code>mutation-audit</code> breaks a mechanism on purpose to see whether any test notices.</span></li>
           <li><span>Its MCP surface is read-only by construction. The gates that would run a command are deliberately absent, and a test keeps them out.</span></li>
         </ul>
@@ -699,8 +699,8 @@ read. Below that, edit the file directly.</code></pre>
       <div class="after">
         <p class="lbl">Check it yourself</p>
         <p>Five task shapes, both baselines and the span measurement live in
-          <code>scripts/measure.sh</code>. The numbers move with the code, so run it rather than
-          trusting this page.</p>
+          <code>scripts/measure.sh</code>. The numbers move with the code, so run it yourself
+          before you quote them.</p>
         <p>Two commands, on <a class="xlink" href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite">the
           repository<span class="ext" aria-hidden="true">↗</span></a>:</p>
 <pre><code>git clone https://github.com/atvirokodosprendimai/\
@@ -733,24 +733,24 @@ cd tool-multipathreadwrite &amp;&amp; ./scripts/measure.sh</code></pre>
 
       <details class="rv"><summary>Do I have to take all three?</summary>
         <p>No, and most people should not. Each installs on its own. Start with whichever problem actually happened to you.</p>
-        <p>They do compose. The memory carries decisions between sessions and between tools, the harness keeps the record honest across days rather than inside one session, and <code>mrw</code> does the edits in one pass. None of them needs the others to be present.</p>
+        <p>They do compose. The memory carries decisions between sessions and between tools, the harness keeps the evidence across days, and <code>mrw</code> does the edits in one pass. None of them needs the others to be present.</p>
       </details>
 
       <details class="rv"><summary>What does Quality Harness do, exactly?</summary>
-        <p>It is a delivery cycle with gates on it. Write the spec, record the decision, execute it, review it, write up what broke. Each stage leaves a record the next stage reads, so progress is something you can inspect rather than something Claude asserts.</p>
+        <p>It is a delivery cycle with gates on it. Write the spec, record the decision, execute it, review it, write up what broke. Each stage leaves a record the next stage reads, so progress is something you can open and inspect.</p>
         <p>The gates are ordinary programs. A task marked done without tool-written evidence fails the lint. The advisory check never fails your build, so an opinion never enters the evidence chain. <code>mutation-audit</code> breaks a mechanism on purpose to find tests that assert nothing.</p>
         <p>Skip it if you do not want a cycle. It asks you to work a particular way, and that is exactly what turns done into something measurable.</p>
       </details>
 
       <details class="rv"><summary>What does AI Agent Memory do, exactly?</summary>
         <p>It is an MCP server your agents read and write. Decisions, rejected alternatives, and what a past session got wrong go in. Your code cannot show you any of that, because a fix looks identical to code that was always right.</p>
-        <p>You write as you work, and the next session recalls it. After a compaction Claude Code re-reads the memory on its own. Correcting a memory ends the old version rather than overwriting it, and a memory pinned to a piece of code is flagged stale when that code moves.</p>
+        <p>You write as you work, and the next session recalls it. After a compaction Claude Code re-reads the memory on its own. Correcting a memory ends the old version, so the wrong one stops surfacing in search, and a memory pinned to a piece of code is flagged stale when that code moves.</p>
         <p>Skip it on a project with no history worth keeping. And it makes no token-saving claim: nothing here measures that.</p>
       </details>
 
       <details class="rv"><summary>What does MultiPath Read/Write do, exactly?</summary>
-        <p>One binary. It reads many file ranges and applies many edits in a single call, all or nothing, with a verdict for every edit and a checksum ledger, so a file changed behind Claude's back is refused instead of clobbered.</p>
-        <p>That is two calls however many files you touch. On a change across 54 files it is 2 rather than 108.</p>
+        <p>One binary. It reads many file ranges and applies many edits in a single call, all or nothing, with a verdict for every edit and a checksum ledger, so a file changed behind Claude's back is refused.</p>
+        <p>That is two calls however many files you touch. On a change across 54 files: 2 calls against 108.</p>
         <p>Skip it for one edit to a small file you need in full: it sends more and saves you no steps. One line in your <code>CLAUDE.md</code> routes around that case.</p>
       </details>
 
@@ -975,7 +975,7 @@ cd tool-multipathreadwrite &amp;&amp; ./scripts/measure.sh</code></pre>
           "name": "Do I have to take all three?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No, and most people should not. Each installs on its own. Start with whichever problem actually happened to you. They do compose. The memory carries decisions between sessions and between tools, the harness keeps the record honest across days rather than inside one session, and mrw does the edits in one pass. None of them needs the others to be present."
+            "text": "No, and most people should not. Each installs on its own. Start with whichever problem actually happened to you. They do compose. The memory carries decisions between sessions and between tools, the harness keeps the evidence across days, and mrw does the edits in one pass. None of them needs the others to be present."
           }
         },
         {
@@ -983,7 +983,7 @@ cd tool-multipathreadwrite &amp;&amp; ./scripts/measure.sh</code></pre>
           "name": "What does Quality Harness do, exactly?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "It is a delivery cycle with gates on it. Write the spec, record the decision, execute it, review it, write up what broke. Each stage leaves a record the next stage reads, so progress is something you can inspect rather than something Claude asserts. The gates are ordinary programs. A task marked done without tool-written evidence fails the lint. The advisory check never fails your build, so an opinion never enters the evidence chain. mutation-audit breaks a mechanism on purpose to find tests that assert nothing. Skip it if you do not want a cycle. It asks you to work a particular way, and that is exactly what turns done into something measurable."
+            "text": "It is a delivery cycle with gates on it. Write the spec, record the decision, execute it, review it, write up what broke. Each stage leaves a record the next stage reads, so progress is something you can open and inspect. The gates are ordinary programs. A task marked done without tool-written evidence fails the lint. The advisory check never fails your build, so an opinion never enters the evidence chain. mutation-audit breaks a mechanism on purpose to find tests that assert nothing. Skip it if you do not want a cycle. It asks you to work a particular way, and that is exactly what turns done into something measurable."
           }
         },
         {
@@ -991,7 +991,7 @@ cd tool-multipathreadwrite &amp;&amp; ./scripts/measure.sh</code></pre>
           "name": "What does AI Agent Memory do, exactly?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "It is an MCP server your agents read and write. Decisions, rejected alternatives, and what a past session got wrong go in. Your code cannot show you any of that, because a fix looks identical to code that was always right. You write as you work, and the next session recalls it. After a compaction Claude Code re-reads the memory on its own. Correcting a memory ends the old version rather than overwriting it, and a memory pinned to a piece of code is flagged stale when that code moves. Skip it on a project with no history worth keeping. And it makes no token-saving claim: nothing here measures that."
+            "text": "It is an MCP server your agents read and write. Decisions, rejected alternatives, and what a past session got wrong go in. Your code cannot show you any of that, because a fix looks identical to code that was always right. You write as you work, and the next session recalls it. After a compaction Claude Code re-reads the memory on its own. Correcting a memory ends the old version, so the wrong one stops surfacing in search, and a memory pinned to a piece of code is flagged stale when that code moves. Skip it on a project with no history worth keeping. And it makes no token-saving claim: nothing here measures that."
           }
         },
         {
@@ -999,7 +999,7 @@ cd tool-multipathreadwrite &amp;&amp; ./scripts/measure.sh</code></pre>
           "name": "What does MultiPath Read/Write do, exactly?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "One binary. It reads many file ranges and applies many edits in a single call, all or nothing, with a verdict for every edit and a checksum ledger, so a file changed behind Claude's back is refused instead of clobbered. That is two calls however many files you touch. On a change across 54 files it is 2 rather than 108. Skip it for one edit to a small file you need in full: it sends more and saves you no steps. One line in your CLAUDE.md routes around that case."
+            "text": "One binary. It reads many file ranges and applies many edits in a single call, all or nothing, with a verdict for every edit and a checksum ledger, so a file changed behind Claude's back is refused. That is two calls however many files you touch. On a change across 54 files: 2 calls against 108. Skip it for one edit to a small file you need in full: it sends more and saves you no steps. One line in your CLAUDE.md routes around that case."
           }
         },
         {
