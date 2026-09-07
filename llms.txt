@@ -45,7 +45,8 @@ one answer. On a change touching 54 files that is 2 calls against 108. Three con
 it: an oversized search returns an index of files with no content, an oversized read comes back
 a page at a time, and a plan editing lines you have not read is refused until you read them.
 
-All figures below are from `scripts/measure.sh` at commit 2487949. Ratios are as the script
+All figures below are from `scripts/measure.sh` at commit 8487013. Ratios are as the script
+prints them. The span rows are shape E in that script, so they reproduce like every other row.
 prints them.
 
     shape                          whole files    windowed        mrw     calls
@@ -65,10 +66,10 @@ The overhead against a windowed read of the SAME span is flat and does not grow,
     span          whole file    windowed          mrw   vs whole   vs windowed
     100 lines      1,060,000       5,300        6,052   175.1x less   1.14x more
     2,000 lines    1,060,000     106,000      120,053     8.8x less   1.13x more
-    19,999 lines   1,060,000   1,059,947    1,199,994     1.13x MORE  1.13x more
+    20,000 lines   1,060,000   1,060,000    1,200,054     1.13x MORE  1.13x more
 
 The fixture is 20,000 identical 53-byte lines, synthetic and uniform on purpose so the per-line
-gutter is isolated from variation in line length. The last row is 19,999 lines, not 20,000.
+gutter is isolated from variation in line length.
 
 ⚠ The whole-file column is the file's RAW bytes. A real Read tool numbers every line, so a genuine
 whole-file read is LARGER than 1,060,000 and nearer mrw's own 1,200,054. That baseline is the
@@ -79,7 +80,7 @@ That 13 percent is the line-number gutter, which is what makes a served line add
 later write; the per-file header and receipt are fixed costs that amortise away. So the larger
 ratios are a small-payload artefact rather than a scaling property. Shape D is 54 files of ONE
 line each, so 54 headers and 54 receipts are charged against 770 bytes of payload. In absolute
-terms the worst case across all four shapes is about 4 KB more, in a row that saves 855,932 bytes
+terms the worst case across all five shapes is about 4 KB more, in a row that saves 855,932 bytes
 against the whole-file baseline.
 
 So the saving tracks how much of the file you were never going to read: 175.1x less at 100 lines
