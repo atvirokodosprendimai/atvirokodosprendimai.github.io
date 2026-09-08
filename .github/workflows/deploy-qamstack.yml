@@ -1,0 +1,31 @@
+# GitHub Pages redeploys qamstack/ on every push to main, but that folder is also
+# what qamstack.dev serves — through a Worker that has no git connection at all.
+# Without this workflow a push updates the OLD github.io URL and leaves the
+# canonical domain stale, which is the wrong direction for the two to drift.
+name: Deploy qamstack.dev
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'qamstack/**'
+      - 'wrangler.jsonc'
+      - '.github/workflows/deploy-qamstack.yml'
+  workflow_dispatch:
+
+# A second push while the first is deploying would race to publish the same
+# Worker; let the newer one win rather than leaving the outcome to timing.
+concurrency:
+  group: deploy-qamstack
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}

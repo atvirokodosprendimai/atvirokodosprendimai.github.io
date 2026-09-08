@@ -1,8 +1,8 @@
-# Atviro Kodo Sprendimai
+# QAM Stack
 
-> Open-source developer tooling for AI coding agents. Everything we build is public.
+> Three open-source tools for AI coding agents: Quality Harness, AI Agent Memory and MultiPath Read/Write. Everything is public.
 
-## QAM Stack
+## What it is
 
 Three things go wrong when you build with an AI coding agent. It reports a job finished when
 nothing checked it. It forgets what you decided, so you re-explain the project every session.
