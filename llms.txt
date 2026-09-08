@@ -79,11 +79,14 @@ charitable version of what mrw is being compared against, not the harsh one, and
 this bias itself.
 
 That 13 percent is the line-number gutter, which is what makes a served line addressable by a
-later write; the per-file header and receipt are fixed costs that amortise away. So the larger
-ratios are a small-payload artefact rather than a scaling property. Shape D is one line in every
-Go file, so one header and one receipt per file are charged against a payload of a few hundred
-bytes. In absolute terms the worst case across all five shapes is about 4 KB more, and it is the
-row whose whole-file baseline is the largest in the table.
+later write; the header and receipt lines are fixed costs that amortise away. A read emits one
+header per SPAN served, and a write emits one line per hunk and one per file, so what they cost
+depends on how the work is shaped rather than on how many bytes it moves. That makes the larger
+ratios a small-payload artefact rather than a scaling property. Shape D is the worst case for
+exactly that reason: one line in every Go file makes span, hunk and file all the same thing, so
+every fixed cost is charged once per file against a payload of one line. In absolute terms the
+worst case across all five shapes is about 4 KB more, and it is the row whose whole-file
+baseline is the largest in the table.
 
 So the saving tracks how much of the file you were never going to read: 175.15x less at 100 lines
 of that file, 8.83x at 2,000, and a 1.13x LOSS once the span is the whole file. It does not decay
