@@ -38,6 +38,13 @@
   --clay:#dd9a72;      --clay-bg:#faeee5;
   --rose:#d98a8a;      --rose-bg:#faecec;
 
+  /* Text-weight accents. The display accents above are tuned as borders and
+     grounds, and at 2.3:1 on white they are below the 3:1 that WCAG 1.4.3 asks
+     of large text and 1.4.11 of a meaningful glyph. These are the same hues
+     darkened until they clear 3:1 on BOTH grounds a card sits on. Dark mode
+     needs no variant: its accents are already above 7:1. */
+  --sage-ink:#579877; --blue-ink:#628bd1; --clay-ink:#d0723a; --rose-ink:#d06f6f;
+
   --track:#f3f1ea;
   --accent:var(--clay);
   --shadow:0 1px 2px rgba(40,35,25,.04), 0 12px 28px -18px rgba(40,35,25,.22);
@@ -57,6 +64,8 @@
     --blue:#9bb6e8;   --blue-bg:#1e2432;
     --clay:#e6a982;   --clay-bg:#2e241d;
     --rose:#e09a9a;   --rose-bg:#2e1f1f;
+    --sage-ink:var(--sage); --blue-ink:var(--blue);
+    --clay-ink:var(--clay); --rose-ink:var(--rose);
     --shadow:0 1px 2px rgba(0,0,0,.3), 0 14px 30px -20px rgba(0,0,0,.7);
   }
 }
@@ -327,6 +336,39 @@ pre .p{color:#5a7fc4}
   .stat{display:grid;grid-template-rows:subgrid;grid-row:span 3}
   .stat .mean{margin-top:0}
 }
+/* Turn diagram: the 110 -> 2 card made visible. Round trips are the claim that
+   survives every reading of the measurement, and a reader who has never counted
+   one cannot picture it from a number. Two panels so the shapes sit beside each
+   other; stacked below 760px, where side by side would squeeze both to nothing. */
+.turns{display:grid;gap:1.25rem;margin-top:clamp(2rem,4vw,3rem)}
+@media (min-width:760px){
+  .turns{grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(1.5rem,3vw,2.5rem)}
+}
+.turn{border:1px solid var(--line);border-top:4px solid var(--c);border-radius:var(--r);
+  background:var(--panel);box-shadow:var(--shadow);
+  padding:clamp(1.3rem,2.5vw,1.7rem);display:flex;flex-direction:column}
+.turn .lbl{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:1.1rem}
+.tlist{list-style:none;display:flex;flex-direction:column;gap:.5rem;flex:1}
+.tlist li{display:flex;align-items:baseline;gap:.55rem;font-family:var(--mono);
+  font-size:.8rem;color:var(--ink-2)}
+.tlist .op{color:var(--ink);min-width:2.4rem}
+.tlist .fn{flex:1}
+/* The arrow pair IS the round trip, so it carries the weight of the diagram and
+   is the one thing that must stay legible when the panel is narrow. */
+.tlist .rt{color:var(--ink-3);letter-spacing:.05em;white-space:nowrap}
+.tlist .more{color:var(--ink-3);font-style:italic}
+.batch{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  border:1px solid var(--line-2);border-radius:calc(var(--r) - 3px);
+  background:var(--bg-2);padding:.75rem .9rem;
+  font-family:var(--mono);font-size:.8rem;color:var(--ink)}
+.batch .n{flex:1}
+.batch .got{color:var(--ink-3)}
+.tot{margin-top:1.2rem;padding-top:.95rem;border-top:1px solid var(--line);
+  font-size:.9rem;color:var(--ink-2)}
+.tot b{font-family:var(--mono);font-weight:700;font-size:1.2rem;color:var(--ct);
+  letter-spacing:-.03em}
+.turncap{margin-top:1.4rem;font-size:.9rem;color:var(--ink-2);max-width:62ch}
 /* The caveat and the invitation to check are both credibility moves, so they
    carry equal weight side by side instead of stacking at half the width. */
 .afters{display:grid;gap:1.75rem;margin-top:clamp(2rem,4vw,2.75rem)}
@@ -659,6 +701,33 @@ tool-multipathreadwrite/cmd/mrw@latest
         repository; yours will differ, and that is the point.
       </p>
     </div>
+
+    <figure class="turns rv">
+      <div class="turn" style="--c:var(--line-2);--ct:var(--ink-3)">
+        <p class="lbl">One file at a time</p>
+        <ul class="tlist">
+          <li><span class="op">read</span><span class="fn">store.go</span><span class="rt" aria-hidden="true">&rarr;&nbsp;&larr;</span></li>
+          <li><span class="op">read</span><span class="fn">cart.go</span><span class="rt" aria-hidden="true">&rarr;&nbsp;&larr;</span></li>
+          <li><span class="more">one read per file</span></li>
+          <li><span class="op">edit</span><span class="fn">store.go</span><span class="rt" aria-hidden="true">&rarr;&nbsp;&larr;</span></li>
+          <li><span class="op">edit</span><span class="fn">cart.go</span><span class="rt" aria-hidden="true">&rarr;&nbsp;&larr;</span></li>
+          <li><span class="more">one edit per file</span></li>
+        </ul>
+        <p class="tot"><b>110</b> round trips</p>
+      </div>
+      <div class="turn" style="--c:var(--sage);--ct:var(--sage-ink)">
+        <p class="lbl">With <code>mrw</code></p>
+        <ul class="tlist">
+          <li class="batch"><span class="n">read &times; 55</span><span class="rt" aria-hidden="true">&rarr;&nbsp;&larr;</span><span class="got">one answer</span></li>
+          <li class="batch"><span class="n">write &times; 55</span><span class="rt" aria-hidden="true">&rarr;&nbsp;&larr;</span><span class="got">one verdict</span></li>
+        </ul>
+        <p class="tot"><b>2</b> round trips</p>
+      </div>
+      <figcaption class="turncap">A round trip is one ask and one wait. Editing 55 files the
+        usual way is 55 reads and 55 edits, each of them a separate wait. <code>mrw</code>
+        takes the same work in one read and one write, so the count stops depending on how
+        many files the change touches.</figcaption>
+    </figure>
 
     <div class="stats">
       <div class="stat rv" style="--c:var(--sage)">
