@@ -368,6 +368,9 @@ pre .p{color:#5a7fc4}
   font-size:.9rem;color:var(--ink-2)}
 .tot b{font-family:var(--mono);font-weight:700;font-size:1.2rem;color:var(--ct);
   letter-spacing:-.03em}
+/* The sub-line under each total is where the envelope point lands: the per-file
+   headers do not go away, they stop each needing their own ask and wait. */
+.tot .sub{display:block;margin-top:.35rem;font-size:.8rem;color:var(--ink-3)}
 .turncap{margin-top:1.4rem;font-size:.9rem;color:var(--ink-2);max-width:62ch}
 /* The caveat and the invitation to check are both credibility moves, so they
    carry equal weight side by side instead of stacking at half the width. */
@@ -713,7 +716,8 @@ tool-multipathreadwrite/cmd/mrw@latest
           <li><span class="op">edit</span><span class="fn">cart.go</span><span class="rt" aria-hidden="true">&rarr;&nbsp;&larr;</span></li>
           <li><span class="more">one edit per file</span></li>
         </ul>
-        <p class="tot"><b>110</b> round trips</p>
+        <p class="tot"><b>110</b> round trips
+          <span class="sub">110 asks, 110 waits, 110 replies</span></p>
       </div>
       <div class="turn" style="--c:var(--sage);--ct:var(--sage-ink)">
         <p class="lbl">With <code>mrw</code></p>
@@ -721,12 +725,14 @@ tool-multipathreadwrite/cmd/mrw@latest
           <li class="batch"><span class="n">read &times; 55</span><span class="rt" aria-hidden="true">&rarr;&nbsp;&larr;</span><span class="got">one answer</span></li>
           <li class="batch"><span class="n">write &times; 55</span><span class="rt" aria-hidden="true">&rarr;&nbsp;&larr;</span><span class="got">one verdict</span></li>
         </ul>
-        <p class="tot"><b>2</b> round trips</p>
+        <p class="tot"><b>2</b> round trips
+          <span class="sub">all 55 file headers ride inside two replies</span></p>
       </div>
       <figcaption class="turncap">A round trip is one ask and one wait. Editing 55 files the
         usual way is 55 reads and 55 edits, each of them a separate wait. <code>mrw</code>
         takes the same work in one read and one write, so the count stops depending on how
-        many files the change touches.</figcaption>
+        many files the change touches. Each file still gets its own header and its own
+        verdict; what stops repeating is the asking and the waiting.</figcaption>
     </figure>
 
     <div class="stats">
