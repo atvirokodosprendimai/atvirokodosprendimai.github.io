@@ -679,10 +679,11 @@ tool-multipathreadwrite/cmd/mrw@latest
       <div class="stat rv" style="--c:var(--clay)">
         <p class="big">13% more</p>
         <p class="cap">Than a read that already knew exactly where to look.</p>
-        <p class="mean">The extra is line numbers and a short header on each file. That
-          bookkeeping is what lets a later edit name the exact lines it is changing, and be
-          refused if they have moved since. It is the price of the edit being checkable, and it
-          stays flat, 13 to 14%, however much you read.</p>
+        <p class="mean">The extra is line numbers, plus a short header on every range
+          served. That bookkeeping is what lets a later edit name the exact lines it is
+          changing, and be refused if they have moved since. Read more of one file and the
+          share stays flat at 13 to 14%. Ask for one line from each of fifty files and that
+          header is charged fifty times, which is where it costs.</p>
       </div>
     </div>
 
