@@ -1,5 +1,6 @@
 {
   "name": "qamstack",
+  "account_id": "71d1358d19f295003de9518c8b2019b8",
   "compatibility_date": "2026-01-05",
   "assets": {
     "directory": "./qamstack"
