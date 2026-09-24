@@ -27,6 +27,8 @@ quadrature amplitude modulation, the telecoms signal-modulation scheme.
   your build, so a prose heuristic never enters the evidence chain (its only non-zero exit is a
   broken invocation). `mutation-audit` breaks a mechanism on purpose to find tests that assert
   nothing.
+  Its own page, with why it matters now and the six habits that make it work:
+  https://qamstack.dev/quality-harness/
 - [AI Agent Memory](https://aiagentmemory.dev): an MCP memory server. Wings (projects), rooms
   (aspects) and drawers (verbatim memories), plus a temporal knowledge graph of
   subject-predicate-object facts with validity windows. Holds what source cannot show: what was

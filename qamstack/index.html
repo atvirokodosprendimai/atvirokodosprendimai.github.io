@@ -232,6 +232,8 @@ h2{font-family:var(--serif);font-size:clamp(1.6rem,3.4vw,2.15rem);font-weight:60
   margin-top:1.1rem;font-size:.75rem;padding:1rem 1.05rem;
   white-space:pre-wrap;overflow-wrap:anywhere}
 .step .btn{margin-top:auto;justify-content:center;font-size:.86rem;padding:.55rem 1rem}
+.step .btns{margin-top:auto;display:grid;gap:.5rem}
+.step .btns .btn{margin-top:0}
 /* the "or hand it to your agent" path: for a reader who does not know where a
    slash command goes, saying it in English is the easier of the two routes */
 .or{display:flex;align-items:center;gap:.8rem;margin:1.2rem 0 1rem;font-family:var(--mono);
@@ -524,7 +526,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
     </div>
 
     <div class="sym">
-      <a class="symcard rv" href="#start" style="--c:var(--sage);--ct:var(--sage-ink);--cbg:var(--sage-bg)">
+      <a class="symcard rv" href="/quality-harness/" style="--c:var(--sage);--ct:var(--sage-ink);--cbg:var(--sage-bg)">
         <p class="said">It said it fixed it. It didn't.</p>
         <p class="fix">A task marked done without proof fails a check you can run yourself.</p>
         <p class="toolrow"><span class="badge">Q</span> Quality Harness <span class="arrow">→</span></p>
@@ -572,7 +574,10 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
           <q>Add the Claude Code plugin marketplace D3-lt/quality-harness, then install the quality-harness plugin from it.</q>
           <div class="clients"><span>Claude Code</span></div>
         </div>
-        <a class="btn" href="https://github.com/D3-lt/quality-harness">GitHub →</a>
+        <div class="btns">
+          <a class="btn" href="/quality-harness/">Why, and how to use it right →</a>
+          <a class="btn" href="https://github.com/D3-lt/quality-harness">GitHub →</a>
+        </div>
       </div>
 
       <div class="step rv" style="--c:var(--blue);--ct:var(--blue-ink)">
@@ -633,7 +638,7 @@ tool-multipathreadwrite/cmd/mrw@latest
     <div class="strength">
       <div class="srow rv" style="--c:var(--sage);--ct:var(--sage-ink);--cbg:var(--sage-bg)">
         <div>
-          <p class="who"><span class="badge">Q</span> <a class="xlink" href="https://github.com/D3-lt/quality-harness">Quality Harness<span class="ext" aria-hidden="true">↗</span></a></p>
+          <p class="who"><span class="badge">Q</span> <a class="xlink" href="/quality-harness/">Quality Harness</a></p>
           <p class="best">Best at giving a loose task a shape that produces evidence: spec, decision, build, review.</p>
           <p class="caps"><span class="key">MCP over stdio</span><span>Claude Code</span><span>Claude Desktop</span><span>Any pipeline</span></p>
         </div>
@@ -642,6 +647,7 @@ tool-multipathreadwrite/cmd/mrw@latest
           <li><span>A task marked done without tool-written evidence fails the check. The check is an ordinary program, so what reaches Claude is its verdict.</span></li>
           <li><span>A check that cannot fail is a defect. <code>mutation-audit</code> breaks a mechanism on purpose to see whether any test notices.</span></li>
           <li><span>Its MCP surface is read-only by construction. The gates that would run a command are deliberately absent, and a test keeps them out.</span></li>
+          <li><span><a href="/quality-harness/">Why it matters now, what you gain, and how to use it right: the Quality Harness page.</a> Source on <a href="https://github.com/D3-lt/quality-harness">GitHub<span class="ext" aria-hidden="true">↗</span></a>.</span></li>
         </ul>
       </div>
 
@@ -823,7 +829,7 @@ cd tool-multipathreadwrite &amp;&amp; ./scripts/measure.sh</code></pre>
       <details class="rv"><summary>What does Quality Harness do, exactly?</summary>
         <p>It is a delivery cycle with gates on it. Write the spec, record the decision, execute it, review it, write up what broke. Each stage leaves a record the next stage reads, so progress is something you can open and inspect.</p>
         <p>The gates are ordinary programs. A task marked done without tool-written evidence fails the lint. The advisory check never fails your build, so an opinion never enters the evidence chain. <code>mutation-audit</code> breaks a mechanism on purpose to find tests that assert nothing.</p>
-        <p>Skip it if you do not want a cycle. It asks you to work a particular way, and that is exactly what turns done into something measurable.</p>
+        <p>Skip it if you do not want a cycle. It asks you to work a particular way, and that is exactly what turns done into something measurable. The full case, with the record behind each claim, is on <a href="/quality-harness/">its own page</a>.</p>
       </details>
 
       <details class="rv"><summary>What does AI Agent Memory do, exactly?</summary>
@@ -899,7 +905,7 @@ cd tool-multipathreadwrite &amp;&amp; ./scripts/measure.sh</code></pre>
     <a class="brand" href="#top" style="margin-right:0"><span class="dots"><i></i><i></i><i></i></span> QAM&nbsp;Stack</a>
     <span>by <a href="https://github.com/atvirokodosprendimai">Atviro Kodo Sprendimai</a></span>
     <span class="sp"></span>
-    <a href="https://github.com/D3-lt/quality-harness">Quality Harness</a>
+    <a href="/quality-harness/">Quality Harness</a>
     <a href="https://aiagentmemory.dev">AI Agent Memory</a>
     <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite">MultiPath R/W</a>
     <a href="https://atvirokodosprendimai.github.io/">↑ atvirokodosprendimai</a>
@@ -985,7 +991,8 @@ cd tool-multipathreadwrite &amp;&amp; ./scripts/measure.sh</code></pre>
             "name": "Quality Harness",
             "applicationCategory": "DeveloperApplication",
             "operatingSystem": "macOS, Linux, Windows",
-            "url": "https://github.com/D3-lt/quality-harness",
+            "url": "https://qamstack.dev/quality-harness/",
+            "codeRepository": "https://github.com/D3-lt/quality-harness",
             "description": "A Claude Code plugin carrying a full delivery cycle: spec, decision record, execution, review, postmortem, each stage gated. A task marked done without tool-written evidence fails the check, and the check is an ordinary program you can run yourself. Ships a read-only MCP server for Claude Desktop.",
             "offers": {
               "@type": "Offer",
