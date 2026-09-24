@@ -298,7 +298,7 @@ tr.us td{background:var(--sage-bg)}
 tr.us td:first-child{border-left:4px solid var(--sage)}
 .tabnote{margin-top:1rem;font-size:.86rem;color:var(--ink-2);max-width:70ch}
 .tabhead{margin-top:clamp(2rem,4vw,3rem);font-size:1.05rem;font-weight:700}
-.tabhead + .tablewrap{margin-top:.8rem}
+.tabhead + .tablewrap,.tabhead + .rules{margin-top:.8rem}
 .back{margin-top:1.2rem;font-size:.92rem;color:var(--ink-2);max-width:70ch}
 .back a{color:var(--sage-ink);font-weight:600}
 
@@ -379,8 +379,8 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
       <a class="hide-sm" href="#why">Why it matters</a>
       <a href="#strengths">What's different</a>
       <a class="hide-sm" href="#how">How it works</a>
-      <a class="hide-sm" href="#use">Getting started</a>
       <a class="hide-sm" href="#compare">Compared</a>
+      <a class="hide-sm" href="#faq">FAQ</a>
       <a class="nav-cta" href="#install">Install</a>
     </nav>
   </div>
@@ -650,58 +650,6 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
     <div class="shead">
       <div>
         <p class="kicker rv">How it works</p>
-        <h2 class="rv">Four small programs. Each one says pass or fail.</h2>
-      </div>
-      <p class="sub rv">You tell it how your project runs its tests, or it finds out. For bigger work,
-        each step gets one command that proves it. Everything else is a program reading those
-        files.</p>
-    </div>
-
-    <div class="hows two">
-      <div class="how rv" style="--c:var(--clay);--ct:var(--clay-ink)">
-        <p class="n">0 · before every commit</p>
-        <h3><code>qh-check</code> runs your tests before a commit</h3>
-        <p>On every change. It runs your project's tests and remembers the result. Until they've
-          passed, the commit is blocked. Even a quick fix can't go out untested.</p>
-<pre><code>$ qh-check   <span class="c"># runs the declared check, exits with its code</span>
-{…,"command":"npm test","exit":0,"verdict":"passed",…}  <span class="c">→ checks.jsonl, abbreviated</span></code></pre>
-      </div>
-      <div class="how rv" style="--c:var(--sage);--ct:var(--sage-ink)">
-        <p class="n">1 · write down the result</p>
-        <h3><code>adr-verify</code> runs the proof and writes it down</h3>
-        <p>It runs the step's proof command itself, then adds one line: the date, the code version, the
-          result, the command, and its fingerprint. Change the command and earlier lines stop counting.
-          Nobody edits these lines by hand.</p>
-<pre><code>- 2026-09-23 · ac1d286* · exit 0 · `python3 -m unittest …`
-  · acceptance-sha256:b43e2374…ec4405 · ms:52</code></pre>
-      </div>
-      <div class="how rv" style="--c:var(--rose);--ct:var(--rose-ink)">
-        <p class="n">2 · refuse “done” without proof</p>
-        <h3><code>adr-lint</code> says no to an unproven “done”</h3>
-        <p>If a step is marked done but has no passing result behind it, this program refuses it.
-          Everything else it reports is advice, and it tells you which is which.</p>
-<pre><code>README.md: T1 marked done but its Verification Log
-has no exit-0 entry — run adr-verify, don't hand-declare</code></pre>
-      </div>
-      <div class="how rv" style="--c:var(--blue);--ct:var(--blue-ink)">
-        <p class="n">3 · check the test can fail</p>
-        <h3><code>adr-verify --mutant</code> breaks your code on purpose</h3>
-        <p>It breaks the code, runs the test, and puts the code back. If the test still passes, that
-          test isn't protecting anything, and now you know.</p>
-<pre><code>- 2026-09-23 · ac1d286* · mutant killed · exit 1
-  · `duration.py` · from `int(text)` to `0` · why …</code></pre>
-      </div>
-    </div>
-    <p class="stamp rv">Quality Harness is built with itself: its own tests run on every change, and <code>bash scripts/selftest.sh</code> shows today's numbers</p>
-  </div>
-</section>
-
-<!-- ============ UNDER THE HOOD ============ -->
-<section id="convention">
-  <div class="wrap">
-    <div class="shead">
-      <div>
-        <p class="kicker rv">Under the hood</p>
         <h2 class="rv">What gets written down, and who writes it.</h2>
       </div>
       <p class="sub rv">Every check is a plain program reading files in your project. Same files, same
@@ -773,84 +721,29 @@ has no exit-0 entry — run adr-verify, don't hand-declare</code></pre>
       </ol>
     </div>
 
+    <div class="hows two">
+      <div class="how rv" style="--c:var(--clay);--ct:var(--clay-ink)">
+        <p class="n">Before every commit</p>
+        <h3><code>qh-check</code> runs your tests first</h3>
+        <p>On every change, big or small. It runs your project's tests and remembers the result. Until
+          they've passed, the commit is blocked, so even a quick fix can't go out untested.</p>
+<pre><code>$ qh-check   <span class="c"># runs the declared check, exits with its code</span>
+{…,"command":"npm test","exit":0,"verdict":"passed",…}  <span class="c">→ checks.jsonl, abbreviated</span></code></pre>
+      </div>
+      <div class="how rv" style="--c:var(--blue);--ct:var(--blue-ink)">
+        <p class="n">Once in a while</p>
+        <h3><code>adr-verify --mutant</code> checks your tests can fail</h3>
+        <p>It breaks your code on purpose, runs the test, and puts the code back. If the test still
+          passes, that test isn't protecting anything, and now you know.</p>
+<pre><code>- 2026-09-23 · ac1d286* · mutant killed · exit 1
+  · `duration.py` · from `int(text)` to `0` · why …</code></pre>
+      </div>
+    </div>
+
     <p class="afterrules rv">Your files stay yours. The tool only adds lines under two headings,
       <code>## Verification Log</code> and <code>## Mutation Log</code>, and never creates them.
       Nobody, person or AI, edits those lines by hand.</p>
-  </div>
-</section>
-
-<!-- ============ GETTING STARTED ============ -->
-<section id="use" class="alt">
-  <div class="wrap">
-    <div class="shead">
-      <div>
-        <p class="kicker rv">Getting started</p>
-        <h2 class="rv">Six habits that make it work.</h2>
-      </div>
-      <p class="sub rv">The tool is small. These habits are what make it pay off. Here's the short
-        version, in the order you'll meet them.</p>
-    </div>
-
-    <ol class="rules">
-      <li class="rv">
-        <div>
-          <h3>One command, once, at the start</h3>
-          <p>Type it in your main session. It sorts the work for you: a bug goes straight to a fix, a
-            bigger decision gets written down first. Use it for real work, not quick questions.</p>
-<pre><code>/quality-harness:work</code></pre>
-        </div>
-      </li>
-      <li class="rv">
-        <div>
-          <h3>Say how you'll know it works, before you start</h3>
-          <p>Each step gets one command that decides whether it's done. Writing it first is the one
-            extra step, and it's worth it: if you can't say what would prove the work is done, the work
-            isn't clear yet.</p>
-<pre><code>## Acceptance
-python3 -m unittest -v test_duration</code></pre>
-        </div>
-      </li>
-      <li class="rv">
-        <div>
-          <h3>Commit the proof with the change</h3>
-          <p>When the tool adds its line, commit it along with the work. Never edit those lines by hand.
-            If you change the proof command, run it again.</p>
-<pre><code>[adr-verify] WROTE this entry into …/T1.md
-<span class="c"># commit it with the work it evidences</span></code></pre>
-        </div>
-      </li>
-      <li class="rv">
-        <div>
-          <h3>In your first week, break one thing on purpose</h3>
-          <p>Pick the code you'd least like to see break without anyone noticing. The tool breaks it,
-            runs the test, and puts it back. “mutant killed” means your test works. Save the full run
-            for your build pipeline.</p>
-<pre><code>adr-verify T1.md --mutant duration.py \
-  --from 'int(text)' --to '0' \
-  --why 'the test must notice'</code></pre>
-        </div>
-      </li>
-      <li class="rv">
-        <div>
-          <h3><code>UNRUN</code>, <code>PARTIAL</code> and <code>UNPROVEN</code> mean “not checked”</h3>
-          <p>The tool tells you when it couldn't check something, instead of pretending it passed.
-            Treat these as not passed, every time.</p>
-        </div>
-      </li>
-      <li class="rv">
-        <div>
-          <h3>If a commit is blocked, run your tests</h3>
-          <p>Once your project has tests the tool can find, a commit is blocked until they pass.
-            Running <code>qh-check</code> is the whole fix. Prefer a warning? Set
-            <code>"publish": "warn"</code> in <code>.quality-harness.json</code>.</p>
-<pre><code>qh-check
-<span class="c"># your check runs and is recorded</span></code></pre>
-        </div>
-      </li>
-    </ol>
-    <p class="afterrules rv">Lost track? <code>node "$(qh-root)/scripts/work-next.mjs"</code> tells you
-      what's waiting and why. Written decisions are for choices you'd regret undoing; a one-line fix is
-      just a fix. Leave the advanced features alone until you need them.</p>
+    <p class="stamp rv">Quality Harness is built with itself: its own tests run on every change, and <code>bash scripts/selftest.sh</code> shows today's numbers</p>
   </div>
 </section>
 
@@ -970,12 +863,12 @@ python3 -m unittest -v test_duration</code></pre>
   </div>
 </section>
 
-<!-- ============ INSTALL ============ -->
+<!-- ============ GET STARTED ============ -->
 <section id="install" class="alt">
   <div class="wrap">
     <div class="shead">
       <div>
-        <p class="kicker rv">Install</p>
+        <p class="kicker rv">Get started</p>
         <h2 class="rv">Two commands to install. Then work as you normally do.</h2>
       </div>
       <p class="sub rv">Want to see it first? Tutorial 1 takes about ten minutes, with a throwaway
@@ -995,8 +888,8 @@ python3 -m unittest -v test_duration</code></pre>
       <div class="step rv">
         <p class="verb">In your project</p>
         <h3>Start with one command</h3>
-        <p class="t">Type this once in your main session, then ask for work as usual. When the work is
-          done, there's real proof behind it.</p>
+        <p class="t">Type this once in your main session, then ask for work as usual. It sorts the work
+          for you: a bug goes straight to a fix, a bigger decision gets written down first.</p>
 <pre><code><span class="p">/quality-harness:work</span></code></pre>
         <p class="after">That's your first hour. The rest is for problems you may not have yet; the
           onboarding guide says what to skip.</p>
@@ -1013,42 +906,58 @@ python3 -m unittest -v test_duration</code></pre>
         <a class="btn" href="https://github.com/D3-lt/quality-harness/blob/main/docs/INSTALL.md">Full install guide →</a>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- ============ GOOD TO KNOW ============ -->
-<section id="scope">
-  <div class="wrap">
-    <div class="shead">
-      <div>
-        <p class="kicker rv">Good to know</p>
-        <h2 class="rv">Three design choices, and what it costs you.</h2>
-      </div>
-      <p class="sub rv">Each one is a deliberate decision, recorded in the project. The last one is the
-        price.</p>
-    </div>
-    <ul class="nots rv">
-      <li><span><b>Built for Claude Code.</b> The automatic checks run inside Claude Code. Cursor, Codex,
-        Zed and Claude Desktop can run the checks and use a read-only connection (<code>qh-mcp</code>)
-        that tells you when something's off. Saving proof needs a terminal, because only a program that
-        actually ran can report a result.</span></li>
-      <li><span><b>It blocks one thing, on purpose.</b> Once your project has tests the tool can find, a
-        commit is blocked until they pass (ADR-061). A warning the AI shrugs off still gets committed,
-        so this one is a block. Everything else is advice.</span></li>
-      <li><span><b>It has its own format for decisions.</b> Decision records in other formats (MADR,
-        Nygard) are left alone, not judged (ADR-038). New decisions written with
-        <code>/quality-harness:adr-write</code> get the proof lines.</span></li>
-      <li><span><b>The price.</b> More steps: about 2.3 times as many in the project's own measurement,
-        though most of the extra input is cheap, cached reads. You write the proof command yourself; the
-        tool won't guess it. The full “break it on purpose” run takes about forty minutes, so it belongs
-        in your build pipeline. The automatic checks run on every edit, and
-        <code>claude plugin details quality-harness</code> shows how much context it uses.</span></li>
-    </ul>
+    <p class="tabhead rv">Six habits that make it pay off</p>
+    <ol class="rules">
+      <li class="rv">
+        <div>
+          <h3>Say how you'll know it works, before you start</h3>
+          <p>Each step gets one command that decides whether it's done. If you can't say what would
+            prove the work is done, the work isn't clear yet.</p>
+        </div>
+      </li>
+      <li class="rv">
+        <div>
+          <h3>Commit the proof with the change</h3>
+          <p>When the tool adds its line, commit it along with the work. Never edit those lines by hand;
+            if you change the proof command, run it again.</p>
+        </div>
+      </li>
+      <li class="rv">
+        <div>
+          <h3>In your first week, break one thing on purpose</h3>
+          <p>Pick the code you'd least like to see break unnoticed. The tool breaks it, runs the test
+            and puts it back. “mutant killed” means your test works. Leave the full run to your build
+            pipeline.</p>
+        </div>
+      </li>
+      <li class="rv">
+        <div>
+          <h3><code>UNRUN</code>, <code>PARTIAL</code> and <code>UNPROVEN</code> mean “not checked”</h3>
+          <p>The tool tells you when it couldn't check something, instead of pretending it passed.
+            Treat these as not passed, every time.</p>
+        </div>
+      </li>
+      <li class="rv">
+        <div>
+          <h3>If a commit is blocked, run your tests</h3>
+          <p>Running <code>qh-check</code> is the whole fix. Prefer a warning? Set
+            <code>"publish": "warn"</code> in <code>.quality-harness.json</code>.</p>
+        </div>
+      </li>
+      <li class="rv">
+        <div>
+          <h3>Lost track? Ask what's waiting</h3>
+          <p><code>node "$(qh-root)/scripts/work-next.mjs"</code> tells you what's waiting and why.
+            Written decisions are for choices you'd regret undoing; a one-line fix is just a fix.</p>
+        </div>
+      </li>
+    </ol>
   </div>
 </section>
 
 <!-- ============ FAQ ============ -->
-<section id="faq" class="alt">
+<section id="faq">
   <div class="wrap faqgrid">
     <div class="head">
       <p class="kicker rv">Questions</p>
@@ -1065,26 +974,43 @@ python3 -m unittest -v test_duration</code></pre>
           can flag things, but only a program can record a pass.</p>
       </details>
       <details class="rv"><summary>Will it get in my way?</summary>
-        <p>In one place: a commit is blocked until your tests pass, and you can turn that into a
-          warning. Everything else is advice, and it tells you what to do next.</p>
+        <p>In one place, on purpose: once your project has tests the tool can find, a commit is blocked
+          until they pass (ADR-061). A warning the AI shrugs off still gets committed, so this one is a
+          block. You can turn it into a warning with <code>"publish": "warn"</code>. Everything else is
+          advice that tells you what to do next.</p>
       </details>
-      <details class="rv"><summary>Can I use it outside Claude Code?</summary>
-        <p>Yes. The checks are ordinary Python and Node programs. Run them from any terminal, script or
-          build pipeline, with no AI involved.</p>
+      <details class="rv"><summary>What does it cost?</summary>
+        <p>The plugin is free and open source. What it costs is effort. The agent takes more steps:
+          about 2.3 times as many in the project's own measurement, though most of the extra is cheap,
+          cached input. You write the proof command yourself; the tool won't guess it.</p>
+        <p>The full “break it on purpose” run takes about forty minutes, so it belongs in your build
+          pipeline. The automatic checks run on every edit, and <code>claude plugin details
+          quality-harness</code> shows how much context it uses.</p>
+      </details>
+      <details class="rv"><summary>Does it only work in Claude Code?</summary>
+        <p>The automatic checks run inside Claude Code. The checks themselves are ordinary Python and
+          Node programs: run them from any terminal, script or build pipeline, with no AI involved.
+          Cursor, Codex, Zed and Claude Desktop can use a read-only connection (<code>qh-mcp</code>)
+          that tells you when something's off.</p>
+        <p>Saving proof needs a terminal, because only a program that actually ran can report a
+          result.</p>
       </details>
       <details class="rv"><summary>Does it work with my language?</summary>
         <p>Yes. The proof command is whatever you'd normally type: <code>go test ./...</code>,
           <code>pytest -k</code>, <code>npm test</code>. It doesn't guess one for you.</p>
       </details>
-      <details class="rv"><summary>Who makes it, and what does it cost?</summary>
-        <p>Made by <a href="https://github.com/D3-lt">D3.lt</a>, hosted by Atviro Kodo Sprendimai. Free
-          and open source. No account, and nothing leaves your machine. It's one of three tools on the
+      <details class="rv"><summary>What about the decision records I already have?</summary>
+        <p>Records in other formats, such as MADR or Nygard, are left alone, not judged (ADR-038). New
+          decisions written with <code>/quality-harness:adr-write</code> get the proof lines.</p>
+      </details>
+      <details class="rv"><summary>Who makes it?</summary>
+        <p>Made by <a href="https://github.com/D3-lt">D3.lt</a>, hosted by Atviro Kodo Sprendimai. No
+          account, and nothing leaves your machine. It's one of three tools on the
           <a href="https://qamstack.dev/">QAM Stack</a> page; each installs on its own.</p>
       </details>
     </div>
   </div>
 </section>
-
 </main>
 
 <footer>
