@@ -352,7 +352,7 @@ summary::-webkit-details-marker{display:none}
 summary::before{content:"+";font-family:var(--mono);color:var(--sage-ink);font-weight:700;flex:none}
 details[open] summary::before{content:"−"}
 details p{padding:0 1.4rem 1.35rem 3.1rem;color:var(--ink-2)}
-details p + p{padding-top:.8rem}
+details p:not(:last-child){padding-bottom:.75rem}
 
 /* ============ footer ============ */
 footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font-size:.86rem;margin-top:3rem}
@@ -462,7 +462,8 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         <h3>A little more effort, a lot less guessing</h3>
         <ol>
           <li><span>The agent takes more steps: about 2.3 times as many in the project's own
-            measurement. Most of the extra is cheap, cached input.</span></li>
+            measurement. Most of the extra is cheap, cached input, and the other two tools in the
+            stack cut it further: <a href="#tokens">see how</a>.</span></li>
           <li><span>You're asked what would prove the work is done, before it starts.</span></li>
           <li><span>A few lines added to your files. You commit them along with the change.</span></li>
         </ol>
@@ -987,6 +988,19 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
           pipeline. The automatic checks run on every edit, and <code>claude plugin details
           quality-harness</code> shows how much context it uses.</p>
       </details>
+      <details class="rv" id="tokens"><summary>It takes more steps. How do I keep the token cost down?</summary>
+        <p>Pair it with the other two tools in the stack. Quality Harness adds the checking; they make
+          the work around it lighter, from two sides.</p>
+        <p><a href="https://aiagentmemory.dev">AI Agent Memory</a> keeps what you decided, and what you
+          rejected, between sessions. The agent doesn't have to rediscover it, and you don't explain the
+          project again every morning.</p>
+        <p><a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite">MultiPath
+          Read/Write</a> reads and edits many files in one call instead of one call per file. A change
+          across 55 files takes 2 tool calls instead of 110, as long as what it reads comes back in one
+          answer.</p>
+        <p>Each installs on its own. All three are on the <a href="https://qamstack.dev/">QAM Stack</a>
+          page.</p>
+      </details>
       <details class="rv"><summary>Does it only work in Claude Code?</summary>
         <p>The automatic checks run inside Claude Code. The checks themselves are ordinary Python and
           Node programs: run them from any terminal, script or build pipeline, with no AI involved.
@@ -1088,6 +1102,15 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
   var onScroll = function () { hdr.classList.toggle('stuck', window.scrollY > 8); };
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
+})();
+// A link to a collapsed FAQ entry scrolls to it but leaves it shut; open it.
+(function () {
+  var openTarget = function () {
+    var el = location.hash && document.getElementById(location.hash.slice(1));
+    if (el && el.tagName === 'DETAILS') el.open = true;
+  };
+  openTarget();
+  window.addEventListener('hashchange', openTarget);
 })();
 </script>
 </body>
