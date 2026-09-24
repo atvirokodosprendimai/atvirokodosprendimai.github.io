@@ -198,14 +198,12 @@ pre .p{color:#5a7fc4}
 .how{border:1px solid var(--line);border-top:4px solid var(--c);border-radius:var(--r);
   background:var(--panel);box-shadow:var(--shadow);padding:clamp(1.5rem,2.5vw,1.9rem);min-width:0;
   display:flex;flex-direction:column}
-  background:var(--panel);box-shadow:var(--shadow);padding:clamp(1.5rem,2.5vw,1.9rem);min-width:0}
 .how .n{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
 .how h3{font-size:1.1rem;font-weight:700;margin-top:.5rem}
 .how p{margin-top:.6rem;font-size:.92rem;color:var(--ink-2)}
 .how:has(pre) p{margin-bottom:1.1rem}
 .how pre{background:var(--bg-2);border:1px solid var(--line);border-radius:9px;margin-top:auto;
   font-size:.75rem;padding:1rem 1.05rem;white-space:pre-wrap;overflow-wrap:anywhere}
-  font-size:.74rem;white-space:pre-wrap;overflow-wrap:anywhere}
 
 /* ============ the measurement ============ */
 .measure{margin-top:clamp(2rem,4vw,3rem);border:1px solid var(--line);border-left:4px solid var(--sage);
@@ -301,16 +299,25 @@ tr.us td:first-child{border-left:4px solid var(--sage)}
 .tabnote{margin-top:1rem;font-size:.86rem;color:var(--ink-2);max-width:70ch}
 .tabhead{margin-top:clamp(2rem,4vw,3rem);font-size:1.05rem;font-weight:700}
 .tabhead + .tablewrap{margin-top:.8rem}
-.only{margin-top:clamp(2rem,4vw,3rem);border:1px solid var(--line);border-left:4px solid var(--sage);
-  border-radius:var(--r);background:var(--panel);box-shadow:var(--shadow);padding:clamp(1.6rem,3vw,2.2rem)}
-.only .claim{font-family:var(--serif);font-size:clamp(1.15rem,1.8vw,1.4rem);font-weight:600;line-height:1.35;max-width:60ch;margin-top:.6rem}
-.only ol{margin:1.2rem 0 0;padding:0;list-style:none;display:grid;gap:.8rem;counter-reset:only;
-  grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
-.only li{counter-increment:only;display:grid;grid-template-columns:auto 1fr;gap:.7rem;font-size:.92rem;color:var(--ink-2);
-  padding:.9rem 1rem;border:1px solid var(--line);border-radius:10px;background:var(--bg-2)}
-.only li::before{content:counter(only);font-family:var(--mono);font-weight:700;color:var(--sage-ink)}
-.only b{color:var(--ink)}
-.only .note{margin-top:1.1rem;font-size:.9rem;color:var(--ink-2)}
+.back{margin-top:1.2rem;font-size:.92rem;color:var(--ink-2);max-width:70ch}
+.back a{color:var(--sage-ink);font-weight:600}
+
+/* ============ what to expect: two routes and what you will notice ============ */
+.expect{display:grid;gap:1.15rem;margin-top:clamp(2rem,4vw,3rem);
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.exp{border:1px solid var(--line);border-top:4px solid var(--c);border-radius:var(--r);background:var(--panel);
+  box-shadow:var(--shadow);padding:clamp(1.5rem,2.5vw,1.9rem);min-width:0}
+.exp .n{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ct)}
+.exp h3{font-size:1.1rem;font-weight:700;margin-top:.5rem}
+.exp ol{list-style:none;margin:1.1rem 0 0;padding:0;display:grid;gap:.7rem;counter-reset:s}
+.exp li{counter-increment:s;display:grid;grid-template-columns:1.6rem 1fr;gap:.7rem;font-size:.92rem;color:var(--ink-2)}
+.exp li::before{content:counter(s);width:1.6rem;height:1.6rem;border-radius:50%;background:var(--cbg);color:var(--ct);
+  font-family:var(--mono);font-size:.72rem;font-weight:700;display:grid;place-items:center}
+
+/* ============ strengths: what the others leave out ============ */
+.how .else{margin-top:auto;padding-top:.9rem;border-top:1px dashed var(--line);font-size:.84rem;color:var(--ink-3)}
+.how .else b{color:var(--ink-2);font-weight:600}
+.how:has(.else) h3 + p{margin-bottom:1.1rem}
 
 /* ============ install ============ */
 .steps{display:grid;gap:1.15rem;margin-top:clamp(2rem,4vw,3rem);
@@ -368,10 +375,11 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
   <div class="wrap bar">
     <a class="brand" href="https://qamstack.dev/"><span class="dots"><i></i><i></i><i></i></span> QAM&nbsp;Stack <span class="q">/ quality-harness</span></a>
     <nav aria-label="Primary">
+      <a class="hide-sm" href="#expect">What to expect</a>
       <a class="hide-sm" href="#why">Why now</a>
-      <a class="hide-sm" href="#caught">Caught</a>
+      <a href="#strengths">Strengths</a>
       <a class="hide-sm" href="#how">How it works</a>
-      <a href="#use">Use it right</a>
+      <a class="hide-sm" href="#use">Use it right</a>
       <a class="hide-sm" href="#compare">Compared</a>
       <a class="nav-cta" href="#install">Install</a>
     </nav>
@@ -387,13 +395,14 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
       <h1><span class="lead">Quality Harness</span>“Done” is a <em>recorded run</em>, or the check refuses it.</h1>
       <p class="lede">
         A Claude Code plugin with two mechanisms. A <code>commit</code> is refused until your
-        project's own check has passed on the tree. A task backed by a decision record is done only
-        when a tool ran its acceptance command and wrote the exit code, the commit and a digest of
-        what ran into the record. You merge evidence, not summaries.
+        project's check, declared or inferred from your manifest, has passed on the tree. A task
+        backed by a decision record is done only when a tool ran its acceptance command and wrote the
+        exit code, the commit and a digest of what ran into the record. You merge evidence, not
+        summaries.
       </p>
       <div class="cta-row">
         <a class="btn primary" href="#install">Install →</a>
-        <a class="btn" href="#use">How to use it right</a>
+        <a class="btn" href="#strengths">What only this does</a>
       </div>
       <div class="trust">
         <span>Free and open source</span>
@@ -417,6 +426,56 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
   </div>
 </div>
 
+<!-- ============ WHAT TO EXPECT ============ -->
+<section id="expect" class="alt">
+  <div class="wrap">
+    <div class="shead">
+      <div>
+        <p class="kicker rv">What to expect</p>
+        <h2 class="rv">What happens after you install.</h2>
+      </div>
+      <p class="sub rv">Two kinds of request, handled two ways. You do not pick the route:
+        <code>/quality-harness:work</code> classifies the work and routes it. Most days are the first
+        kind.</p>
+    </div>
+
+    <div class="expect">
+      <div class="exp rv" style="--c:var(--sage);--ct:var(--sage-ink);--cbg:var(--sage-bg)">
+        <p class="n">You ask for a fix or a bounded change</p>
+        <h3>Your check runs, then the commit</h3>
+        <ol>
+          <li><span>The agent makes the change, as it always did.</span></li>
+          <li><span><code>qh-check</code> runs your project's check: the one you declared, or the one
+            it inferred from your manifest.</span></li>
+          <li><span><code>git commit</code> is refused until that check has passed on the current tree.
+            No log line, no record; just a commit that cannot skip the check.</span></li>
+        </ol>
+      </div>
+      <div class="exp rv" style="--c:var(--blue);--ct:var(--blue-ink);--cbg:var(--blue-bg)">
+        <p class="n">You ask for a change you would regret reversing</p>
+        <h3>A record first, then evidence per task</h3>
+        <ol>
+          <li><span>The agent writes a decision record. You read it and accept it.</span></li>
+          <li><span>Each task in it gets one acceptance command: the shell line that decides
+            whether that task is done.</span></li>
+          <li><span><code>adr-verify</code> runs it and writes the line into the task file;
+            <code>adr-lint</code> refuses <code>done</code> without it.</span></li>
+        </ol>
+      </div>
+      <div class="exp rv" style="--c:var(--clay);--ct:var(--clay-ink);--cbg:var(--clay-bg)">
+        <p class="n">What you will notice</p>
+        <h3>More asked of you, less taken on trust</h3>
+        <ol>
+          <li><span>More turns: 2.33× on the README's own ablation, most of them cheap cache reads.</span></li>
+          <li><span>Being asked what would prove the work done, before the work.</span></li>
+          <li><span>Lines the tool writes into your files. You commit them with the change they
+            prove.</span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ WHY NOW ============ -->
 <section id="why">
   <div class="wrap">
@@ -430,7 +489,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         wrong, and whether another model can tell. It is the most common way coding agents fail, and
         it is the failure you cannot see from the transcript. A category is now forming around it:
         at least five Claude Code tools exist whose whole pitch is checking the agent's own claim.
-        They are compared below.
+        What sets this one apart is next.
       </p>
     </div>
 
@@ -465,39 +524,54 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
   </div>
 </section>
 
-<!-- ============ WHAT YOU GAIN ============ -->
-<section id="gain" class="alt">
+<!-- ============ STRENGTHS ============ -->
+<section id="strengths" class="alt">
   <div class="wrap">
     <div class="shead">
       <div>
-        <p class="kicker rv">What you gain</p>
-        <h2 class="rv">A “done” you can merge without reading the diff twice.</h2>
+        <p class="kicker rv">What only this does</p>
+        <h2 class="rv">The evidence lives in your repository, and a program refuses “done” without it.</h2>
       </div>
-      <p class="sub rv">Three things change on day one. The third is measured against a baseline,
-        which is the only way a claim like that should be made.</p>
+      <p class="sub rv">Four properties. Each tool in the comparison further down has some of them;
+        none has all four. Read from each tool's own README on 2026-09-24.</p>
     </div>
 
-    <div class="hows">
+    <div class="hows two">
       <div class="how rv" style="--c:var(--sage);--ct:var(--sage-ink)">
-        <p class="n">Evidence, not summaries</p>
-        <h3>Every finished task carries a line a program wrote</h3>
-        <p>Date, commit, exit code, the exact command, and a digest of it. No model wrote any of it.
-          If it says <code>exit 0</code>, a process exited 0. You stop re-running the tests yourself
-          to find out whether the agent did.</p>
+        <p class="n">1 · in your repository</p>
+        <h3>The evidence is a line in your repository</h3>
+        <p>Date, commit, exit code, the exact command, a digest of it. Written by the tool into the
+          task file, committed with the work, readable in a year from any shell. If it says
+          <code>exit 0</code>, a process exited 0. You stop re-running the tests to find out whether
+          the agent did.</p>
+        <p class="else"><b>Elsewhere:</b> a hook's console line, a hosted verdict, or JSON handed back
+          to the agent. None of it stays with the code.</p>
       </div>
       <div class="how rv" style="--c:var(--blue);--ct:var(--blue-ink)">
-        <p class="n">Tests proven able to fail</p>
-        <h3>A green suite that cannot go red is named, not trusted</h3>
-        <p>The mutant run breaks your code on purpose, re-runs the check, restores the file and
-          records whether the test noticed. A test that passes no matter what looks like safety and
-          is not. Now it has a name in the log.</p>
+        <p class="n">2 · bound to the question</p>
+        <h3>A digest ties each line to the command it answers</h3>
+        <p>Every entry carries a SHA-256 of the acceptance command. Change the command and every
+          earlier entry stops counting. Old evidence can never be reused for a new question, and a
+          hand-edited log is visible as one.</p>
+        <p class="else"><b>Elsewhere:</b> a receipt that counts while the session vouches for it. It
+          expires with the session, not with the question.</p>
+      </div>
+      <div class="how rv" style="--c:var(--rose);--ct:var(--rose-ink)">
+        <p class="n">3 · a program refuses done</p>
+        <h3>A lint, not a model, decides whether “done” stands</h3>
+        <p><code>adr-lint</code> reads the task index and the log and fails a <code>done</code> with no
+          exit-0 line behind it. In a session, a Makefile or CI, the same files give the same answer.
+          No model is asked, and none can talk its way past it.</p>
+        <p class="else"><b>Elsewhere:</b> prose asking the model to verify itself, or a reviewer's
+          silence read as a pass.</p>
       </div>
       <div class="how rv" style="--c:var(--clay);--ct:var(--clay-ink)">
-        <p class="n">Decisions where the code lives</p>
-        <h3>The next session reads why, not just what</h3>
-        <p>Why something was built this way sits in a record next to the code, not in a chat log
-          nobody can search six months later. An agent that consults the record before writing a new
-          one stops relitigating what you already decided.</p>
+        <p class="n">4 · the test must fail once</p>
+        <h3>A green test is not trusted until it has gone red</h3>
+        <p><code>adr-verify --mutant</code> breaks the code on purpose, re-runs the check, restores the
+          file and records whether the test noticed. A test that passes no matter what is named in the
+          log instead of counted as safety.</p>
+        <p class="else"><b>Elsewhere:</b> no tool in the comparison asks this question at all.</p>
       </div>
     </div>
 
@@ -511,7 +585,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
           <div class="nums"><span>with<b>0.76</b></span><span>without<b class="zero">0.00</b></span></div>
         </div>
         <div class="mrow">
-          <p class="what">Consults the existing decision corpus before writing a record</p>
+          <p class="what">Consults the existing decision records before writing a new one</p>
           <div class="nums"><span>with<b>1.00</b></span><span>without<b class="zero">0.00</b></span></div>
         </div>
       </div>
@@ -919,26 +993,9 @@ python3 -m unittest -v test_duration</code></pre>
       </table>
     </div>
 
-    <div class="only rv">
-      <p class="kicker">What only this row has</p>
-      <p class="claim">The evidence is a line in your repository, bound to the command by a digest,
-        read by a lint that refuses done, and paired with proof that the test could fail.</p>
-      <ol>
-        <li><span><b>It lives in the repo.</b> Not a hook's console line, not a hosted verdict, not
-          JSON handed back to the agent. A line in the task file, committed with the work, readable
-          in a year.</span></li>
-        <li><span><b>The digest binds it to the command.</b> Change the acceptance command and every
-          earlier entry stops matching. A receipt vouched for by a session expires with the session;
-          this one expires with the question.</span></li>
-        <li><span><b>A program refuses <code>done</code>.</b> <code>adr-lint</code> reads the task
-          index and the log, from any shell or CI, and fails a done with no exit-0 line behind it. No
-          model is asked.</span></li>
-        <li><span><b>The test has to fail once.</b> <code>adr-verify --mutant</code> records whether
-          the check noticed a broken build. None of the tools above asks that question.</span></li>
-      </ol>
-      <p class="note">Read 2026-09-24 from each tool's own README. If one of them ships these, open an
-        issue and this box changes the same day.</p>
-    </div>
+    <p class="back rv">Across both tables, one row keeps the evidence in your repository, binds it to
+      the command by a digest, lets a program refuse done, and proves the test could fail.
+      <a href="#strengths">The four properties, side by side →</a></p>
   </div>
 </section>
 
