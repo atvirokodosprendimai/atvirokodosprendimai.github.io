@@ -448,7 +448,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
           <li><span><code>qh-check</code> runs your project's check: the one you declared, or the one
             it inferred from your manifest.</span></li>
           <li><span><code>git commit</code> is refused until that check has passed on the current tree.
-            No log line, no record; just a commit that cannot skip the check.</span></li>
+            No task file, no verification log; just a commit that cannot skip the check.</span></li>
         </ol>
       </div>
       <div class="exp rv" style="--c:var(--blue);--ct:var(--blue-ink);--cbg:var(--blue-bg)">
@@ -466,7 +466,8 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         <p class="n">What you will notice</p>
         <h3>More asked of you, less taken on trust</h3>
         <ol>
-          <li><span>More turns: 2.33× on the README's own ablation, most of them cheap cache reads.</span></li>
+          <li><span>More turns: 2.33× on the README's own ablation. Most of the extra input is cache
+            reads, billed well below fresh tokens.</span></li>
           <li><span>Being asked what would prove the work done, before the work.</span></li>
           <li><span>Lines the tool writes into your files. You commit them with the change they
             prove.</span></li>
@@ -532,8 +533,8 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         <p class="kicker rv">What only this does</p>
         <h2 class="rv">The evidence lives in your repository, and a program refuses “done” without it.</h2>
       </div>
-      <p class="sub rv">Four properties. Each tool in the comparison further down has some of them;
-        none has all four. Read from each tool's own README on 2026-09-24.</p>
+      <p class="sub rv">Four properties. Some tools in the comparison further down have one or two
+        of them; none has all four. Read from each tool's own README on 2026-09-24.</p>
     </div>
 
     <div class="hows two">
@@ -544,8 +545,8 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
           task file, committed with the work, readable in a year from any shell. If it says
           <code>exit 0</code>, a process exited 0. You stop re-running the tests to find out whether
           the agent did.</p>
-        <p class="else"><b>Elsewhere:</b> a hook's console line, a hosted verdict, or JSON handed back
-          to the agent. None of it stays with the code.</p>
+        <p class="else"><b>Elsewhere:</b> a hook's console line, a hosted verdict, JSON handed back to
+          the agent, or a receipt in the checkout that stops counting when the session ends.</p>
       </div>
       <div class="how rv" style="--c:var(--blue);--ct:var(--blue-ink)">
         <p class="n">2 · bound to the question</p>
@@ -562,8 +563,9 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         <p><code>adr-lint</code> reads the task index and the log and fails a <code>done</code> with no
           exit-0 line behind it. In a session, a Makefile or CI, the same files give the same answer.
           No model is asked, and none can talk its way past it.</p>
-        <p class="else"><b>Elsewhere:</b> prose asking the model to verify itself, or a reviewer's
-          silence read as a pass.</p>
+        <p class="else"><b>Elsewhere:</b> claimcheck blocks a turn whose transcript contradicts the
+          agent's message; some tools refuse a commit until tests ran, as this one does. None refuses a
+          <em>done</em> written into the repository, when CI reads it a week later.</p>
       </div>
       <div class="how rv" style="--c:var(--clay);--ct:var(--clay-ink)">
         <p class="n">4 · the test must fail once</p>
@@ -571,7 +573,8 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         <p><code>adr-verify --mutant</code> breaks the code on purpose, re-runs the check, restores the
           file and records whether the test noticed. A test that passes no matter what is named in the
           log instead of counted as safety.</p>
-        <p class="else"><b>Elsewhere:</b> no tool in the comparison asks this question at all.</p>
+        <p class="else"><b>Elsewhere:</b> red-first is a step the model is told to follow. No tool in
+          the comparison breaks the finished code and records whether the test noticed.</p>
       </div>
     </div>
 
@@ -682,7 +685,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
           <code>commit</code> or <code>push</code> is refused. A bug fix with no record still cannot
           be published unchecked.</p>
 <pre><code>$ qh-check   <span class="c"># runs the declared check, exits with its code</span>
-{"command":"npm test","exit":0,"verdict":"passed", …}  <span class="c">→ checks.jsonl</span></code></pre>
+{…,"command":"npm test","exit":0,"verdict":"passed",…}  <span class="c">→ checks.jsonl, abbreviated</span></code></pre>
       </div>
       <div class="how rv" style="--c:var(--sage);--ct:var(--sage-ink)">
         <p class="n">1 · record the run</p>
@@ -987,7 +990,8 @@ python3 -m unittest -v test_duration</code></pre>
             <td>The nearest neighbour. Gate skills run typecheck, lint and tests; a hook refuses
               <code>git commit</code> until they have. “A file written by hand is not evidence.”</td>
             <td>A receipt in the checkout that counts while a skill call in the session vouches for
-              it. No digest of the command; no check that a test can fail.</td>
+              it. No digest of the command; red-first is a workflow step, and nothing breaks the
+              finished code to check a test can fail.</td>
           </tr>
         </tbody>
       </table>
@@ -1070,8 +1074,9 @@ python3 -m unittest -v test_duration</code></pre>
       <li><span><b>It knows its own record shape.</b> A MADR or Nygard file is reported as
         <code>not-recognised</code> and left alone (ADR-038). Bring new decisions to
         <code>/quality-harness:adr-write</code>; your old corpus is not judged.</span></li>
-      <li><span><b>The price.</b> More turns: 2.33× on the README's own ablation, most of them cache
-        reads. You write the acceptance command yourself; the tool will not guess it. The full
+      <li><span><b>The price.</b> More turns: 2.33× on the README's own ablation, though most of the
+        extra input is cache reads, billed well below fresh tokens.
+        You write the acceptance command yourself; the tool will not guess it. The full
         mutation campaign is a CI and release job, about forty minutes on the plugin's own repository.
         Hooks run on every edit and start a Node process each time. <code>claude plugin details
         quality-harness</code> prints the context cost of the version you have.</span></li>
