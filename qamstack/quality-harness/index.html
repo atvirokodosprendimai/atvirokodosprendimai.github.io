@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quality Harness: "done" is a recorded run, or it is refused</title>
+<meta name="description" content="A Claude Code plugin where a task is done only when a tool ran its check and wrote the exit code and a digest into the record. Why agents' own status reports cannot be trusted, what you gain, and the six habits that make it work.">
+<link rel="canonical" href="https://qamstack.dev/quality-harness/">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#faf9f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16161a" media="(prefers-color-scheme: dark)">
+<meta property="og:site_name" content="Atviro Kodo Sprendimai">
+<meta property="og:title" content="Quality Harness: “done” is a recorded run, or it is refused">
+<meta property="og:description" content="Your agent says done. The message looks the same whether it checked or not. Quality Harness runs the check itself, writes the evidence into the record, and refuses a bare claim.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://qamstack.dev/quality-harness/">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Quality Harness: “done” is a recorded run, or it is refused">
+<meta name="twitter:description" content="A task marked done without a tool-written run fails the check. Why that matters now, what you gain, and how to use it right.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============ tokens: the QAM Stack page's, verbatim ============ */
+:root{
+  --bg:#faf9f5; --bg-2:#f3f1ea; --panel:#ffffff; --panel-2:#f7f5ef;
+  --line:#e6e2d7; --line-2:#d5d0c1;
+  --ink:#22222a; --ink-2:#5c5f6b; --ink-3:#686b79;
+  --sage:#7fb69a;      --sage-bg:#e8f2ec;
+  --blue:#8aa9dd;      --blue-bg:#e9eefa;
+  --clay:#dd9a72;      --clay-bg:#faeee5;
+  --rose:#d98a8a;      --rose-bg:#faecec;
+  --sage-ink:#569776; --blue-ink:#5f89d0; --clay-ink:#cf723a; --rose-ink:#d06d6d;
+  --ct:var(--ink);
+  --accent:var(--sage);
+  --shadow:0 1px 2px rgba(40,35,25,.04), 0 12px 28px -18px rgba(40,35,25,.22);
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16161a; --bg-2:#1c1c21; --panel:#1e1e24; --panel-2:#232329;
+    --line:#2e2e36; --line-2:#3d3d47;
+    --ink:#eeece6; --ink-2:#adaeb8; --ink-3:#8b8d99;
+    --sage:#8cc7aa;   --sage-bg:#1e2b25;
+    --blue:#9bb6e8;   --blue-bg:#1e2432;
+    --clay:#e6a982;   --clay-bg:#2e241d;
+    --rose:#e09a9a;   --rose-bg:#2e1f1f;
+    --sage-ink:var(--sage); --blue-ink:var(--blue);
+    --clay-ink:var(--clay); --rose-ink:var(--rose);
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 14px 30px -20px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16161a; --bg-2:#1c1c21; --panel:#1e1e24; --panel-2:#232329;
+  --line:#2e2e36; --line-2:#3d3d47;
+  --ink:#eeece6; --ink-2:#adaeb8; --ink-3:#8b8d99;
+  --sage:#8cc7aa;   --sage-bg:#1e2b25;
+  --blue:#9bb6e8;   --blue-bg:#1e2432;
+  --clay:#e6a982;   --clay-bg:#2e241d;
+  --rose:#e09a9a;   --rose-bg:#2e1f1f;
+  --sage-ink:var(--sage); --blue-ink:var(--blue);
+  --clay-ink:var(--clay); --rose-ink:var(--rose);
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 14px 30px -20px rgba(0,0,0,.7);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:17.5px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+h1,h2,h3,h4{margin:0;line-height:1.18;letter-spacing:-.015em;text-wrap:balance}
+p{margin:0}
+code{font-family:var(--mono);font-size:.88em;background:var(--bg-2);
+  padding:.1em .35em;border-radius:4px;border:1px solid var(--line)}
+.wrap{width:min(1180px,100% - clamp(1.5rem,5vw,4rem));margin-inline:auto}
+.skip{position:absolute;left:-9999px;top:0;z-index:100;background:var(--panel);
+  padding:.75rem 1.25rem;border:1px solid var(--line-2);border-radius:0 0 var(--r) 0}
+.skip:focus{left:0}
+:where(a,button,summary,[tabindex]):focus-visible{outline:2px solid var(--accent);
+  outline-offset:3px;border-radius:6px}
+
+/* ============ header ============ */
+header{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+  background:color-mix(in srgb,var(--bg) 85%,transparent);
+  border-bottom:1px solid transparent;transition:border-color .3s}
+header.stuck{border-bottom-color:var(--line)}
+.bar{display:flex;align-items:center;gap:1.25rem;height:62px}
+.brand{display:flex;align-items:center;gap:.55rem;font-weight:700;letter-spacing:-.02em;
+  font-size:1.02rem;text-decoration:none;margin-right:auto;white-space:nowrap}
+.dots{display:flex;gap:3px}
+.dots i{width:8px;height:8px;border-radius:2px;display:block}
+.dots i:nth-child(1){background:var(--sage)}
+.dots i:nth-child(2){background:var(--blue)}
+.dots i:nth-child(3){background:var(--clay)}
+.brand .q{font-family:var(--mono);color:var(--ink-3);font-weight:500;font-size:.9rem;margin-left:.2rem}
+nav{display:flex;gap:1.4rem;align-items:center}
+nav a{color:var(--ink-2);text-decoration:none;font-size:.89rem;font-weight:500;transition:color .18s}
+nav a:hover{color:var(--ink)}
+.nav-cta{color:var(--ink)!important;background:var(--sage-bg);border:1px solid var(--sage);
+  border-radius:999px;padding:.38rem 1rem;font-weight:600}
+@media (max-width:860px){nav .hide-sm{display:none}}
+@media (max-width:520px){.brand .q{display:none}nav{gap:1rem}}
+
+/* ============ buttons ============ */
+.btn{display:inline-flex;align-items:center;gap:.5rem;text-decoration:none;font-weight:600;
+  font-size:.93rem;padding:.72rem 1.35rem;border-radius:10px;border:1px solid var(--line-2);
+  background:var(--panel);color:var(--ink);cursor:pointer;
+  transition:transform .16s,border-color .16s,background .16s}
+.btn:hover{transform:translateY(-1px);border-color:var(--accent)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.primary:hover{background:var(--sage);border-color:var(--sage);color:#12241b}
+@media (prefers-reduced-motion:reduce){.btn:hover{transform:none}}
+
+/* ============ hero ============ */
+.hero{padding:clamp(3rem,7vw,6rem) 0 clamp(2.5rem,5vw,4.5rem);
+  background:linear-gradient(175deg,var(--sage-bg) 0%,transparent 55%);
+  border-bottom:1px solid var(--line)}
+.herogrid{display:grid;gap:clamp(2rem,4vw,3.5rem);align-items:center}
+@media (min-width:1000px){.herogrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+h1{font-family:var(--serif);font-size:clamp(1.9rem,3.8vw,2.8rem);font-weight:600;
+  margin:1.3rem 0 0;letter-spacing:-.02em;text-wrap:balance}
+h1 .lead{display:block;font-family:var(--mono);font-size:.24em;font-weight:500;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:.9rem}
+h1 em{font-style:normal;color:var(--sage-ink);
+  background:linear-gradient(180deg,transparent 46%,var(--sage-bg) 46%,var(--sage-bg) 92%,transparent 92%);
+  -webkit-box-decoration-break:clone;box-decoration-break:clone}
+.lede{margin-top:1.2rem;font-size:1.08rem;color:var(--ink-2);max-width:52ch}
+.cta-row{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.8rem;align-items:center}
+.trust{display:flex;flex-wrap:wrap;gap:.4rem 1.5rem;margin-top:2rem;font-size:.82rem;
+  color:var(--ink-3);font-family:var(--mono)}
+.trust span{display:inline-flex;align-items:center;gap:.4rem}
+.trust span::before{content:"✓";color:var(--sage)}
+
+/* The evidence line, shown rather than described. A real row from Tutorial 1,
+   run 2026-09-23; the sha is the throwaway repository's and the digest is the
+   fence's. */
+.heroviz{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);
+  box-shadow:var(--shadow);overflow:hidden;min-width:0}
+.heroviz .cap{display:flex;align-items:center;gap:.45rem;padding:.6rem .9rem;
+  border-bottom:1px solid var(--line);background:var(--panel-2);
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3)}
+.heroviz .cap i{width:9px;height:9px;border-radius:50%;background:var(--line-2);display:block}
+.heroviz pre{font-size:.78rem;padding:1.4rem 1.4rem;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
+.heroviz .ok{color:var(--sage-ink);font-weight:600}
+.heroviz .bad{color:var(--rose-ink);font-weight:600}
+
+/* ============ sections ============ */
+section{padding:clamp(3.5rem,7vw,6.5rem) 0}
+.alt{background:var(--bg-2);border-block:1px solid var(--line)}
+.kicker{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+h2{font-family:var(--serif);font-size:clamp(1.6rem,3.4vw,2.15rem);font-weight:600;
+  margin-top:.7rem;max-width:24ch}
+.sub{margin-top:.9rem;color:var(--ink-2);max-width:60ch}
+.shead{display:grid;gap:.9rem}
+@media (min-width:1000px){
+  .shead{grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    gap:clamp(2rem,5vw,4.5rem);align-items:end}
+  .shead .sub{margin-top:0;padding-bottom:.4rem}
+}
+
+/* ============ code ============ */
+pre{margin:0;padding:1rem 1.1rem;overflow-x:auto;font-family:var(--mono);
+  font-size:.775rem;line-height:1.72;color:var(--ink-2);tab-size:2}
+pre code{background:none;border:0;padding:0;font-size:inherit}
+pre .c{color:var(--ink-3)}
+pre .k{color:var(--ink);font-weight:600}
+pre .p{color:#5a7fc4}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) pre .p{color:#9db6e8}}
+:root[data-theme="dark"] pre .p{color:#9db6e8}
+
+/* ============ the literature: three figures ============ */
+.stats{display:grid;gap:1.15rem;margin-top:clamp(2rem,4vw,3rem);
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
+.stat{border:1px solid var(--line);border-top:4px solid var(--c);border-radius:var(--r);
+  background:var(--panel);box-shadow:var(--shadow);padding:clamp(1.6rem,3vw,2.1rem);min-width:0}
+.stat .big{font-family:var(--mono);font-weight:700;letter-spacing:-.04em;line-height:1;
+  font-size:clamp(2rem,4.5vw,2.9rem);color:var(--ct)}
+.stat .cap{margin-top:.9rem;font-size:.95rem;color:var(--ink)}
+.stat .mean{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--line);
+  font-size:.86rem;color:var(--ink-2)}
+.stat .mean a{color:var(--ink-2)}
+@supports (grid-template-rows: subgrid){
+  .stats{grid-template-rows:repeat(3,auto)}
+  .stat{display:grid;grid-template-rows:subgrid;grid-row:span 3}
+  .stat .mean{margin-top:0}
+}
+
+/* ============ cards: what you gain, how it works ============ */
+.hows{display:grid;gap:1.15rem;margin-top:clamp(2rem,4vw,3rem);
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr))}
+.hows.two{grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr))}
+.how{border:1px solid var(--line);border-top:4px solid var(--c);border-radius:var(--r);
+  background:var(--panel);box-shadow:var(--shadow);padding:clamp(1.5rem,2.5vw,1.9rem);min-width:0;
+  display:flex;flex-direction:column}
+  background:var(--panel);box-shadow:var(--shadow);padding:clamp(1.5rem,2.5vw,1.9rem);min-width:0}
+.how .n{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.how h3{font-size:1.1rem;font-weight:700;margin-top:.5rem}
+.how p{margin-top:.6rem;font-size:.92rem;color:var(--ink-2)}
+.how:has(pre) p{margin-bottom:1.1rem}
+.how pre{background:var(--bg-2);border:1px solid var(--line);border-radius:9px;margin-top:auto;
+  font-size:.75rem;padding:1rem 1.05rem;white-space:pre-wrap;overflow-wrap:anywhere}
+  font-size:.74rem;white-space:pre-wrap;overflow-wrap:anywhere}
+
+/* ============ the measurement ============ */
+.measure{margin-top:clamp(2rem,4vw,3rem);border:1px solid var(--line);border-left:4px solid var(--sage);
+  border-radius:var(--r);background:var(--panel);box-shadow:var(--shadow);padding:clamp(1.6rem,3vw,2.2rem)}
+.measure .claim{font-family:var(--serif);font-size:clamp(1.15rem,1.8vw,1.4rem);font-weight:600;line-height:1.35;max-width:60ch;margin-top:.6rem}
+.mgrid{display:grid;gap:1rem;margin-top:1.4rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+.mrow{border:1px solid var(--line);border-radius:10px;background:var(--bg-2);padding:1rem 1.1rem;min-width:0}
+.mrow .what{font-size:.92rem;color:var(--ink)}
+.mrow .nums{display:flex;gap:1.4rem;margin-top:.7rem;font-family:var(--mono);font-size:.8rem;color:var(--ink-3)}
+.mrow .nums b{display:block;font-size:1.5rem;letter-spacing:-.03em;color:var(--sage-ink);line-height:1.1}
+.mrow .nums b.zero{color:var(--ink-3)}
+.measure .note{margin-top:1.2rem;font-size:.95rem;color:var(--ink-2)}
+
+/* ============ the convention: a flow, then the line taken apart ============ */
+.flow{list-style:none;padding:0;margin:clamp(2rem,4vw,3rem) 0 0;display:grid;gap:1.1rem}
+@media (min-width:1000px){.flow{grid-template-columns:repeat(5,minmax(0,1fr));gap:2rem}}
+.flow li{position:relative;min-width:0}
+.node{border:1px solid var(--line);border-top:4px solid var(--c);border-radius:var(--r);
+  background:var(--panel);box-shadow:var(--shadow);padding:1.2rem 1.15rem;display:flex;flex-direction:column;gap:.45rem}
+.node .who{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ct)}
+.node .what{font-weight:700;font-size:1rem;line-height:1.3}
+.node .det{font-size:.86rem;color:var(--ink-2)}
+.node > code{font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;margin-top:auto}
+.node .pills{display:grid;gap:.4rem;margin-top:.2rem}
+.node .pill{font-family:var(--mono);font-size:.74rem;padding:.35rem .6rem;border-radius:8px;border:1px solid var(--line);
+  background:var(--pbg);color:var(--ink)}
+.node .pill small{display:block;font-family:var(--sans);font-size:.78rem;color:var(--ink-2);margin-top:.15rem}
+.flow li:not(:last-child)::after{content:"↓";display:block;text-align:center;font-family:var(--mono);font-weight:700;
+  color:var(--ink-3);margin-top:.5rem}
+@media (min-width:1000px){
+  .node{height:100%}
+  .flow li:not(:last-child)::after{content:"→";position:absolute;top:50%;right:-1.55rem;transform:translateY(-50%);
+    margin:0;font-size:1.1rem}
+}
+.flowkey{margin-top:1.1rem;display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;font-family:var(--mono);font-size:.74rem;color:var(--ink-3)}
+.flowkey span{display:inline-flex;align-items:center;gap:.45rem}
+.flowkey i{width:10px;height:10px;border-radius:3px;background:var(--c);display:block}
+
+/* The one line, taken apart. Tokens in the line carry a small index; the parts
+   list below repeats the index in the same colour, so the eye pairs them without
+   leader lines, which do not survive a phone width. */
+.anat{margin-top:clamp(2rem,4vw,3rem);border:1px solid var(--line);border-radius:var(--r);background:var(--panel);
+  box-shadow:var(--shadow);overflow:hidden}
+.anat .cap{display:flex;align-items:center;gap:.45rem;padding:.6rem .9rem;border-bottom:1px solid var(--line);
+  background:var(--panel-2);font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.anat .cap i{width:9px;height:9px;border-radius:50%;background:var(--line-2);display:block}
+.anat pre{font-size:.84rem;padding:1.4rem 1.4rem 1.2rem;line-height:2.1;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ink);
+  border-bottom:1px solid var(--line)}
+.anat pre b{font-weight:600;padding:.12em .4em;border-radius:5px;background:var(--fbg,var(--bg-2));
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--fc,var(--line-2)) 45%,transparent)}
+.anat pre sup{font-family:var(--mono);font-size:.62em;font-weight:700;color:var(--fc,var(--ink-3));margin-left:.25em;vertical-align:.7em}
+.parts{list-style:none;margin:0;padding:.4rem 1.4rem .6rem;display:grid}
+.parts li{display:grid;grid-template-columns:1.6rem minmax(0,15rem) minmax(0,1fr);gap:.9rem;align-items:baseline;
+  padding:.75rem 0;border-top:1px dashed var(--line);font-size:.92rem;color:var(--ink-2)}
+.parts li:first-child{border-top:0}
+.parts li::before{content:attr(data-n);font-family:var(--mono);font-size:.74rem;font-weight:700;color:var(--fc)}
+.parts li > code{background:var(--fbg);border-color:transparent;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;max-width:100%}
+.parts b{color:var(--ink);font-weight:600}
+@media (max-width:640px){
+  .parts li{grid-template-columns:1.6rem minmax(0,1fr);row-gap:.3rem}
+  .parts li > code{grid-column:2}
+  .parts li > span{grid-column:2}
+}
+
+/* ============ use it right ============ */
+.rules{list-style:none;padding:0;margin:clamp(2rem,4vw,3rem) 0 0;display:grid;gap:1.15rem;counter-reset:rule;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))}
+.rules li{counter-increment:rule;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);
+  box-shadow:var(--shadow);padding:clamp(1.5rem,2.5vw,1.9rem);display:grid;grid-template-columns:auto 1fr;gap:1rem;min-width:0}
+.rules li::before{content:counter(rule,decimal-leading-zero);font-family:var(--mono);font-weight:700;
+  font-size:.9rem;color:var(--sage-ink);padding-top:.15rem}
+.rules li > div{display:flex;flex-direction:column;min-width:0}
+.rules h3{font-size:1.1rem;font-weight:700}
+.rules p{margin-top:.6rem;font-size:.92rem;color:var(--ink-2)}
+.rules li:has(pre) p{margin-bottom:1.1rem}
+.rules pre{background:var(--bg-2);border:1px solid var(--line);border-radius:9px;margin-top:auto;
+  font-size:.75rem;padding:1rem 1.05rem;white-space:pre-wrap;overflow-wrap:anywhere}
+.afterrules{margin-top:1.5rem;font-size:.92rem;color:var(--ink-2);max-width:78ch}
+
+/* ============ comparison table ============ */
+.tablewrap{margin-top:clamp(2rem,4vw,3rem);overflow-x:auto;border:1px solid var(--line);
+  border-radius:var(--r);background:var(--panel);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:680px}
+th,td{text-align:left;vertical-align:top;padding:.85rem 1rem;border-bottom:1px solid var(--line)}
+th{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-3);background:var(--panel-2);font-weight:600}
+tbody tr:last-child td{border-bottom:0}
+td .tool{font-weight:700;white-space:nowrap}
+td .yes{color:var(--sage-ink);font-weight:700}
+td .no{color:var(--ink-3)}
+tr.us td{background:var(--sage-bg)}
+tr.us td:first-child{border-left:4px solid var(--sage)}
+.tabnote{margin-top:1rem;font-size:.86rem;color:var(--ink-2);max-width:70ch}
+.tabhead{margin-top:clamp(2rem,4vw,3rem);font-size:1.05rem;font-weight:700}
+.tabhead + .tablewrap{margin-top:.8rem}
+.only{margin-top:clamp(2rem,4vw,3rem);border:1px solid var(--line);border-left:4px solid var(--sage);
+  border-radius:var(--r);background:var(--panel);box-shadow:var(--shadow);padding:clamp(1.6rem,3vw,2.2rem)}
+.only .claim{font-family:var(--serif);font-size:clamp(1.15rem,1.8vw,1.4rem);font-weight:600;line-height:1.35;max-width:60ch;margin-top:.6rem}
+.only ol{margin:1.2rem 0 0;padding:0;list-style:none;display:grid;gap:.8rem;counter-reset:only;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+.only li{counter-increment:only;display:grid;grid-template-columns:auto 1fr;gap:.7rem;font-size:.92rem;color:var(--ink-2);
+  padding:.9rem 1rem;border:1px solid var(--line);border-radius:10px;background:var(--bg-2)}
+.only li::before{content:counter(only);font-family:var(--mono);font-weight:700;color:var(--sage-ink)}
+.only b{color:var(--ink)}
+.only .note{margin-top:1.1rem;font-size:.9rem;color:var(--ink-2)}
+
+/* ============ install ============ */
+.steps{display:grid;gap:1.15rem;margin-top:clamp(2rem,4vw,3rem);
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.step{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);
+  padding:clamp(1.5rem,2.5vw,1.9rem);box-shadow:var(--shadow);display:flex;flex-direction:column;min-width:0}
+.step .verb{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.step h3{font-size:1.1rem;font-weight:700;margin-top:.5rem}
+.step .t{margin-top:.55rem;font-size:.88rem;color:var(--ink-2);margin-bottom:1.1rem}
+.step pre{background:var(--bg-2);border:1px solid var(--line);border-radius:9px;
+  margin-top:auto;font-size:.75rem;padding:1rem 1.05rem;white-space:pre-wrap;overflow-wrap:anywhere}
+.step .btn{margin-top:1.1rem;justify-content:center;font-size:.86rem;padding:.55rem 1rem}
+.step .after{margin-top:1rem;font-size:.85rem;color:var(--ink-2)}
+
+/* ============ scope ============ */
+.nots{list-style:none;padding:0;margin:clamp(2rem,4vw,3rem) 0 0;display:grid;gap:.9rem;max-width:80ch}
+.nots li{display:grid;grid-template-columns:auto 1fr;gap:.8rem;align-items:baseline;color:var(--ink-2)}
+.nots li::before{content:"·";color:var(--clay-ink);font-family:var(--mono);font-weight:700}
+.nots b{color:var(--ink)}
+
+/* ============ faq ============ */
+.faqgrid{display:grid;gap:1.75rem}
+@media (min-width:1000px){
+  .faqgrid{grid-template-columns:minmax(0,.8fr) minmax(0,1.7fr);gap:clamp(3rem,6vw,5.5rem);align-items:start}
+  .faqgrid .head{position:sticky;top:90px}
+}
+.faq{display:grid;gap:.55rem}
+details{border:1px solid var(--line);border-radius:11px;background:var(--panel);overflow:hidden}
+summary{cursor:pointer;padding:1.15rem 1.4rem;font-weight:600;font-size:1.02rem;
+  list-style:none;display:flex;align-items:center;gap:.85rem}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"+";font-family:var(--mono);color:var(--sage-ink);font-weight:700;flex:none}
+details[open] summary::before{content:"−"}
+details p{padding:0 1.4rem 1.35rem 3.1rem;color:var(--ink-2)}
+details p + p{padding-top:.8rem}
+
+/* ============ footer ============ */
+footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font-size:.86rem;margin-top:3rem}
+.foot{display:flex;flex-wrap:wrap;gap:1rem 1.5rem;align-items:center}
+.foot a{text-decoration:none;color:var(--ink-2)}
+.foot a:hover{color:var(--ink)}
+.foot .sp{margin-left:auto}
+.stamp{margin-top:1.5rem;font-size:.8rem;color:var(--ink-3);font-family:var(--mono)}
+
+/* ============ reveal ============ */
+.rv{opacity:0;transform:translateY(12px);transition:opacity .5s ease,transform .5s ease}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header id="hdr">
+  <div class="wrap bar">
+    <a class="brand" href="https://qamstack.dev/"><span class="dots"><i></i><i></i><i></i></span> QAM&nbsp;Stack <span class="q">/ quality-harness</span></a>
+    <nav aria-label="Primary">
+      <a class="hide-sm" href="#why">Why now</a>
+      <a class="hide-sm" href="#caught">Caught</a>
+      <a class="hide-sm" href="#how">How it works</a>
+      <a href="#use">Use it right</a>
+      <a class="hide-sm" href="#compare">Compared</a>
+      <a class="nav-cta" href="#install">Install</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="wrap herogrid">
+    <div>
+      <h1><span class="lead">Quality Harness</span>“Done” is a <em>recorded run</em>, or the check refuses it.</h1>
+      <p class="lede">
+        A Claude Code plugin with two mechanisms. A <code>commit</code> is refused until your
+        project's own check has passed on the tree. A task backed by a decision record is done only
+        when a tool ran its acceptance command and wrote the exit code, the commit and a digest of
+        what ran into the record. You merge evidence, not summaries.
+      </p>
+      <div class="cta-row">
+        <a class="btn primary" href="#install">Install →</a>
+        <a class="btn" href="#use">How to use it right</a>
+      </div>
+      <div class="trust">
+        <span>Free and open source</span>
+        <span>The checks are ordinary programs</span>
+        <span>Runs in any shell or CI</span>
+        <span>Nothing leaves your machine</span>
+      </div>
+    </div>
+
+    <div class="heroviz rv" aria-hidden="true">
+      <div class="cap"><i></i> the line that is the whole product</div>
+<pre><code><span class="k">$</span> adr-verify docs/adr/ADR-001-parse-durations/tasks/T1-seconds.md
+<span class="ok">[adr-verify] WROTE this entry into …/T1-seconds.md's ## Verification Log</span>
+- 2026-09-23 · ac1d286* · exit 0 · `python3 -m unittest -v test_duration …`
+  · acceptance-sha256:b43e2374…ec4405 · ms:52
+
+<span class="k">$</span> adr-lint docs/adr/ADR-001-parse-durations.md
+<span class="bad">README.md: T2 marked done but its Verification Log has no exit-0 entry
+— run adr-verify, don't hand-declare</span></code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- ============ WHY NOW ============ -->
+<section id="why">
+  <div class="wrap">
+    <div class="shead">
+      <div>
+        <p class="kicker rv">Why now</p>
+        <h2 class="rv">Your agent says “done”. The message looks the same whether it checked or not.</h2>
+      </div>
+      <p class="sub rv">
+        Every coding agent reports its own status. The research measured how often that report is
+        wrong, and whether another model can tell. It is the most common way coding agents fail, and
+        it is the failure you cannot see from the transcript. A category is now forming around it:
+        at least five Claude Code tools exist whose whole pitch is checking the agent's own claim.
+        They are compared below.
+      </p>
+    </div>
+
+    <div class="stats">
+      <div class="stat rv" style="--c:var(--rose);--ct:var(--rose-ink)">
+        <p class="big">75.8%</p>
+        <p class="cap">Of failures among self-assessing coding-agent trajectories were <em>false
+          success</em>: the agent said done, the environment said otherwise.</p>
+        <p class="mean">No LLM judge in the study caught it reliably; none of five exceeded
+          AUROC 0.65. <a href="https://arxiv.org/abs/2606.09863">From Confident Closing to Silent
+          Failure</a>, arXiv 2606.09863, June 2026.</p>
+      </div>
+      <div class="stat rv" style="--c:var(--clay);--ct:var(--clay-ink)">
+        <p class="big">4.8–9.3×</p>
+        <p class="cap">How far LLM operators overstated their own success when every proposal
+          received an exact outcome.</p>
+        <p class="mean">“Agent self-reports should therefore be treated as claims to verify against
+          the environment, not as evidence of their own reliability.” <a
+          href="https://arxiv.org/abs/2609.00652">Self-Reports Are Not Verification</a>, arXiv
+          2609.00652, 1 September 2026.</p>
+      </div>
+      <div class="stat rv" style="--c:var(--blue);--ct:var(--blue-ink)">
+        <p class="big">22.58%</p>
+        <p class="cap">Of misalignment episodes in 20,574 real sessions were inaccurate
+          self-reporting, and that share is rising while the others fall.</p>
+        <p class="mean">91.49% of visible resolutions needed the developer to step in. <a
+          href="https://arxiv.org/abs/2605.29442">How Coding Agents Fail Their Users</a>, arXiv
+          2605.29442 v2, 31 August 2026.</p>
+      </div>
+    </div>
+    <p class="stamp rv">figures as published · retrieved 2026-09-23 · the full reading list is in the repository under <code>docs/research/</code></p>
+  </div>
+</section>
+
+<!-- ============ WHAT YOU GAIN ============ -->
+<section id="gain" class="alt">
+  <div class="wrap">
+    <div class="shead">
+      <div>
+        <p class="kicker rv">What you gain</p>
+        <h2 class="rv">A “done” you can merge without reading the diff twice.</h2>
+      </div>
+      <p class="sub rv">Three things change on day one. The third is measured against a baseline,
+        which is the only way a claim like that should be made.</p>
+    </div>
+
+    <div class="hows">
+      <div class="how rv" style="--c:var(--sage);--ct:var(--sage-ink)">
+        <p class="n">Evidence, not summaries</p>
+        <h3>Every finished task carries a line a program wrote</h3>
+        <p>Date, commit, exit code, the exact command, and a digest of it. No model wrote any of it.
+          If it says <code>exit 0</code>, a process exited 0. You stop re-running the tests yourself
+          to find out whether the agent did.</p>
+      </div>
+      <div class="how rv" style="--c:var(--blue);--ct:var(--blue-ink)">
+        <p class="n">Tests proven able to fail</p>
+        <h3>A green suite that cannot go red is named, not trusted</h3>
+        <p>The mutant run breaks your code on purpose, re-runs the check, restores the file and
+          records whether the test noticed. A test that passes no matter what looks like safety and
+          is not. Now it has a name in the log.</p>
+      </div>
+      <div class="how rv" style="--c:var(--clay);--ct:var(--clay-ink)">
+        <p class="n">Decisions where the code lives</p>
+        <h3>The next session reads why, not just what</h3>
+        <p>Why something was built this way sits in a record next to the code, not in a chat log
+          nobody can search six months later. An agent that consults the record before writing a new
+          one stops relitigating what you already decided.</p>
+      </div>
+    </div>
+
+    <div class="measure rv">
+      <p class="kicker">Measured, with a baseline</p>
+      <p class="claim">Every eval case runs with the plugin and without it, five runs per arm.
+        Where the subject is verification, the baseline scores zero.</p>
+      <div class="mgrid">
+        <div class="mrow">
+          <p class="what">Refuses to mark a task done without tool-written evidence</p>
+          <div class="nums"><span>with<b>0.76</b></span><span>without<b class="zero">0.00</b></span></div>
+        </div>
+        <div class="mrow">
+          <p class="what">Consults the existing decision corpus before writing a record</p>
+          <div class="nums"><span>with<b>1.00</b></span><span>without<b class="zero">0.00</b></span></div>
+        </div>
+      </div>
+      <p class="note">Where a case tests ordinary good practice a capable model already follows, the
+        difference is zero. It changes one thing, and it is the thing this page is about.
+        Taken 2026-09-03; re-derive with <code>node scripts/eval-compare.mjs</code> in the repository.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CAUGHT, ON RECORD ============ -->
+<section id="caught">
+  <div class="wrap">
+    <div class="shead">
+      <div>
+        <p class="kicker rv">Caught, on record</p>
+        <h2 class="rv">Four catches from real repositories, each with the record that shows it.</h2>
+      </div>
+      <p class="sub rv">Two from MultiPath Read/Write, the M in this stack, and two from the harness's own
+        repository, which runs the lifecycle on itself. Every one has a commit or a record you can
+        open; the paths are on the cards.</p>
+    </div>
+
+    <div class="hows two">
+      <div class="how rv" style="--c:var(--sage);--ct:var(--sage-ink)">
+        <p class="n">mrw · 2026-09-13 to 2026-09-24 · a survivor pointed at the bug</p>
+        <h3>The mutant that survived named the path that later broke</h3>
+        <p>ADR-057's stress table recorded one mutant, <code>commitPathOps restore() no-op</code>, as
+          survived: no test reached a commit-phase failure. Eleven days later a chaos pass hit exactly
+          that path. A rename whose destination directory could not be created left the plan
+          half-applied while the receipt said every hunk was fine. A lying receipt is the one thing
+          that tool exists to prevent, and the survivor on record pointed straight at it. The fix is
+          ADR-066.</p>
+<pre><code>| `commitPathOps` restore() no-op | survived |
+<span class="c">docs/adr/ADR-057-unlink-and-rename.md · commit 93c8a1a</span></code></pre>
+      </div>
+      <div class="how rv" style="--c:var(--blue);--ct:var(--blue-ink)">
+        <p class="n">mrw · 2026-09-24 · a kill that was not a kill</p>
+        <h3><code>adr-verify</code> refused to count a compile error as a killed mutant</h3>
+        <p>A mutant re-added an unused variable in Go, which does not compile. The fence exited 1,
+          and a hand check would have logged a kill. The tool graded it inconclusive instead: the
+          fence failed on a build error, not an assertion. The mutant was rewritten so it compiled,
+          re-run, and killed for real. Without that grading the task's mutation evidence would have
+          rested on a compile error.</p>
+<pre><code>- 2026-09-24 · 9874f44* · mutant inconclusive · exit 1
+  the fence failed on a build/parse error, not an assertion
+<span class="c">docs/adr/ADR-064-…/tasks/T1-astgrep-serves-a-named-file.md</span></code></pre>
+      </div>
+      <div class="how rv" style="--c:var(--rose);--ct:var(--rose-ink)">
+        <p class="n">quality-harness · 2026-09-24 · a fix that disabled the lock it fixed</p>
+        <h3>A different-lineage review found a green fix that silently weakened a test lock</h3>
+        <p>A change to the JavaScript test-lock masker was claimed done with a green gate. The Codex
+          review built one input: <code>const n = /x/ / 2; if (true) { /x/.test("x"); }</code>. The fix
+          read the division as a regex that swallowed the next brace, so the lock ended before the
+          assertion. The reviewer changed <code>assert.equal(1, 2)</code> to <code>assert.equal(1, 1)</code>
+          and the lock digest did not move. Shipped, a locked test could have been weakened with no
+          gate noticing.</p>
+<pre><code>const n = /x/ / 2; if (true) { /x/.test("x"); }
+<span class="c">commit b13c98e · plugin/lib/record.py, tests/test-lock.test.mjs</span></code></pre>
+      </div>
+      <div class="how rv" style="--c:var(--clay);--ct:var(--clay-ink)">
+        <p class="n">quality-harness · 2026-09-24 · a test that never reached its code</p>
+        <h3>The mutation campaign showed a passing test had no guard under it</h3>
+        <p>A guard was added so an escaped Swift type name is reported as unrun rather than guessed,
+          and its test passed. The campaign deleted the guard; the test still passed. Its only escaped
+          case was also nested, so a different check refused it first. Until one more case was added,
+          the guard had no test at all, and nothing but a mutant could have said so.</p>
+<pre><code>mutant survived · guard deleted, test still green
+<span class="c">commit 4abf41c · tests/gate-rules.test.mjs</span></code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section id="how" class="alt">
+  <div class="wrap">
+    <div class="shead">
+      <div>
+        <p class="kicker rv">How it works</p>
+        <h2 class="rv">Four ordinary programs. Read their exit codes.</h2>
+      </div>
+      <p class="sub rv">Your project declares one check. A record holds a decision; a task holds one
+        shell command that decides whether the work is done. Everything else is a program reading
+        those files.</p>
+    </div>
+
+    <div class="hows two">
+      <div class="how rv" style="--c:var(--clay);--ct:var(--clay-ink)">
+        <p class="n">0 · gate the commit</p>
+        <h3><code>qh-check</code> runs your check and holds the door</h3>
+        <p>Every day, on every change. It runs the check your project declared, records the result
+          against the current tree, and until a pass is recorded a command that names
+          <code>commit</code> or <code>push</code> is refused. A bug fix with no record still cannot
+          be published unchecked.</p>
+<pre><code>$ qh-check   <span class="c"># runs the declared check, exits with its code</span>
+{"command":"npm test","exit":0,"verdict":"passed", …}  <span class="c">→ checks.jsonl</span></code></pre>
+      </div>
+      <div class="how rv" style="--c:var(--sage);--ct:var(--sage-ink)">
+        <p class="n">1 · record the run</p>
+        <h3><code>adr-verify</code> runs the check and writes the line</h3>
+        <p>It runs the task's <code>## Acceptance</code> command, then appends the date, the git sha,
+          the exit code, the command and a SHA-256 of it. Change the command and every earlier
+          line stops matching. Logs are never edited by hand.</p>
+<pre><code>- 2026-09-23 · ac1d286* · exit 0 · `python3 -m unittest …`
+  · acceptance-sha256:b43e2374…ec4405 · ms:52</code></pre>
+      </div>
+      <div class="how rv" style="--c:var(--rose);--ct:var(--rose-ink)">
+        <p class="n">2 · refuse a bare claim</p>
+        <h3><code>adr-lint</code> fails a <code>done</code> with no line behind it</h3>
+        <p>A task index that says <code>done</code> while the task's log has no matching exit-0 entry
+          is a blocking finding. Everything else the lint says is advice, and it says which is which.</p>
+<pre><code>README.md: T1 marked done but its Verification Log
+has no exit-0 entry — run adr-verify, don't hand-declare</code></pre>
+      </div>
+      <div class="how rv" style="--c:var(--blue);--ct:var(--blue-ink)">
+        <p class="n">3 · prove the test can fail</p>
+        <h3><code>adr-verify --mutant</code> breaks the code on purpose</h3>
+        <p>A green test proves little until something shows it can go red. The mutant run edits a
+          source file, re-runs the check, restores the file, and records whether the test noticed.
+          A survivor is a finding about the test.</p>
+<pre><code>- 2026-09-23 · ac1d286* · mutant killed · exit 1
+  · `duration.py` · from `int(text)` to `0` · why …</code></pre>
+      </div>
+    </div>
+    <p class="stamp rv">the plugin runs this lifecycle on itself: its own tests and mutation campaign run in CI on every push, and <code>bash scripts/selftest.sh</code> prints today's numbers</p>
+  </div>
+</section>
+
+<!-- ============ THE CONVENTION ============ -->
+<section id="convention">
+  <div class="wrap">
+    <div class="shead">
+      <div>
+        <p class="kicker rv">The convention</p>
+        <h2 class="rv">One line, two files, and a word for not knowing.</h2>
+      </div>
+      <p class="sub rv">Every gate is a deterministic reading of files in your repository. Same files,
+        same answer, from any shell, with no model in the loop. A model routes the work; a model
+        never writes a verdict. This is the whole vocabulary.</p>
+    </div>
+
+    <ol class="flow rv" aria-label="How a done claim becomes a recorded run">
+      <li>
+        <div class="node" style="--c:var(--line-2);--ct:var(--ink-3)">
+          <p class="who">You write</p>
+          <p class="what">One acceptance command</p>
+          <p class="det">In the task file, under <code>## Acceptance</code>. One shell line that decides
+            whether the work is done. The tool never guesses it.</p>
+          <code>python3 -m unittest -v test_duration</code>
+        </div>
+      </li>
+      <li>
+        <div class="node" style="--c:var(--sage);--ct:var(--sage-ink)">
+          <p class="who">The tool runs</p>
+          <p class="what"><code>adr-verify</code> executes it</p>
+          <p class="det">A process, not a model. Whatever exit code comes back is the answer, and a
+            check that could not run says so instead of passing.</p>
+        </div>
+      </li>
+      <li>
+        <div class="node" style="--c:var(--sage);--ct:var(--sage-ink)">
+          <p class="who">The tool writes</p>
+          <p class="what">One line into <code>## Verification Log</code></p>
+          <p class="det">Date, commit, exit code, the command, a digest of it, the duration. Appended,
+            never edited. Taken apart below.</p>
+        </div>
+      </li>
+      <li>
+        <div class="node" style="--c:var(--blue);--ct:var(--blue-ink)">
+          <p class="who">A program reads</p>
+          <p class="what"><code>adr-lint</code> checks the claim</p>
+          <p class="det">It reads the task index and the log. A <code>done</code> needs an exit-0 line
+            whose digest matches the current command. Nothing else is consulted.</p>
+        </div>
+      </li>
+      <li>
+        <div class="node" style="--c:var(--clay);--ct:var(--clay-ink)">
+          <p class="who">What comes out</p>
+          <div class="pills">
+            <span class="pill" style="--pbg:var(--sage-bg)">done stands<small>an exit-0 line, digest current</small></span>
+            <span class="pill" style="--pbg:var(--rose-bg)">done refused<small>no line, or the command changed</small></span>
+            <span class="pill" style="--pbg:var(--clay-bg)">UNRUN · PARTIAL · UNPROVEN<small>nothing was measured; never a pass</small></span>
+          </div>
+        </div>
+      </li>
+    </ol>
+    <p class="flowkey rv">
+      <span><i style="--c:var(--line-2)"></i>you write it</span>
+      <span><i style="--c:var(--sage)"></i>the tool writes it</span>
+      <span><i style="--c:var(--blue)"></i>a program reads it</span>
+      <span><i style="--c:var(--clay)"></i>the verdict</span>
+    </p>
+
+    <div class="anat rv">
+      <div class="cap"><i></i> one verification log entry, taken apart</div>
+<pre><code>- <b style="--fbg:var(--sage-bg);--fc:var(--sage-ink)">2026-09-03<sup>1</sup></b> · <b style="--fbg:var(--blue-bg);--fc:var(--blue-ink)">1d9381f*<sup>2</sup></b> · <b style="--fbg:var(--rose-bg);--fc:var(--rose-ink)">exit 0<sup>3</sup></b> · <b style="--fbg:var(--clay-bg);--fc:var(--clay-ink)">`python3 -m unittest -v test_duration`<sup>4</sup></b> · <b style="--fbg:var(--bg-2);--fc:var(--ink-2)">acceptance-sha256:b43e2374…<sup>5</sup></b> · <b style="--fbg:var(--bg-2);--fc:var(--ink-2)">ms:75<sup>6</sup></b></code></pre>
+      <ol class="parts">
+        <li data-n="1" style="--fbg:var(--sage-bg);--fc:var(--sage-ink)"><code>2026-09-03</code><span><b>When it ran.</b> The date the tool executed the command, not the date someone typed it.</span></li>
+        <li data-n="2" style="--fbg:var(--blue-bg);--fc:var(--blue-ink)"><code>1d9381f*</code><span><b>Which commit.</b> The star means the working tree was dirty at the time, and that is recorded too.</span></li>
+        <li data-n="3" style="--fbg:var(--rose-bg);--fc:var(--rose-ink)"><code>exit 0</code><span><b>What the process returned.</b> If it says 0, a process exited 0. No summary, no paraphrase.</span></li>
+        <li data-n="4" style="--fbg:var(--clay-bg);--fc:var(--clay-ink)"><code>`python3 -m unittest …`</code><span><b>The command itself.</b> Your <code>## Acceptance</code> line, verbatim, so a reader can run it again.</span></li>
+        <li data-n="5" style="--fbg:var(--bg-2);--fc:var(--ink-2)"><code>acceptance-sha256:…</code><span><b>A digest of that command.</b> Edit the acceptance line and every earlier entry stops matching. There is no way to keep old evidence for a new question.</span></li>
+        <li data-n="6" style="--fbg:var(--bg-2);--fc:var(--ink-2)"><code>ms:75</code><span><b>How long it took.</b> Useful when a check that used to take a second starts taking a minute.</span></li>
+      </ol>
+    </div>
+
+    <p class="afterrules rv">The files are yours and the entries are the tool's: a task file holds one
+      <code>## Acceptance</code> command and two empty sections, <code>## Verification Log</code> and
+      <code>## Mutation Log</code>, which the tool appends to and refuses to create. Nobody, human or
+      model, edits a log by hand.</p>
+  </div>
+</section>
+
+<!-- ============ USE IT RIGHT ============ -->
+<section id="use" class="alt">
+  <div class="wrap">
+    <div class="shead">
+      <div>
+        <p class="kicker rv">Use it right</p>
+        <h2 class="rv">Six habits that decide whether it works for you.</h2>
+      </div>
+      <p class="sub rv">The tool is small. The discipline is the product. Each of these is in the
+        onboarding guide; this is the short form, in the order you will meet them.</p>
+    </div>
+
+    <ol class="rules">
+      <li class="rv">
+        <div>
+          <h3>One command, once, in the main session</h3>
+          <p>It classifies the work and routes it: a bug goes straight to execution, a decision you
+            would regret reversing goes through a record first. You do not have to know which. Not
+            inside a subagent, and not for questions.</p>
+<pre><code>/quality-harness:work</code></pre>
+        </div>
+      </li>
+      <li class="rv">
+        <div>
+          <h3>Write the acceptance command before the code</h3>
+          <p>A task carries <code>## Acceptance</code>: one shell line that decides whether the work
+            is done. Writing it first is the tax, and it is the point. If you cannot say what would
+            prove the work done, that is information about the work, not about the tool.</p>
+<pre><code>## Acceptance
+python3 -m unittest -v test_duration</code></pre>
+        </div>
+      </li>
+      <li class="rv">
+        <div>
+          <h3>Commit the evidence with the change</h3>
+          <p><code>adr-verify</code> writes into your task file and tells you so every time. Those
+            lines are the record; commit them with the work they prove. Never hand-edit a log. If you
+            change the acceptance command, every earlier entry stops matching. Re-run it.</p>
+<pre><code>[adr-verify] WROTE this entry into …/T1.md
+<span class="c"># commit it with the work it evidences</span></code></pre>
+        </div>
+      </li>
+      <li class="rv">
+        <div>
+          <h3>Add one mutant in week one</h3>
+          <p>Pick the code you would most hate to see silently broken. <code>mutant killed</code> is
+            the answer you want; a survivor is a test that proves nothing. Run the full campaign in
+            CI and at release, not on every edit.</p>
+<pre><code>adr-verify T1.md --mutant duration.py \
+  --from 'int(text)' --to '0' \
+  --why 'the test must notice'</code></pre>
+        </div>
+      </li>
+      <li class="rv">
+        <div>
+          <h3><code>UNRUN</code>, <code>PARTIAL</code> and <code>UNPROVEN</code> are not passes</h3>
+          <p>They mean nothing was measured. The tool says so instead of reporting a clean result it
+            never observed. Read them that way, and never let one through as green.</p>
+        </div>
+      </li>
+      <li class="rv">
+        <div>
+          <h3>When a commit is refused, run the check</h3>
+          <p>Once your project declares a check, a <code>commit</code> or <code>push</code> is
+            refused until <code>qh-check</code> has passed on the current tree. That is the whole
+            fix. <code>"publish": "warn"</code> in <code>.quality-harness.json</code> if you must.</p>
+<pre><code>qh-check
+<span class="c"># your check runs and is recorded</span></code></pre>
+        </div>
+      </li>
+    </ol>
+    <p class="afterrules rv">Lost the thread? <code>node "$(qh-root)/scripts/work-next.mjs"</code> reads the
+      corpus and says which stage is waiting and why. Records are for decisions you would regret
+      reversing; a one-line fix is a one-line fix. Leave specs, architecture lint and consensus alone
+      until a problem calls for them.</p>
+  </div>
+</section>
+
+<!-- ============ COMPARED ============ -->
+<section id="compare">
+  <div class="wrap">
+    <div class="shead">
+      <div>
+        <p class="kicker rv">Compared, by mechanism</p>
+        <h2 class="rv">Who decides “done”, and what is written down when they do.</h2>
+      </div>
+      <p class="sub rv">
+        Each tool's mechanism as its own README or product page describes it, read 2026-09-24. Two
+        tables: the frameworks and reviewers most people already run, then the new tools built on the
+        same premise as this one.
+      </p>
+    </div>
+
+    <p class="tabhead rv">The frameworks and reviewers</p>
+    <div class="tablewrap rv">
+      <table>
+        <thead>
+          <tr><th>Tool</th><th>How “done” is decided</th><th>Tool-written evidence of the claim</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tool">obra/superpowers</span></td>
+            <td>Prose to the model. <code>verification-before-completion/SKILL.md</code>: “no
+              completion claims without fresh verification evidence.”</td>
+            <td><span class="no">None.</span> Nothing checks the instruction was obeyed.</td>
+          </tr>
+          <tr>
+            <td><span class="tool">github/spec-kit</span></td>
+            <td><code>/speckit.converge</code> assesses by prompt. A <code>/speckit.verify</code>
+              with a report file is an open discussion (#1662), agent-driven.</td>
+            <td><span class="no">None shipped.</span></td>
+          </tr>
+          <tr>
+            <td><span class="tool">Fission-AI/OpenSpec</span></td>
+            <td>Agent judgement.</td>
+            <td><span class="no">None documented.</span></td>
+          </tr>
+          <tr>
+            <td><span class="tool">bmad-code-org/BMAD-METHOD</span></td>
+            <td>Multi-agent role simulation; agent judgement.</td>
+            <td><span class="no">None documented.</span></td>
+          </tr>
+          <tr>
+            <td><span class="tool">SonarQube</span></td>
+            <td>Deterministic analyzers under the organisation's quality profile.</td>
+            <td>Verifies the <em>code</em>, not the agent's claim about the work.</td>
+          </tr>
+          <tr>
+            <td><span class="tool">CodeRabbit · Greptile · Qodo</span></td>
+            <td>A model reviews the PR. The one independent catch rate is c-CRAB's ≤ 32.1%
+              (arXiv 2603.23448).</td>
+            <td>Review comments. A clean pass is one reviewer's silence.</td>
+          </tr>
+          <tr class="us">
+            <td><span class="tool">quality-harness</span></td>
+            <td><code>adr-verify</code> runs the task's acceptance command itself and appends the
+              date, sha, exit code, command and a SHA-256 of it to the record.
+              <code>adr-lint</code> refuses <code>done</code> without a matching exit-0 line.
+              <code>adr-verify --sweep</code> re-runs every recorded claim and sorts it into held,
+              false, superseded or unrunnable.</td>
+            <td><span class="yes">Yes.</span> The line at the top of this page.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tabnote rv">It is not either-or. It runs alongside superpowers and the review bots: they
+      ask for verification in prose or comments, this adds the line a program wrote.</p>
+
+    <p class="tabhead rv">The verification tools, same premise, different mechanism</p>
+    <div class="tablewrap rv">
+      <table>
+        <thead>
+          <tr><th>Tool</th><th>How the claim is checked</th><th>What is written down, and where</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tool">claimcheck</span></td>
+            <td>A Stop hook reads the agent's final message and the turn's tool output, and blocks only
+              on a direct contradiction: “170 passed” against a runner that printed 162. Runs nothing
+              itself. Reports zero false alarms on 4,000+ real turns.</td>
+            <td><span class="no">Nothing.</span> Stateless; a verdict on one turn's transcript.</td>
+          </tr>
+          <tr>
+            <td><span class="tool">truthguard</span></td>
+            <td>Hooks check the exit code of each command after it ran and run tests before a commit.
+              Warns on a mismatch, blocks only dangerous commands.</td>
+            <td><span class="no">Console warnings.</span> File checksums for its own comparison.</td>
+          </tr>
+          <tr>
+            <td><span class="tool">DidWork</span></td>
+            <td>A hosted service. The agent submits a claim (“pushed”, “deployed”, “charged”) and the
+              service asks GitHub, Stripe or Jira whether it is true. A Stop gate blocks a turn that
+              ends after a side effect without asking. Fails open. Needs an API key.</td>
+            <td>A verdict from a remote API: <code>verified</code>, <code>failed</code>,
+              <code>unknown</code>.</td>
+          </tr>
+          <tr>
+            <td><span class="tool">Critique</span></td>
+            <td>A paid finish pass. Rebuilds the change in a separate workspace, runs the tests, and
+              hands the agent a JSON verdict with an exit code. The agent decides what to do with it.</td>
+            <td>JSON returned to the agent. Nothing enters your repository.</td>
+          </tr>
+          <tr>
+            <td><span class="tool">dev-process-toolkit</span></td>
+            <td>The nearest neighbour. Gate skills run typecheck, lint and tests; a hook refuses
+              <code>git commit</code> until they have. “A file written by hand is not evidence.”</td>
+            <td>A receipt in the checkout that counts while a skill call in the session vouches for
+              it. No digest of the command; no check that a test can fail.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="only rv">
+      <p class="kicker">What only this row has</p>
+      <p class="claim">The evidence is a line in your repository, bound to the command by a digest,
+        read by a lint that refuses done, and paired with proof that the test could fail.</p>
+      <ol>
+        <li><span><b>It lives in the repo.</b> Not a hook's console line, not a hosted verdict, not
+          JSON handed back to the agent. A line in the task file, committed with the work, readable
+          in a year.</span></li>
+        <li><span><b>The digest binds it to the command.</b> Change the acceptance command and every
+          earlier entry stops matching. A receipt vouched for by a session expires with the session;
+          this one expires with the question.</span></li>
+        <li><span><b>A program refuses <code>done</code>.</b> <code>adr-lint</code> reads the task
+          index and the log, from any shell or CI, and fails a done with no exit-0 line behind it. No
+          model is asked.</span></li>
+        <li><span><b>The test has to fail once.</b> <code>adr-verify --mutant</code> records whether
+          the check noticed a broken build. None of the tools above asks that question.</span></li>
+      </ol>
+      <p class="note">Read 2026-09-24 from each tool's own README. If one of them ships these, open an
+        issue and this box changes the same day.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INSTALL ============ -->
+<section id="install" class="alt">
+  <div class="wrap">
+    <div class="shead">
+      <div>
+        <p class="kicker rv">Install</p>
+        <h2 class="rv">Two commands. Then ask for work as you normally would.</h2>
+      </div>
+      <p class="sub rv">Tutorial 1 is a throwaway repository, one real test and a task file you write
+        by hand. It gets you to the first tool-written line in about ten minutes, and the tool's own
+        part of that is well under a second.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step rv">
+        <p class="verb">In Claude Code</p>
+        <h3>Install the plugin</h3>
+        <p class="t">A marketplace and a plugin from it. Restart the session afterwards.</p>
+<pre><code><span class="p">/plugin marketplace add</span> D3-lt/quality-harness
+<span class="p">/plugin install</span> quality-harness@quality-harness</code></pre>
+        <p class="after">Or say it: “Add the Claude Code plugin marketplace D3-lt/quality-harness, then install the quality-harness plugin from it.”</p>
+        <a class="btn" href="https://github.com/D3-lt/quality-harness/blob/main/docs/TUTORIALS.md">Tutorial 1, ten minutes →</a>
+      </div>
+      <div class="step rv">
+        <p class="verb">In your repository</p>
+        <h3>Ask for work</h3>
+        <p class="t">Once, in the main session, for anything substantive. Then ask as you always did.
+          When the work claims to be done, the claim has a recorded run behind it.</p>
+<pre><code><span class="p">/quality-harness:work</span></code></pre>
+        <p class="after">Hour one is those two things. The rest of the lifecycle is for problems you may
+          not have yet; the onboarding guide says what to leave alone.</p>
+        <a class="btn" href="https://github.com/D3-lt/quality-harness/blob/main/docs/ONBOARDING.md">Onboarding, first week →</a>
+      </div>
+      <div class="step rv">
+        <p class="verb">On your corpus</p>
+        <h3>See what every reader says about your records</h3>
+        <p class="t">One command runs every reader the plugin ships over your repository and prints one
+          JSON: paths relative, disagreements between readers computed, its own digest included.
+          Paste it into an issue as it is.</p>
+<pre><code><span class="k">$</span> node "$(qh-root)/scripts/corpus-probe.mjs" --json
+<span class="c"># add --sweep to re-run every recorded claim</span></code></pre>
+        <p class="after">The same command the plugin's CI runs over its own corpora, so a report from
+          yours is directly comparable.</p>
+        <a class="btn" href="https://github.com/D3-lt/quality-harness/blob/main/docs/INSTALL.md">INSTALL.md →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCOPE ============ -->
+<section id="scope">
+  <div class="wrap">
+    <div class="shead">
+      <div>
+        <p class="kicker rv">Scope</p>
+        <h2 class="rv">Three design choices and the price, stated up front.</h2>
+      </div>
+      <p class="sub rv">Each has a decision record or a measurement behind it in the repository. They
+        are the shape of the tool, not gaps, and the last one is what it costs you.</p>
+    </div>
+    <ul class="nots rv">
+      <li><span><b>The hooks are Claude Code.</b> Cursor, Codex, Zed and Claude Desktop get the gates
+        by path and a read-only MCP server (<code>qh-mcp</code>) that can tell you a record is dirty.
+        Recording evidence needs a shell, because only a process that ran can write an exit code.</span></li>
+      <li><span><b>One refusal, on purpose.</b> Once your project has a check, a command that names
+        <code>commit</code> or <code>push</code> is refused until <code>qh-check</code> has passed on
+        the tree (ADR-061). A warning a model treats as noise still publishes. Everything else advises
+        and exits non-zero at most, so a CI step can read it.</span></li>
+      <li><span><b>It knows its own record shape.</b> A MADR or Nygard file is reported as
+        <code>not-recognised</code> and left alone (ADR-038). Bring new decisions to
+        <code>/quality-harness:adr-write</code>; your old corpus is not judged.</span></li>
+      <li><span><b>The price.</b> More turns: 2.33× on the README's own ablation, most of them cache
+        reads. You write the acceptance command yourself; the tool will not guess it. The full
+        mutation campaign is a CI and release job, about forty minutes on the plugin's own repository.
+        Hooks run on every edit and start a Node process each time. <code>claude plugin details
+        quality-harness</code> prints the context cost of the version you have.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq" class="alt">
+  <div class="wrap faqgrid">
+    <div class="head">
+      <p class="kicker rv">Answers</p>
+      <h2 class="rv">Straight answers.</h2>
+    </div>
+    <div class="faq">
+      <details class="rv" open><summary>Is this just “write tests”?</summary>
+        <p>No. Tests decide whether the code is right. This decides whether the <em>claim</em> that the
+          work is done has a run behind it, and refuses the claim when it does not. The papers above
+          measured the gap between those two things; this is aimed at the gap.</p>
+      </details>
+      <details class="rv"><summary>Why not have the model verify its own work?</summary>
+        <p>Because the model is the thing being checked. Five LLM judges could not reliably detect false
+          success (AUROC ≤ 0.65, arXiv 2606.09863). A model here may flag and exclude; only a program may
+          record. <code>adr-judge</code> exists and is advisory by construction.</p>
+      </details>
+      <details class="rv"><summary>Does it block me?</summary>
+        <p>One refusal, named above (ADR-061), with an opt-out. Everything else advises: it exits
+          non-zero so a CI step can read it, and it says what to do next. A tool that stops you without
+          saying why is worse than no tool, and that is written into the project's rules.</p>
+      </details>
+      <details class="rv"><summary>Can I run the checks outside Claude Code?</summary>
+        <p>Yes. They are Python and Node programs under <code>plugin/bin</code> and
+          <code>plugin/scripts</code>; run them by path from any shell, Makefile or CI job, with no
+          model involved. Inside a Claude Code session they resolve by bare name.</p>
+      </details>
+      <details class="rv"><summary>Does it work with my language?</summary>
+        <p>It has no opinion about your language or test runner. The acceptance command is whatever you
+          type: <code>go test ./...</code>, <code>pytest -k</code>, <code>npm test</code>. That also means
+          it will not guess one for you.</p>
+      </details>
+      <details class="rv"><summary>Who is behind it, and what does it cost?</summary>
+        <p>Made by <a href="https://github.com/D3-lt">D3.lt</a>, hosted by Atviro Kodo Sprendimai. Free and
+          open source, no accounts, nothing leaves your machine. It is one of three tools on the
+          <a href="https://qamstack.dev/">QAM Stack</a> page; each installs on its own.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="https://qamstack.dev/" style="margin-right:0"><span class="dots"><i></i><i></i><i></i></span> QAM&nbsp;Stack</a>
+    <span>made by <a href="https://github.com/D3-lt">D3.lt</a> · hosted by <a href="https://github.com/atvirokodosprendimai">Atviro Kodo Sprendimai</a></span>
+    <span class="sp"></span>
+    <a href="https://github.com/D3-lt/quality-harness">Quality Harness on GitHub</a>
+    <a href="https://github.com/D3-lt/quality-harness/blob/main/docs/research/2026-08-28-verification-is-the-bottleneck.md">The research note</a>
+    <a href="https://qamstack.dev/">← QAM Stack</a>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://qamstack.dev/quality-harness/#app",
+      "name": "Quality Harness",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "macOS, Linux, Windows",
+      "isAccessibleForFree": true,
+      "url": "https://qamstack.dev/quality-harness/",
+      "codeRepository": "https://github.com/D3-lt/quality-harness",
+      "description": "A Claude Code plugin where a task is done only when a tool ran its acceptance check and wrote the exit code and a digest of what ran into the record; a task marked done without that line fails adr-lint.",
+      "author": { "@id": "https://github.com/D3-lt#org" },
+      "publisher": { "@id": "https://atvirokodosprendimai.github.io/#org" }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://atvirokodosprendimai.github.io/#org",
+      "name": "Atviro Kodo Sprendimai",
+      "url": "https://atvirokodosprendimai.github.io/"
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/D3-lt#org",
+      "name": "D3.lt",
+      "url": "https://github.com/D3-lt"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://qamstack.dev/quality-harness/#page",
+      "url": "https://qamstack.dev/quality-harness/",
+      "name": "Quality Harness: “done” is a recorded run, or it is refused",
+      "isPartOf": { "@id": "https://qamstack.dev/#site" },
+      "about": { "@id": "https://qamstack.dev/quality-harness/#app" },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Atviro Kodo Sprendimai", "item": "https://atvirokodosprendimai.github.io/" },
+        { "@type": "ListItem", "position": 2, "name": "QAM Stack", "item": "https://qamstack.dev/" },
+        { "@type": "ListItem", "position": 3, "name": "Quality Harness", "item": "https://qamstack.dev/quality-harness/" }
+      ]
+    }
+  ]
+}
+</script>
+
+<script>
+(function () {
+  var els = document.querySelectorAll('.rv');
+  if (!('IntersectionObserver' in window)) { els.forEach(function (el) { el.classList.add('in'); }); return; }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (!e.isIntersecting) return; e.target.classList.add('in'); io.unobserve(e.target); });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  els.forEach(function (el) { io.observe(el); });
+})();
+(function () {
+  var hdr = document.getElementById('hdr');
+  var onScroll = function () { hdr.classList.toggle('stuck', window.scrollY > 8); };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+})();
+</script>
+</body>
+</html>
