@@ -3,22 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Quality Harness: "done" is a recorded run, or it is refused</title>
-<meta name="description" content="A Claude Code plugin where a task is done only when a tool ran its check and wrote the exit code and a digest into the record. Why agents' own status reports cannot be trusted, what you gain, and the six habits that make it work.">
+<title>Quality Harness: know when your AI agent is really done</title>
+<meta name="description" content="Your AI agent says the work is done. Quality Harness runs your tests to check, keeps the proof in your project, and blocks the commit until they pass. A free plugin for Claude Code.">
 <link rel="canonical" href="https://qamstack.dev/quality-harness/">
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#faf9f5" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#16161a" media="(prefers-color-scheme: dark)">
 <meta property="og:site_name" content="Atviro Kodo Sprendimai">
-<meta property="og:title" content="Quality Harness: “done” is a recorded run, or it is refused">
-<meta property="og:description" content="Your agent says done. The message looks the same whether it checked or not. Quality Harness runs the check itself, writes the evidence into the record, and refuses a bare claim.">
+<meta property="og:title" content="Quality Harness: know when your AI agent is really done">
+<meta property="og:description" content="Your AI agent says done. Did it actually check? Quality Harness runs your tests itself, keeps the proof in your project, and won't accept “done” without it.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://qamstack.dev/quality-harness/">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Quality Harness: “done” is a recorded run, or it is refused">
-<meta name="twitter:description" content="A task marked done without a tool-written run fails the check. Why that matters now, what you gain, and how to use it right.">
+<meta name="twitter:title" content="Quality Harness: know when your AI agent is really done">
+<meta name="twitter:description" content="Know when your AI agent's “done” is really done. A free Claude Code plugin that checks the work and keeps the proof in your project.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -376,10 +376,10 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
     <a class="brand" href="https://qamstack.dev/"><span class="dots"><i></i><i></i><i></i></span> QAM&nbsp;Stack <span class="q">/ quality-harness</span></a>
     <nav aria-label="Primary">
       <a class="hide-sm" href="#expect">What to expect</a>
-      <a class="hide-sm" href="#why">Why now</a>
-      <a href="#strengths">Strengths</a>
+      <a class="hide-sm" href="#why">Why it matters</a>
+      <a href="#strengths">What's different</a>
       <a class="hide-sm" href="#how">How it works</a>
-      <a class="hide-sm" href="#use">Use it right</a>
+      <a class="hide-sm" href="#use">Getting started</a>
       <a class="hide-sm" href="#compare">Compared</a>
       <a class="nav-cta" href="#install">Install</a>
     </nav>
@@ -392,28 +392,26 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
 <div class="hero">
   <div class="wrap herogrid">
     <div>
-      <h1><span class="lead">Quality Harness</span>“Done” is a <em>recorded run</em>, or the check refuses it.</h1>
+      <h1><span class="lead">Quality Harness</span>Know when your AI agent's “done” is <em>really done</em>.</h1>
       <p class="lede">
-        A Claude Code plugin with two mechanisms. A <code>commit</code> is refused until your
-        project's check, declared or inferred from your manifest, has passed on the tree. A task
-        backed by a decision record is done only when a tool ran its acceptance command and wrote the
-        exit code, the commit and a digest of what ran into the record. You merge evidence, not
-        summaries.
+        A free plugin for Claude Code. When your agent says the work is finished, Quality Harness runs
+        your tests itself and writes down what really happened. If they didn't pass, the work isn't
+        done, and the commit is blocked until they do.
       </p>
       <div class="cta-row">
         <a class="btn primary" href="#install">Install →</a>
-        <a class="btn" href="#strengths">What only this does</a>
+        <a class="btn" href="#strengths">See what makes it different</a>
       </div>
       <div class="trust">
         <span>Free and open source</span>
-        <span>The checks are ordinary programs</span>
-        <span>Runs in any shell or CI</span>
-        <span>Nothing leaves your machine</span>
+        <span>Works with the tests you already have</span>
+        <span>Runs on your machine</span>
+        <span>No account needed</span>
       </div>
     </div>
 
     <div class="heroviz rv" aria-hidden="true">
-      <div class="cap"><i></i> the line that is the whole product</div>
+      <div class="cap"><i></i> what it writes down, and what it refuses</div>
 <pre><code><span class="k">$</span> adr-verify docs/adr/ADR-001-parse-durations/tasks/T1-seconds.md
 <span class="ok">[adr-verify] WROTE this entry into …/T1-seconds.md's ## Verification Log</span>
 - 2026-09-23 · ac1d286* · exit 0 · `python3 -m unittest -v test_duration …`
@@ -432,81 +430,76 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
     <div class="shead">
       <div>
         <p class="kicker rv">What to expect</p>
-        <h2 class="rv">What happens after you install.</h2>
+        <h2 class="rv">What changes after you install it.</h2>
       </div>
-      <p class="sub rv">Two kinds of request, handled two ways. You do not pick the route:
-        <code>/quality-harness:work</code> classifies the work and routes it. Most days are the first
-        kind.</p>
+      <p class="sub rv">You keep working the way you do now. Quality Harness sorts each request and
+        handles the checking. Most days look like the first card.</p>
     </div>
 
     <div class="expect">
       <div class="exp rv" style="--c:var(--sage);--ct:var(--sage-ink);--cbg:var(--sage-bg)">
-        <p class="n">You ask for a fix or a bounded change</p>
-        <h3>Your check runs, then the commit</h3>
+        <p class="n">Everyday fixes</p>
+        <h3>Your tests run before anything is committed</h3>
         <ol>
-          <li><span>The agent makes the change, as it always did.</span></li>
-          <li><span><code>qh-check</code> runs your project's check: the one you declared, or the one
-            it inferred from your manifest.</span></li>
-          <li><span><code>git commit</code> is refused until that check has passed on the current tree.
-            No task file, no verification log; just a commit that cannot skip the check.</span></li>
+          <li><span>You ask for a fix. The agent makes it, as usual.</span></li>
+          <li><span>Quality Harness runs your project's tests. It finds your usual test command on its
+            own, or you tell it which one to use.</span></li>
+          <li><span>If the tests haven't passed, the commit is blocked until they do.</span></li>
         </ol>
       </div>
       <div class="exp rv" style="--c:var(--blue);--ct:var(--blue-ink);--cbg:var(--blue-bg)">
-        <p class="n">You ask for a change you would regret reversing</p>
-        <h3>A record first, then evidence per task</h3>
+        <p class="n">Bigger decisions</p>
+        <h3>A written plan first, then proof for each step</h3>
         <ol>
-          <li><span>The agent writes a decision record. You read it and accept it.</span></li>
-          <li><span>Each task in it gets one acceptance command: the shell line that decides
-            whether that task is done.</span></li>
-          <li><span><code>adr-verify</code> runs it and writes the line into the task file;
-            <code>adr-lint</code> refuses <code>done</code> without it.</span></li>
+          <li><span>The agent writes the decision down. You read it and approve it.</span></li>
+          <li><span>Each step gets one command that proves it works.</span></li>
+          <li><span>Quality Harness runs that command and saves the result in your project. A step can't
+            be marked done without it.</span></li>
         </ol>
       </div>
       <div class="exp rv" style="--c:var(--clay);--ct:var(--clay-ink);--cbg:var(--clay-bg)">
-        <p class="n">What you will notice</p>
-        <h3>More asked of you, less taken on trust</h3>
+        <p class="n">What you'll notice</p>
+        <h3>A little more effort, a lot less guessing</h3>
         <ol>
-          <li><span>More turns: 2.33× on the README's own ablation. Most of the extra input is cache
-            reads, billed well below fresh tokens.</span></li>
-          <li><span>Being asked what would prove the work done, before the work.</span></li>
-          <li><span>Lines the tool writes into your files. You commit them with the change they
-            prove.</span></li>
+          <li><span>The agent takes more steps: about 2.3 times as many in the project's own
+            measurement. Most of the extra is cheap, cached input.</span></li>
+          <li><span>You're asked what would prove the work is done, before it starts.</span></li>
+          <li><span>A few lines added to your files. You commit them along with the change.</span></li>
         </ol>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ WHY NOW ============ -->
+<!-- ============ WHY IT MATTERS ============ -->
 <section id="why">
   <div class="wrap">
     <div class="shead">
       <div>
-        <p class="kicker rv">Why now</p>
-        <h2 class="rv">Your agent says “done”. The message looks the same whether it checked or not.</h2>
+        <p class="kicker rv">Why it matters</p>
+        <h2 class="rv">Your agent says “done”. Did it actually check?</h2>
       </div>
       <p class="sub rv">
-        Every coding agent reports its own status. The research measured how often that report is
-        wrong, and whether another model can tell. It is the most common way coding agents fail, and
-        it is the failure you cannot see from the transcript. A category is now forming around it:
-        at least five Claude Code tools exist whose whole pitch is checking the agent's own claim.
-        What sets this one apart is next.
+        Often it didn't, and you can't tell from the message. Researchers have measured it: when an AI
+        coding agent reports on its own work, the report is wrong more often than you'd think, and
+        another AI can't reliably catch it. Several tools appeared this year to deal with this. Below
+        is what makes this one different.
       </p>
     </div>
 
     <div class="stats">
       <div class="stat rv" style="--c:var(--rose);--ct:var(--rose-ink)">
         <p class="big">75.8%</p>
-        <p class="cap">Of failures among self-assessing coding-agent trajectories were <em>false
-          success</em>: the agent said done, the environment said otherwise.</p>
-        <p class="mean">No LLM judge in the study caught it reliably; none of five exceeded
-          AUROC 0.65. <a href="https://arxiv.org/abs/2606.09863">From Confident Closing to Silent
-          Failure</a>, arXiv 2606.09863, June 2026.</p>
+        <p class="cap">of failed tasks were reported as a success. The agent said “done”; the result
+          said otherwise.</p>
+        <p class="mean">Five AI judges tried to spot these. None could do it reliably: the best scored
+          0.65, where 0.5 is a coin toss. <a href="https://arxiv.org/abs/2606.09863">From Confident
+          Closing to Silent Failure</a>, arXiv 2606.09863, June 2026.</p>
       </div>
       <div class="stat rv" style="--c:var(--clay);--ct:var(--clay-ink)">
         <p class="big">4.8–9.3×</p>
-        <p class="cap">How far LLM operators overstated their own success when every proposal
-          received an exact outcome.</p>
+        <p class="cap">how much AI agents overstated their own success, once every result was
+          checked against what really happened.</p>
         <p class="mean">“Agent self-reports should therefore be treated as claims to verify against
           the environment, not as evidence of their own reliability.” <a
           href="https://arxiv.org/abs/2609.00652">Self-Reports Are Not Verification</a>, arXiv
@@ -514,9 +507,9 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
       </div>
       <div class="stat rv" style="--c:var(--blue);--ct:var(--blue-ink)">
         <p class="big">22.58%</p>
-        <p class="cap">Of misalignment episodes in 20,574 real sessions were inaccurate
-          self-reporting, and that share is rising while the others fall.</p>
-        <p class="mean">91.49% of visible resolutions needed the developer to step in. <a
+        <p class="cap">of the problems in 20,574 real sessions were the agent misreporting its own work,
+          and that share is growing.</p>
+        <p class="mean">In 91.49% of the visible fixes, the developer had to step in. <a
           href="https://arxiv.org/abs/2605.29442">How Coding Agents Fail Their Users</a>, arXiv
           2605.29442 v2, 31 August 2026.</p>
       </div>
@@ -525,137 +518,125 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
   </div>
 </section>
 
-<!-- ============ STRENGTHS ============ -->
+<!-- ============ WHAT'S DIFFERENT ============ -->
 <section id="strengths" class="alt">
   <div class="wrap">
     <div class="shead">
       <div>
-        <p class="kicker rv">What only this does</p>
-        <h2 class="rv">The evidence lives in your repository, and a program refuses “done” without it.</h2>
+        <p class="kicker rv">What's different</p>
+        <h2 class="rv">Proof you can check, kept in your project.</h2>
       </div>
-      <p class="sub rv">Four properties. Some tools in the comparison further down have one or two
-        of them; none has all four. Read from each tool's own README on 2026-09-24.</p>
+      <p class="sub rv">Four things set it apart. Other tools do one or two of them; none does all
+        four. Compared on 2026-09-24, from each tool's own documentation.</p>
     </div>
 
     <div class="hows two">
       <div class="how rv" style="--c:var(--sage);--ct:var(--sage-ink)">
-        <p class="n">1 · in your repository</p>
-        <h3>The evidence is a line in your repository</h3>
-        <p>Date, commit, exit code, the exact command, a digest of it. Written by the tool into the
-          task file, committed with the work, readable in a year from any shell. If it says
-          <code>exit 0</code>, a process exited 0. You stop re-running the tests to find out whether
-          the agent did.</p>
-        <p class="else"><b>Elsewhere:</b> a hook's console line, a hosted verdict, JSON handed back to
-          the agent, or a receipt in the checkout that stops counting when the session ends.</p>
+        <p class="n">1 · kept in your project</p>
+        <h3>The proof lives next to your code</h3>
+        <p>Every finished step gets one line: when it ran, on which version of your code, which command,
+          and whether it passed. The tool writes it, not the AI. It's saved in your project, so anyone
+          can read it next week or next year. If it says it passed, it passed.</p>
+        <p class="else"><b>Elsewhere:</b> a message on screen, a verdict from someone else's server, a
+          report handed back to the AI, or a receipt that stops counting when the session ends.</p>
       </div>
       <div class="how rv" style="--c:var(--blue);--ct:var(--blue-ink)">
-        <p class="n">2 · bound to the question</p>
-        <h3>A digest ties each line to the command it answers</h3>
-        <p>Every entry carries a SHA-256 of the acceptance command. Change the command and every
-          earlier entry stops counting. Old evidence can never be reused for a new question, and a
-          hand-edited log is visible as one.</p>
-        <p class="else"><b>Elsewhere:</b> a receipt that counts while the session vouches for it. It
-          expires with the session, not with the question.</p>
+        <p class="n">2 · tied to the exact test</p>
+        <h3>Change the test, and the old proof stops counting</h3>
+        <p>Each line carries a fingerprint of the exact command that ran. Change the command and every
+          earlier result stops counting, so old proof can't be passed off as an answer to a new
+          question.</p>
+        <p class="else"><b>Elsewhere:</b> a receipt that counts only while the current session vouches
+          for it.</p>
       </div>
       <div class="how rv" style="--c:var(--rose);--ct:var(--rose-ink)">
-        <p class="n">3 · a program refuses done</p>
-        <h3>A lint, not a model, decides whether “done” stands</h3>
-        <p><code>adr-lint</code> reads the task index and the log and fails a <code>done</code> with no
-          exit-0 line behind it. In a session, a Makefile or CI, the same files give the same answer.
-          No model is asked, and none can talk its way past it.</p>
-        <p class="else"><b>Elsewhere:</b> claimcheck blocks a turn whose transcript contradicts the
-          agent's message; some tools refuse a commit until tests ran, as this one does. None refuses a
-          <em>done</em> written into the repository, when CI reads it a week later.</p>
+        <p class="n">3 · a program decides</p>
+        <h3>The AI can't talk its way to “done”</h3>
+        <p>A plain program reads the saved results and won't accept “done” without a passing one. It
+          gives the same answer on your laptop and in your build pipeline. No AI is asked.</p>
+        <p class="else"><b>Elsewhere:</b> one tool compares the AI's last message with what happened in
+          that turn; some block a commit until tests run, as this one does. None refuses a “done” saved
+          in your project when your build pipeline checks it later.</p>
       </div>
       <div class="how rv" style="--c:var(--clay);--ct:var(--clay-ink)">
-        <p class="n">4 · the test must fail once</p>
-        <h3>A green test is not trusted until it has gone red</h3>
-        <p><code>adr-verify --mutant</code> breaks the code on purpose, re-runs the check, restores the
-          file and records whether the test noticed. A test that passes no matter what is named in the
-          log instead of counted as safety.</p>
-        <p class="else"><b>Elsewhere:</b> red-first is a step the model is told to follow. No tool in
-          the comparison breaks the finished code and records whether the test noticed.</p>
+        <p class="n">4 · tests that can fail</p>
+        <h3>It checks that your tests can catch a bug</h3>
+        <p>A test that always passes looks like safety and isn't. Quality Harness breaks your code on
+          purpose, runs the test, puts the code back, and records whether the test noticed.</p>
+        <p class="else"><b>Elsewhere:</b> the AI is told to watch a test fail first. No other tool
+          breaks the finished code to check that the test notices.</p>
       </div>
     </div>
 
     <div class="measure rv">
-      <p class="kicker">Measured, with a baseline</p>
-      <p class="claim">Every eval case runs with the plugin and without it, five runs per arm.
-        Where the subject is verification, the baseline scores zero.</p>
+      <p class="kicker">Measured, with and without</p>
+      <p class="claim">The same tasks, run with the plugin and without it, five times each. On
+        checking the work, the difference is night and day.</p>
       <div class="mgrid">
         <div class="mrow">
-          <p class="what">Refuses to mark a task done without tool-written evidence</p>
+          <p class="what">Refuses to call a task done without real proof</p>
           <div class="nums"><span>with<b>0.76</b></span><span>without<b class="zero">0.00</b></span></div>
         </div>
         <div class="mrow">
-          <p class="what">Consults the existing decision records before writing a new one</p>
+          <p class="what">Reads past decisions before writing a new one</p>
           <div class="nums"><span>with<b>1.00</b></span><span>without<b class="zero">0.00</b></span></div>
         </div>
       </div>
-      <p class="note">Where a case tests ordinary good practice a capable model already follows, the
-        difference is zero. It changes one thing, and it is the thing this page is about.
-        Taken 2026-09-03; re-derive with <code>node scripts/eval-compare.mjs</code> in the repository.</p>
+      <p class="note">On general good practice, which the AI already does well, there was no
+        difference. It changes one thing, and it's the thing this page is about. Measured
+        2026-09-03; the numbers and the script behind them are in the repository.</p>
     </div>
   </div>
 </section>
 
-<!-- ============ CAUGHT, ON RECORD ============ -->
+<!-- ============ REAL CATCHES ============ -->
 <section id="caught">
   <div class="wrap">
     <div class="shead">
       <div>
-        <p class="kicker rv">Caught, on record</p>
-        <h2 class="rv">Four catches from real repositories, each with the record that shows it.</h2>
+        <p class="kicker rv">Real catches</p>
+        <h2 class="rv">Four times it caught something before it shipped.</h2>
       </div>
-      <p class="sub rv">Two from MultiPath Read/Write, the M in this stack, and two from the harness's own
-        repository, which runs the lifecycle on itself. Every one has a commit or a record you can
-        open; the paths are on the cards.</p>
+      <p class="sub rv">From two projects we build with it: MultiPath Read/Write, the M in this stack,
+        and Quality Harness itself. Each card names the file or commit, so you can check.</p>
     </div>
 
     <div class="hows two">
       <div class="how rv" style="--c:var(--sage);--ct:var(--sage-ink)">
-        <p class="n">mrw · 2026-09-13 to 2026-09-24 · a survivor pointed at the bug</p>
-        <h3>The mutant that survived named the path that later broke</h3>
-        <p>ADR-057's stress table recorded one mutant, <code>commitPathOps restore() no-op</code>, as
-          survived: no test reached a commit-phase failure. Eleven days later a chaos pass hit exactly
-          that path. A rename whose destination directory could not be created left the plan
-          half-applied while the receipt said every hunk was fine. A lying receipt is the one thing
-          that tool exists to prevent, and the survivor on record pointed straight at it. The fix is
-          ADR-066.</p>
+        <p class="n">MultiPath Read/Write · September 2026</p>
+        <h3>A weak spot it flagged turned out to be a real bug</h3>
+        <p>We broke one piece of code on purpose and the tests didn't notice. The record said so.
+          Eleven days later, a real bug turned up in exactly that code: a save that failed halfway was
+          reported as a full success. Reporting honestly is the whole point of that tool, and the earlier
+          flag pointed straight at the problem.</p>
 <pre><code>| `commitPathOps` restore() no-op | survived |
 <span class="c">docs/adr/ADR-057-unlink-and-rename.md · commit 93c8a1a</span></code></pre>
       </div>
       <div class="how rv" style="--c:var(--blue);--ct:var(--blue-ink)">
-        <p class="n">mrw · 2026-09-24 · a kill that was not a kill</p>
-        <h3><code>adr-verify</code> refused to count a compile error as a killed mutant</h3>
-        <p>A mutant re-added an unused variable in Go, which does not compile. The fence exited 1,
-          and a hand check would have logged a kill. The tool graded it inconclusive instead: the
-          fence failed on a build error, not an assertion. The mutant was rewritten so it compiled,
-          re-run, and killed for real. Without that grading the task's mutation evidence would have
-          rested on a compile error.</p>
+        <p class="n">MultiPath Read/Write · September 2026</p>
+        <h3>It wouldn't count a broken test run as a pass</h3>
+        <p>A deliberately broken version of the code didn't even compile. Checking by hand, you'd see
+          the failure and think the test had done its job. Quality Harness marked it “inconclusive”
+          instead. The test was re-run properly, and this time it caught the bug for real.</p>
 <pre><code>- 2026-09-24 · 9874f44* · mutant inconclusive · exit 1
   the fence failed on a build/parse error, not an assertion
 <span class="c">docs/adr/ADR-064-…/tasks/T1-astgrep-serves-a-named-file.md</span></code></pre>
       </div>
       <div class="how rv" style="--c:var(--rose);--ct:var(--rose-ink)">
-        <p class="n">quality-harness · 2026-09-24 · a fix that disabled the lock it fixed</p>
-        <h3>A different-lineage review found a green fix that silently weakened a test lock</h3>
-        <p>A change to the JavaScript test-lock masker was claimed done with a green gate. The Codex
-          review built one input: <code>const n = /x/ / 2; if (true) { /x/.test("x"); }</code>. The fix
-          read the division as a regex that swallowed the next brace, so the lock ended before the
-          assertion. The reviewer changed <code>assert.equal(1, 2)</code> to <code>assert.equal(1, 1)</code>
-          and the lock digest did not move. Shipped, a locked test could have been weakened with no
-          gate noticing.</p>
+        <p class="n">Quality Harness · September 2026</p>
+        <h3>A second opinion caught a fix that weakened a safeguard</h3>
+        <p>A change was marked done and every check was green. The harness asks a different AI model
+          to review risky changes, and that review found one input that slipped through. It would have
+          let someone quietly weaken a protected test with nothing noticing.</p>
 <pre><code>const n = /x/ / 2; if (true) { /x/.test("x"); }
 <span class="c">commit b13c98e · plugin/lib/record.py, tests/test-lock.test.mjs</span></code></pre>
       </div>
       <div class="how rv" style="--c:var(--clay);--ct:var(--clay-ink)">
-        <p class="n">quality-harness · 2026-09-24 · a test that never reached its code</p>
-        <h3>The mutation campaign showed a passing test had no guard under it</h3>
-        <p>A guard was added so an escaped Swift type name is reported as unrun rather than guessed,
-          and its test passed. The campaign deleted the guard; the test still passed. Its only escaped
-          case was also nested, so a different check refused it first. Until one more case was added,
-          the guard had no test at all, and nothing but a mutant could have said so.</p>
+        <p class="n">Quality Harness · September 2026</p>
+        <h3>A passing test turned out to test nothing</h3>
+        <p>A new safety check was added, and its test passed. When the check was deliberately removed,
+          the test still passed. It had never been testing the check at all. One more test case fixed
+          it, and only breaking the code on purpose could have shown the gap.</p>
 <pre><code>mutant survived · guard deleted, test still green
 <span class="c">commit 4abf41c · tests/gate-rules.test.mjs</span></code></pre>
       </div>
@@ -669,109 +650,105 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
     <div class="shead">
       <div>
         <p class="kicker rv">How it works</p>
-        <h2 class="rv">Four ordinary programs. Read their exit codes.</h2>
+        <h2 class="rv">Four small programs. Each one says pass or fail.</h2>
       </div>
-      <p class="sub rv">Your project declares one check. A record holds a decision; a task holds one
-        shell command that decides whether the work is done. Everything else is a program reading
-        those files.</p>
+      <p class="sub rv">You tell it how your project runs its tests, or it finds out. For bigger work,
+        each step gets one command that proves it. Everything else is a program reading those
+        files.</p>
     </div>
 
     <div class="hows two">
       <div class="how rv" style="--c:var(--clay);--ct:var(--clay-ink)">
-        <p class="n">0 · gate the commit</p>
-        <h3><code>qh-check</code> runs your check and holds the door</h3>
-        <p>Every day, on every change. It runs the check your project declared, records the result
-          against the current tree, and until a pass is recorded a command that names
-          <code>commit</code> or <code>push</code> is refused. A bug fix with no record still cannot
-          be published unchecked.</p>
+        <p class="n">0 · before every commit</p>
+        <h3><code>qh-check</code> runs your tests before a commit</h3>
+        <p>On every change. It runs your project's tests and remembers the result. Until they've
+          passed, the commit is blocked. Even a quick fix can't go out untested.</p>
 <pre><code>$ qh-check   <span class="c"># runs the declared check, exits with its code</span>
 {…,"command":"npm test","exit":0,"verdict":"passed",…}  <span class="c">→ checks.jsonl, abbreviated</span></code></pre>
       </div>
       <div class="how rv" style="--c:var(--sage);--ct:var(--sage-ink)">
-        <p class="n">1 · record the run</p>
-        <h3><code>adr-verify</code> runs the check and writes the line</h3>
-        <p>It runs the task's <code>## Acceptance</code> command, then appends the date, the git sha,
-          the exit code, the command and a SHA-256 of it. Change the command and every earlier
-          line stops matching. Logs are never edited by hand.</p>
+        <p class="n">1 · write down the result</p>
+        <h3><code>adr-verify</code> runs the proof and writes it down</h3>
+        <p>It runs the step's proof command itself, then adds one line: the date, the code version, the
+          result, the command, and its fingerprint. Change the command and earlier lines stop counting.
+          Nobody edits these lines by hand.</p>
 <pre><code>- 2026-09-23 · ac1d286* · exit 0 · `python3 -m unittest …`
   · acceptance-sha256:b43e2374…ec4405 · ms:52</code></pre>
       </div>
       <div class="how rv" style="--c:var(--rose);--ct:var(--rose-ink)">
-        <p class="n">2 · refuse a bare claim</p>
-        <h3><code>adr-lint</code> fails a <code>done</code> with no line behind it</h3>
-        <p>A task index that says <code>done</code> while the task's log has no matching exit-0 entry
-          is a blocking finding. Everything else the lint says is advice, and it says which is which.</p>
+        <p class="n">2 · refuse “done” without proof</p>
+        <h3><code>adr-lint</code> says no to an unproven “done”</h3>
+        <p>If a step is marked done but has no passing result behind it, this program refuses it.
+          Everything else it reports is advice, and it tells you which is which.</p>
 <pre><code>README.md: T1 marked done but its Verification Log
 has no exit-0 entry — run adr-verify, don't hand-declare</code></pre>
       </div>
       <div class="how rv" style="--c:var(--blue);--ct:var(--blue-ink)">
-        <p class="n">3 · prove the test can fail</p>
-        <h3><code>adr-verify --mutant</code> breaks the code on purpose</h3>
-        <p>A green test proves little until something shows it can go red. The mutant run edits a
-          source file, re-runs the check, restores the file, and records whether the test noticed.
-          A survivor is a finding about the test.</p>
+        <p class="n">3 · check the test can fail</p>
+        <h3><code>adr-verify --mutant</code> breaks your code on purpose</h3>
+        <p>It breaks the code, runs the test, and puts the code back. If the test still passes, that
+          test isn't protecting anything, and now you know.</p>
 <pre><code>- 2026-09-23 · ac1d286* · mutant killed · exit 1
   · `duration.py` · from `int(text)` to `0` · why …</code></pre>
       </div>
     </div>
-    <p class="stamp rv">the plugin runs this lifecycle on itself: its own tests and mutation campaign run in CI on every push, and <code>bash scripts/selftest.sh</code> prints today's numbers</p>
+    <p class="stamp rv">Quality Harness is built with itself: its own tests run on every change, and <code>bash scripts/selftest.sh</code> shows today's numbers</p>
   </div>
 </section>
 
-<!-- ============ THE CONVENTION ============ -->
+<!-- ============ UNDER THE HOOD ============ -->
 <section id="convention">
   <div class="wrap">
     <div class="shead">
       <div>
-        <p class="kicker rv">The convention</p>
-        <h2 class="rv">One line, two files, and a word for not knowing.</h2>
+        <p class="kicker rv">Under the hood</p>
+        <h2 class="rv">What gets written down, and who writes it.</h2>
       </div>
-      <p class="sub rv">Every gate is a deterministic reading of files in your repository. Same files,
-        same answer, from any shell, with no model in the loop. A model routes the work; a model
-        never writes a verdict. This is the whole vocabulary.</p>
+      <p class="sub rv">Every check is a plain program reading files in your project. Same files, same
+        answer, on any machine. The AI does the work; it never gets to mark it as passed.</p>
     </div>
 
-    <ol class="flow rv" aria-label="How a done claim becomes a recorded run">
+    <ol class="flow rv" aria-label="How a done becomes a checked result">
       <li>
         <div class="node" style="--c:var(--line-2);--ct:var(--ink-3)">
           <p class="who">You write</p>
-          <p class="what">One acceptance command</p>
-          <p class="det">In the task file, under <code>## Acceptance</code>. One shell line that decides
-            whether the work is done. The tool never guesses it.</p>
+          <p class="what">One proof command</p>
+          <p class="det">In the step's file, under <code>## Acceptance</code>. One line that decides
+            whether the step is done. The tool never guesses it.</p>
           <code>python3 -m unittest -v test_duration</code>
         </div>
       </li>
       <li>
         <div class="node" style="--c:var(--sage);--ct:var(--sage-ink)">
           <p class="who">The tool runs</p>
-          <p class="what"><code>adr-verify</code> executes it</p>
-          <p class="det">A process, not a model. Whatever exit code comes back is the answer, and a
-            check that could not run says so instead of passing.</p>
+          <p class="what"><code>adr-verify</code> runs it</p>
+          <p class="det">A real program, not the AI. Whatever the result is, that's the answer. If it
+            couldn't run, it says so instead of passing.</p>
         </div>
       </li>
       <li>
         <div class="node" style="--c:var(--sage);--ct:var(--sage-ink)">
           <p class="who">The tool writes</p>
-          <p class="what">One line into <code>## Verification Log</code></p>
-          <p class="det">Date, commit, exit code, the command, a digest of it, the duration. Appended,
-            never edited. Taken apart below.</p>
+          <p class="what">One line of proof</p>
+          <p class="det">When, which code version, the result, the command, its fingerprint, how long it
+            took. Added, never edited. Broken down below.</p>
         </div>
       </li>
       <li>
         <div class="node" style="--c:var(--blue);--ct:var(--blue-ink)">
           <p class="who">A program reads</p>
-          <p class="what"><code>adr-lint</code> checks the claim</p>
-          <p class="det">It reads the task index and the log. A <code>done</code> needs an exit-0 line
-            whose digest matches the current command. Nothing else is consulted.</p>
+          <p class="what"><code>adr-lint</code> checks it</p>
+          <p class="det">A “done” needs a passing line whose fingerprint matches today's command.
+            Nothing else counts.</p>
         </div>
       </li>
       <li>
         <div class="node" style="--c:var(--clay);--ct:var(--clay-ink)">
-          <p class="who">What comes out</p>
+          <p class="who">The answer</p>
           <div class="pills">
-            <span class="pill" style="--pbg:var(--sage-bg)">done stands<small>an exit-0 line, digest current</small></span>
-            <span class="pill" style="--pbg:var(--rose-bg)">done refused<small>no line, or the command changed</small></span>
-            <span class="pill" style="--pbg:var(--clay-bg)">UNRUN · PARTIAL · UNPROVEN<small>nothing was measured; never a pass</small></span>
+            <span class="pill" style="--pbg:var(--sage-bg)">done stands<small>a passing line, same command</small></span>
+            <span class="pill" style="--pbg:var(--rose-bg)">done refused<small>no passing line, or the command changed</small></span>
+            <span class="pill" style="--pbg:var(--clay-bg)">UNRUN · PARTIAL · UNPROVEN<small>nothing was checked; never a pass</small></span>
           </div>
         </div>
       </li>
@@ -780,77 +757,74 @@ has no exit-0 entry — run adr-verify, don't hand-declare</code></pre>
       <span><i style="--c:var(--line-2)"></i>you write it</span>
       <span><i style="--c:var(--sage)"></i>the tool writes it</span>
       <span><i style="--c:var(--blue)"></i>a program reads it</span>
-      <span><i style="--c:var(--clay)"></i>the verdict</span>
+      <span><i style="--c:var(--clay)"></i>the answer</span>
     </p>
 
     <div class="anat rv">
-      <div class="cap"><i></i> one verification log entry, taken apart</div>
+      <div class="cap"><i></i> one line of proof, piece by piece</div>
 <pre><code>- <b style="--fbg:var(--sage-bg);--fc:var(--sage-ink)">2026-09-03<sup>1</sup></b> · <b style="--fbg:var(--blue-bg);--fc:var(--blue-ink)">1d9381f*<sup>2</sup></b> · <b style="--fbg:var(--rose-bg);--fc:var(--rose-ink)">exit 0<sup>3</sup></b> · <b style="--fbg:var(--clay-bg);--fc:var(--clay-ink)">`python3 -m unittest -v test_duration`<sup>4</sup></b> · <b style="--fbg:var(--bg-2);--fc:var(--ink-2)">acceptance-sha256:b43e2374…<sup>5</sup></b> · <b style="--fbg:var(--bg-2);--fc:var(--ink-2)">ms:75<sup>6</sup></b></code></pre>
       <ol class="parts">
-        <li data-n="1" style="--fbg:var(--sage-bg);--fc:var(--sage-ink)"><code>2026-09-03</code><span><b>When it ran.</b> The date the tool executed the command, not the date someone typed it.</span></li>
-        <li data-n="2" style="--fbg:var(--blue-bg);--fc:var(--blue-ink)"><code>1d9381f*</code><span><b>Which commit.</b> The star means the working tree was dirty at the time, and that is recorded too.</span></li>
-        <li data-n="3" style="--fbg:var(--rose-bg);--fc:var(--rose-ink)"><code>exit 0</code><span><b>What the process returned.</b> If it says 0, a process exited 0. No summary, no paraphrase.</span></li>
-        <li data-n="4" style="--fbg:var(--clay-bg);--fc:var(--clay-ink)"><code>`python3 -m unittest …`</code><span><b>The command itself.</b> Your <code>## Acceptance</code> line, verbatim, so a reader can run it again.</span></li>
-        <li data-n="5" style="--fbg:var(--bg-2);--fc:var(--ink-2)"><code>acceptance-sha256:…</code><span><b>A digest of that command.</b> Edit the acceptance line and every earlier entry stops matching. There is no way to keep old evidence for a new question.</span></li>
-        <li data-n="6" style="--fbg:var(--bg-2);--fc:var(--ink-2)"><code>ms:75</code><span><b>How long it took.</b> Useful when a check that used to take a second starts taking a minute.</span></li>
+        <li data-n="1" style="--fbg:var(--sage-bg);--fc:var(--sage-ink)"><code>2026-09-03</code><span><b>When it ran.</b> The date the check actually ran.</span></li>
+        <li data-n="2" style="--fbg:var(--blue-bg);--fc:var(--blue-ink)"><code>1d9381f*</code><span><b>Which version of your code.</b> The star means there were unsaved changes too, and that's recorded.</span></li>
+        <li data-n="3" style="--fbg:var(--rose-bg);--fc:var(--rose-ink)"><code>exit 0</code><span><b>The result.</b> 0 means it passed. It's the program's own answer, not a summary.</span></li>
+        <li data-n="4" style="--fbg:var(--clay-bg);--fc:var(--clay-ink)"><code>`python3 -m unittest …`</code><span><b>The command.</b> Exactly what was run, so anyone can run it again.</span></li>
+        <li data-n="5" style="--fbg:var(--bg-2);--fc:var(--ink-2)"><code>acceptance-sha256:…</code><span><b>Its fingerprint.</b> Change the command and every earlier line stops counting. Old proof can't answer a new question.</span></li>
+        <li data-n="6" style="--fbg:var(--bg-2);--fc:var(--ink-2)"><code>ms:75</code><span><b>How long it took.</b> Handy when something that took a second starts taking a minute.</span></li>
       </ol>
     </div>
 
-    <p class="afterrules rv">The files are yours and the entries are the tool's: a task file holds one
-      <code>## Acceptance</code> command and two empty sections, <code>## Verification Log</code> and
-      <code>## Mutation Log</code>, which the tool appends to and refuses to create. Nobody, human or
-      model, edits a log by hand.</p>
+    <p class="afterrules rv">Your files stay yours. The tool only adds lines under two headings,
+      <code>## Verification Log</code> and <code>## Mutation Log</code>, and never creates them.
+      Nobody, person or AI, edits those lines by hand.</p>
   </div>
 </section>
 
-<!-- ============ USE IT RIGHT ============ -->
+<!-- ============ GETTING STARTED ============ -->
 <section id="use" class="alt">
   <div class="wrap">
     <div class="shead">
       <div>
-        <p class="kicker rv">Use it right</p>
-        <h2 class="rv">Six habits that decide whether it works for you.</h2>
+        <p class="kicker rv">Getting started</p>
+        <h2 class="rv">Six habits that make it work.</h2>
       </div>
-      <p class="sub rv">The tool is small. The discipline is the product. Each of these is in the
-        onboarding guide; this is the short form, in the order you will meet them.</p>
+      <p class="sub rv">The tool is small. These habits are what make it pay off. Here's the short
+        version, in the order you'll meet them.</p>
     </div>
 
     <ol class="rules">
       <li class="rv">
         <div>
-          <h3>One command, once, in the main session</h3>
-          <p>It classifies the work and routes it: a bug goes straight to execution, a decision you
-            would regret reversing goes through a record first. You do not have to know which. Not
-            inside a subagent, and not for questions.</p>
+          <h3>One command, once, at the start</h3>
+          <p>Type it in your main session. It sorts the work for you: a bug goes straight to a fix, a
+            bigger decision gets written down first. Use it for real work, not quick questions.</p>
 <pre><code>/quality-harness:work</code></pre>
         </div>
       </li>
       <li class="rv">
         <div>
-          <h3>Write the acceptance command before the code</h3>
-          <p>A task carries <code>## Acceptance</code>: one shell line that decides whether the work
-            is done. Writing it first is the tax, and it is the point. If you cannot say what would
-            prove the work done, that is information about the work, not about the tool.</p>
+          <h3>Say how you'll know it works, before you start</h3>
+          <p>Each step gets one command that decides whether it's done. Writing it first is the one
+            extra step, and it's worth it: if you can't say what would prove the work is done, the work
+            isn't clear yet.</p>
 <pre><code>## Acceptance
 python3 -m unittest -v test_duration</code></pre>
         </div>
       </li>
       <li class="rv">
         <div>
-          <h3>Commit the evidence with the change</h3>
-          <p><code>adr-verify</code> writes into your task file and tells you so every time. Those
-            lines are the record; commit them with the work they prove. Never hand-edit a log. If you
-            change the acceptance command, every earlier entry stops matching. Re-run it.</p>
+          <h3>Commit the proof with the change</h3>
+          <p>When the tool adds its line, commit it along with the work. Never edit those lines by hand.
+            If you change the proof command, run it again.</p>
 <pre><code>[adr-verify] WROTE this entry into …/T1.md
 <span class="c"># commit it with the work it evidences</span></code></pre>
         </div>
       </li>
       <li class="rv">
         <div>
-          <h3>Add one mutant in week one</h3>
-          <p>Pick the code you would most hate to see silently broken. <code>mutant killed</code> is
-            the answer you want; a survivor is a test that proves nothing. Run the full campaign in
-            CI and at release, not on every edit.</p>
+          <h3>In your first week, break one thing on purpose</h3>
+          <p>Pick the code you'd least like to see break without anyone noticing. The tool breaks it,
+            runs the test, and puts it back. “mutant killed” means your test works. Save the full run
+            for your build pipeline.</p>
 <pre><code>adr-verify T1.md --mutant duration.py \
   --from 'int(text)' --to '0' \
   --why 'the test must notice'</code></pre>
@@ -858,148 +832,141 @@ python3 -m unittest -v test_duration</code></pre>
       </li>
       <li class="rv">
         <div>
-          <h3><code>UNRUN</code>, <code>PARTIAL</code> and <code>UNPROVEN</code> are not passes</h3>
-          <p>They mean nothing was measured. The tool says so instead of reporting a clean result it
-            never observed. Read them that way, and never let one through as green.</p>
+          <h3><code>UNRUN</code>, <code>PARTIAL</code> and <code>UNPROVEN</code> mean “not checked”</h3>
+          <p>The tool tells you when it couldn't check something, instead of pretending it passed.
+            Treat these as not passed, every time.</p>
         </div>
       </li>
       <li class="rv">
         <div>
-          <h3>When a commit is refused, run the check</h3>
-          <p>Once your project declares a check, a <code>commit</code> or <code>push</code> is
-            refused until <code>qh-check</code> has passed on the current tree. That is the whole
-            fix. <code>"publish": "warn"</code> in <code>.quality-harness.json</code> if you must.</p>
+          <h3>If a commit is blocked, run your tests</h3>
+          <p>Once your project has tests the tool can find, a commit is blocked until they pass.
+            Running <code>qh-check</code> is the whole fix. Prefer a warning? Set
+            <code>"publish": "warn"</code> in <code>.quality-harness.json</code>.</p>
 <pre><code>qh-check
 <span class="c"># your check runs and is recorded</span></code></pre>
         </div>
       </li>
     </ol>
-    <p class="afterrules rv">Lost the thread? <code>node "$(qh-root)/scripts/work-next.mjs"</code> reads the
-      corpus and says which stage is waiting and why. Records are for decisions you would regret
-      reversing; a one-line fix is a one-line fix. Leave specs, architecture lint and consensus alone
-      until a problem calls for them.</p>
+    <p class="afterrules rv">Lost track? <code>node "$(qh-root)/scripts/work-next.mjs"</code> tells you
+      what's waiting and why. Written decisions are for choices you'd regret undoing; a one-line fix is
+      just a fix. Leave the advanced features alone until you need them.</p>
   </div>
 </section>
 
-<!-- ============ COMPARED ============ -->
+<!-- ============ HOW IT COMPARES ============ -->
 <section id="compare">
   <div class="wrap">
     <div class="shead">
       <div>
-        <p class="kicker rv">Compared, by mechanism</p>
-        <h2 class="rv">Who decides “done”, and what is written down when they do.</h2>
+        <p class="kicker rv">How it compares</p>
+        <h2 class="rv">Who decides the work is done, and is it written down?</h2>
       </div>
       <p class="sub rv">
-        Each tool's mechanism as its own README or product page describes it, read 2026-09-24. Two
-        tables: the frameworks and reviewers most people already run, then the new tools built on the
-        same premise as this one.
+        We read each tool's own documentation on 2026-09-24. First, the tools most people already use.
+        Then the new tools built on the same idea as this one.
       </p>
     </div>
 
-    <p class="tabhead rv">The frameworks and reviewers</p>
+    <p class="tabhead rv">The tools most people already use</p>
     <div class="tablewrap rv">
       <table>
         <thead>
-          <tr><th>Tool</th><th>How “done” is decided</th><th>Tool-written evidence of the claim</th></tr>
+          <tr><th>Tool</th><th>How “done” is decided</th><th>Written proof?</th></tr>
         </thead>
         <tbody>
           <tr>
             <td><span class="tool">obra/superpowers</span></td>
-            <td>Prose to the model. <code>verification-before-completion/SKILL.md</code>: “no
-              completion claims without fresh verification evidence.”</td>
-            <td><span class="no">None.</span> Nothing checks the instruction was obeyed.</td>
+            <td>Instructions to the AI: “no completion claims without fresh verification
+              evidence.”</td>
+            <td><span class="no">None.</span> Nothing checks the instruction was followed.</td>
           </tr>
           <tr>
             <td><span class="tool">github/spec-kit</span></td>
-            <td><code>/speckit.converge</code> assesses by prompt. A <code>/speckit.verify</code>
-              with a report file is an open discussion (#1662), agent-driven.</td>
-            <td><span class="no">None shipped.</span></td>
+            <td>The AI assesses its own work. A proper check step is still being discussed (#1662).</td>
+            <td><span class="no">None yet.</span></td>
           </tr>
           <tr>
             <td><span class="tool">Fission-AI/OpenSpec</span></td>
-            <td>Agent judgement.</td>
+            <td>The AI's judgement.</td>
             <td><span class="no">None documented.</span></td>
           </tr>
           <tr>
             <td><span class="tool">bmad-code-org/BMAD-METHOD</span></td>
-            <td>Multi-agent role simulation; agent judgement.</td>
+            <td>Several AI roles; the AI's judgement.</td>
             <td><span class="no">None documented.</span></td>
           </tr>
           <tr>
             <td><span class="tool">SonarQube</span></td>
-            <td>Deterministic analyzers under the organisation's quality profile.</td>
-            <td>Verifies the <em>code</em>, not the agent's claim about the work.</td>
+            <td>Fixed rules that scan the code.</td>
+            <td>Checks the <em>code</em>, not the AI's claim about the work.</td>
           </tr>
           <tr>
             <td><span class="tool">CodeRabbit · Greptile · Qodo</span></td>
-            <td>A model reviews the PR. The one independent catch rate is c-CRAB's ≤ 32.1%
-              (arXiv 2603.23448).</td>
-            <td>Review comments. A clean pass is one reviewer's silence.</td>
+            <td>An AI reviews the pull request. The one independent test found they catch at most
+              32.1% (c-CRAB, arXiv 2603.23448).</td>
+            <td>Review comments. A quiet review isn't proof.</td>
           </tr>
           <tr class="us">
             <td><span class="tool">quality-harness</span></td>
-            <td><code>adr-verify</code> runs the task's acceptance command itself and appends the
-              date, sha, exit code, command and a SHA-256 of it to the record.
-              <code>adr-lint</code> refuses <code>done</code> without a matching exit-0 line.
-              <code>adr-verify --sweep</code> re-runs every recorded claim and sorts it into held,
-              false, superseded or unrunnable.</td>
+            <td>A program runs your proof command and saves the result, with a fingerprint of the
+              command, in your project. A step can't be marked done without a passing result. It can
+              also re-run every saved result to see which still hold.</td>
             <td><span class="yes">Yes.</span> The line at the top of this page.</td>
           </tr>
         </tbody>
       </table>
     </div>
-    <p class="tabnote rv">It is not either-or. It runs alongside superpowers and the review bots: they
-      ask for verification in prose or comments, this adds the line a program wrote.</p>
+    <p class="tabnote rv">You don't have to choose. It works alongside superpowers and the review bots:
+      they ask the AI to check its work, and this writes down whether it did.</p>
 
-    <p class="tabhead rv">The verification tools, same premise, different mechanism</p>
+    <p class="tabhead rv">New tools with the same idea, and how they differ</p>
     <div class="tablewrap rv">
       <table>
         <thead>
-          <tr><th>Tool</th><th>How the claim is checked</th><th>What is written down, and where</th></tr>
+          <tr><th>Tool</th><th>How it checks</th><th>What's saved, and where</th></tr>
         </thead>
         <tbody>
           <tr>
             <td><span class="tool">claimcheck</span></td>
-            <td>A Stop hook reads the agent's final message and the turn's tool output, and blocks only
-              on a direct contradiction: “170 passed” against a runner that printed 162. Runs nothing
-              itself. Reports zero false alarms on 4,000+ real turns.</td>
-            <td><span class="no">Nothing.</span> Stateless; a verdict on one turn's transcript.</td>
+            <td>When the AI finishes a turn, it compares what the AI said with what actually happened,
+              and blocks a clear contradiction, like “170 tests passed” when the output said 162.
+              Reports zero false alarms across 4,000+ real turns.</td>
+            <td><span class="no">Nothing.</span> It judges one turn and moves on.</td>
           </tr>
           <tr>
             <td><span class="tool">truthguard</span></td>
-            <td>Hooks check the exit code of each command after it ran and run tests before a commit.
-              Warns on a mismatch, blocks only dangerous commands.</td>
-            <td><span class="no">Console warnings.</span> File checksums for its own comparison.</td>
+            <td>Watches each command's result and runs tests before a commit. Warns on a mismatch;
+              blocks only dangerous commands.</td>
+            <td><span class="no">Warnings on screen.</span></td>
           </tr>
           <tr>
             <td><span class="tool">DidWork</span></td>
-            <td>A hosted service. The agent submits a claim (“pushed”, “deployed”, “charged”) and the
-              service asks GitHub, Stripe or Jira whether it is true. A Stop gate blocks a turn that
-              ends after a side effect without asking. Fails open. Needs an API key.</td>
-            <td>A verdict from a remote API: <code>verified</code>, <code>failed</code>,
-              <code>unknown</code>.</td>
+            <td>An online service. The AI reports what it did (“pushed”, “deployed”, “charged”) and the
+              service checks with GitHub, Stripe or Jira. Needs an account.</td>
+            <td>A verdict from their server.</td>
           </tr>
           <tr>
             <td><span class="tool">Critique</span></td>
-            <td>A paid finish pass. Rebuilds the change in a separate workspace, runs the tests, and
-              hands the agent a JSON verdict with an exit code. The agent decides what to do with it.</td>
-            <td>JSON returned to the agent. Nothing enters your repository.</td>
+            <td>A paid service. Rebuilds your change separately, runs the tests, and hands the AI a
+              verdict. The AI decides what to do with it.</td>
+            <td>A report handed to the AI. Nothing saved in your project.</td>
           </tr>
           <tr>
             <td><span class="tool">dev-process-toolkit</span></td>
-            <td>The nearest neighbour. Gate skills run typecheck, lint and tests; a hook refuses
-              <code>git commit</code> until they have. “A file written by hand is not evidence.”</td>
-            <td>A receipt in the checkout that counts while a skill call in the session vouches for
-              it. No digest of the command; red-first is a workflow step, and nothing breaks the
-              finished code to check a test can fail.</td>
+            <td>The closest to this one. Runs your type checks, lint and tests, and blocks the commit
+              until they've run. “A file written by hand is not evidence.”</td>
+            <td>A receipt in your project that counts only while the current session vouches for it.
+              No fingerprint of the command. Testing-first is a step the AI follows; nothing breaks the
+              finished code to check the tests.</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <p class="back rv">Across both tables, one row keeps the evidence in your repository, binds it to
-      the command by a digest, lets a program refuse done, and proves the test could fail.
-      <a href="#strengths">The four properties, side by side →</a></p>
+    <p class="back rv">Only one row keeps the proof in your project, ties it to the exact command, lets
+      a program refuse “done”, and checks that your tests can fail.
+      <a href="#strengths">See the four side by side →</a></p>
   </div>
 </section>
 
@@ -1009,77 +976,73 @@ python3 -m unittest -v test_duration</code></pre>
     <div class="shead">
       <div>
         <p class="kicker rv">Install</p>
-        <h2 class="rv">Two commands. Then ask for work as you normally would.</h2>
+        <h2 class="rv">Two commands to install. Then work as you normally do.</h2>
       </div>
-      <p class="sub rv">Tutorial 1 is a throwaway repository, one real test and a task file you write
-        by hand. It gets you to the first tool-written line in about ten minutes, and the tool's own
-        part of that is well under a second.</p>
+      <p class="sub rv">Want to see it first? Tutorial 1 takes about ten minutes, with a throwaway
+        project and one real test. The tool's own part of that takes under a second.</p>
     </div>
 
     <div class="steps">
       <div class="step rv">
         <p class="verb">In Claude Code</p>
         <h3>Install the plugin</h3>
-        <p class="t">A marketplace and a plugin from it. Restart the session afterwards.</p>
+        <p class="t">Adds the plugin to Claude Code. Restart your session afterwards.</p>
 <pre><code><span class="p">/plugin marketplace add</span> D3-lt/quality-harness
 <span class="p">/plugin install</span> quality-harness@quality-harness</code></pre>
-        <p class="after">Or say it: “Add the Claude Code plugin marketplace D3-lt/quality-harness, then install the quality-harness plugin from it.”</p>
+        <p class="after">Or just ask: “Add the Claude Code plugin marketplace D3-lt/quality-harness, then install the quality-harness plugin from it.”</p>
         <a class="btn" href="https://github.com/D3-lt/quality-harness/blob/main/docs/TUTORIALS.md">Tutorial 1, ten minutes →</a>
       </div>
       <div class="step rv">
-        <p class="verb">In your repository</p>
-        <h3>Ask for work</h3>
-        <p class="t">Once, in the main session, for anything substantive. Then ask as you always did.
-          When the work claims to be done, the claim has a recorded run behind it.</p>
+        <p class="verb">In your project</p>
+        <h3>Start with one command</h3>
+        <p class="t">Type this once in your main session, then ask for work as usual. When the work is
+          done, there's real proof behind it.</p>
 <pre><code><span class="p">/quality-harness:work</span></code></pre>
-        <p class="after">Hour one is those two things. The rest of the lifecycle is for problems you may
-          not have yet; the onboarding guide says what to leave alone.</p>
+        <p class="after">That's your first hour. The rest is for problems you may not have yet; the
+          onboarding guide says what to skip.</p>
         <a class="btn" href="https://github.com/D3-lt/quality-harness/blob/main/docs/ONBOARDING.md">Onboarding, first week →</a>
       </div>
       <div class="step rv">
-        <p class="verb">On your corpus</p>
-        <h3>See what every reader says about your records</h3>
-        <p class="t">One command runs every reader the plugin ships over your repository and prints one
-          JSON: paths relative, disagreements between readers computed, its own digest included.
-          Paste it into an issue as it is.</p>
-<pre><code><span class="k">$</span> node "$(qh-root)/scripts/corpus-probe.mjs" --json
-<span class="c"># add --sweep to re-run every recorded claim</span></code></pre>
-        <p class="after">The same command the plugin's CI runs over its own corpora, so a report from
-          yours is directly comparable.</p>
-        <a class="btn" href="https://github.com/D3-lt/quality-harness/blob/main/docs/INSTALL.md">INSTALL.md →</a>
+        <p class="verb">Curious?</p>
+        <h3>See what it makes of your project</h3>
+        <p class="t">One command reads your project the way Quality Harness does and prints a report.
+          If something looks off, paste it into an issue.</p>
+<pre><code><span class="k">$</span> node "$(qh-root)/scripts/corpus-probe.mjs" --json</code></pre>
+        <p class="after">It's the same check the plugin runs on its own projects, so a report from yours
+          is easy to compare.</p>
+        <a class="btn" href="https://github.com/D3-lt/quality-harness/blob/main/docs/INSTALL.md">Full install guide →</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ SCOPE ============ -->
+<!-- ============ GOOD TO KNOW ============ -->
 <section id="scope">
   <div class="wrap">
     <div class="shead">
       <div>
-        <p class="kicker rv">Scope</p>
-        <h2 class="rv">Three design choices and the price, stated up front.</h2>
+        <p class="kicker rv">Good to know</p>
+        <h2 class="rv">Three design choices, and what it costs you.</h2>
       </div>
-      <p class="sub rv">Each has a decision record or a measurement behind it in the repository. They
-        are the shape of the tool, not gaps, and the last one is what it costs you.</p>
+      <p class="sub rv">Each one is a deliberate decision, recorded in the project. The last one is the
+        price.</p>
     </div>
     <ul class="nots rv">
-      <li><span><b>The hooks are Claude Code.</b> Cursor, Codex, Zed and Claude Desktop get the gates
-        by path and a read-only MCP server (<code>qh-mcp</code>) that can tell you a record is dirty.
-        Recording evidence needs a shell, because only a process that ran can write an exit code.</span></li>
-      <li><span><b>One refusal, on purpose.</b> Once your project has a check, a command that names
-        <code>commit</code> or <code>push</code> is refused until <code>qh-check</code> has passed on
-        the tree (ADR-061). A warning a model treats as noise still publishes. Everything else advises
-        and exits non-zero at most, so a CI step can read it.</span></li>
-      <li><span><b>It knows its own record shape.</b> A MADR or Nygard file is reported as
-        <code>not-recognised</code> and left alone (ADR-038). Bring new decisions to
-        <code>/quality-harness:adr-write</code>; your old corpus is not judged.</span></li>
-      <li><span><b>The price.</b> More turns: 2.33× on the README's own ablation, though most of the
-        extra input is cache reads, billed well below fresh tokens.
-        You write the acceptance command yourself; the tool will not guess it. The full
-        mutation campaign is a CI and release job, about forty minutes on the plugin's own repository.
-        Hooks run on every edit and start a Node process each time. <code>claude plugin details
-        quality-harness</code> prints the context cost of the version you have.</span></li>
+      <li><span><b>Built for Claude Code.</b> The automatic checks run inside Claude Code. Cursor, Codex,
+        Zed and Claude Desktop can run the checks and use a read-only connection (<code>qh-mcp</code>)
+        that tells you when something's off. Saving proof needs a terminal, because only a program that
+        actually ran can report a result.</span></li>
+      <li><span><b>It blocks one thing, on purpose.</b> Once your project has tests the tool can find, a
+        commit is blocked until they pass (ADR-061). A warning the AI shrugs off still gets committed,
+        so this one is a block. Everything else is advice.</span></li>
+      <li><span><b>It has its own format for decisions.</b> Decision records in other formats (MADR,
+        Nygard) are left alone, not judged (ADR-038). New decisions written with
+        <code>/quality-harness:adr-write</code> get the proof lines.</span></li>
+      <li><span><b>The price.</b> More steps: about 2.3 times as many in the project's own measurement,
+        though most of the extra input is cheap, cached reads. You write the proof command yourself; the
+        tool won't guess it. The full “break it on purpose” run takes about forty minutes, so it belongs
+        in your build pipeline. The automatic checks run on every edit, and
+        <code>claude plugin details quality-harness</code> shows how much context it uses.</span></li>
     </ul>
   </div>
 </section>
@@ -1088,38 +1051,34 @@ python3 -m unittest -v test_duration</code></pre>
 <section id="faq" class="alt">
   <div class="wrap faqgrid">
     <div class="head">
-      <p class="kicker rv">Answers</p>
-      <h2 class="rv">Straight answers.</h2>
+      <p class="kicker rv">Questions</p>
+      <h2 class="rv">Common questions.</h2>
     </div>
     <div class="faq">
-      <details class="rv" open><summary>Is this just “write tests”?</summary>
-        <p>No. Tests decide whether the code is right. This decides whether the <em>claim</em> that the
-          work is done has a run behind it, and refuses the claim when it does not. The papers above
-          measured the gap between those two things; this is aimed at the gap.</p>
+      <details class="rv" open><summary>Isn't this just “write tests”?</summary>
+        <p>No. Tests check whether the code is right. This checks whether the claim that the work is
+          done has a real test run behind it, and refuses the claim when it doesn't.</p>
       </details>
-      <details class="rv"><summary>Why not have the model verify its own work?</summary>
-        <p>Because the model is the thing being checked. Five LLM judges could not reliably detect false
-          success (AUROC ≤ 0.65, arXiv 2606.09863). A model here may flag and exclude; only a program may
-          record. <code>adr-judge</code> exists and is advisory by construction.</p>
+      <details class="rv"><summary>Why not let the AI check its own work?</summary>
+        <p>Because the AI is what's being checked. In one study, five AI judges couldn't reliably spot
+          false “done” reports (0.65 at best, where 0.5 is a coin toss; arXiv 2606.09863). Here, an AI
+          can flag things, but only a program can record a pass.</p>
       </details>
-      <details class="rv"><summary>Does it block me?</summary>
-        <p>One refusal, named above (ADR-061), with an opt-out. Everything else advises: it exits
-          non-zero so a CI step can read it, and it says what to do next. A tool that stops you without
-          saying why is worse than no tool, and that is written into the project's rules.</p>
+      <details class="rv"><summary>Will it get in my way?</summary>
+        <p>In one place: a commit is blocked until your tests pass, and you can turn that into a
+          warning. Everything else is advice, and it tells you what to do next.</p>
       </details>
-      <details class="rv"><summary>Can I run the checks outside Claude Code?</summary>
-        <p>Yes. They are Python and Node programs under <code>plugin/bin</code> and
-          <code>plugin/scripts</code>; run them by path from any shell, Makefile or CI job, with no
-          model involved. Inside a Claude Code session they resolve by bare name.</p>
+      <details class="rv"><summary>Can I use it outside Claude Code?</summary>
+        <p>Yes. The checks are ordinary Python and Node programs. Run them from any terminal, script or
+          build pipeline, with no AI involved.</p>
       </details>
       <details class="rv"><summary>Does it work with my language?</summary>
-        <p>It has no opinion about your language or test runner. The acceptance command is whatever you
-          type: <code>go test ./...</code>, <code>pytest -k</code>, <code>npm test</code>. That also means
-          it will not guess one for you.</p>
+        <p>Yes. The proof command is whatever you'd normally type: <code>go test ./...</code>,
+          <code>pytest -k</code>, <code>npm test</code>. It doesn't guess one for you.</p>
       </details>
-      <details class="rv"><summary>Who is behind it, and what does it cost?</summary>
-        <p>Made by <a href="https://github.com/D3-lt">D3.lt</a>, hosted by Atviro Kodo Sprendimai. Free and
-          open source, no accounts, nothing leaves your machine. It is one of three tools on the
+      <details class="rv"><summary>Who makes it, and what does it cost?</summary>
+        <p>Made by <a href="https://github.com/D3-lt">D3.lt</a>, hosted by Atviro Kodo Sprendimai. Free
+          and open source. No account, and nothing leaves your machine. It's one of three tools on the
           <a href="https://qamstack.dev/">QAM Stack</a> page; each installs on its own.</p>
       </details>
     </div>
@@ -1152,7 +1111,7 @@ python3 -m unittest -v test_duration</code></pre>
       "isAccessibleForFree": true,
       "url": "https://qamstack.dev/quality-harness/",
       "codeRepository": "https://github.com/D3-lt/quality-harness",
-      "description": "A Claude Code plugin where a task is done only when a tool ran its acceptance check and wrote the exit code and a digest of what ran into the record; a task marked done without that line fails adr-lint.",
+      "description": "A free Claude Code plugin that runs your tests when your AI agent says the work is done, keeps the result in your project, and won't accept “done” without a passing run.",
       "author": { "@id": "https://github.com/D3-lt#org" },
       "publisher": { "@id": "https://atvirokodosprendimai.github.io/#org" }
     },
@@ -1172,7 +1131,7 @@ python3 -m unittest -v test_duration</code></pre>
       "@type": "WebPage",
       "@id": "https://qamstack.dev/quality-harness/#page",
       "url": "https://qamstack.dev/quality-harness/",
-      "name": "Quality Harness: “done” is a recorded run, or it is refused",
+      "name": "Quality Harness: know when your AI agent is really done",
       "isPartOf": { "@id": "https://qamstack.dev/#site" },
       "about": { "@id": "https://qamstack.dev/quality-harness/#app" },
       "inLanguage": "en"
