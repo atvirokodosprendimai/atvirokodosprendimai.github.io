@@ -538,7 +538,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         <p class="toolrow"><span class="badge">A</span> AI Agent Memory <span class="arrow">→</span></p>
       </a>
 
-      <a class="symcard rv" href="#start" style="--c:var(--clay);--ct:var(--clay-ink);--cbg:var(--clay-bg)">
+      <a class="symcard rv" href="/mrw/" style="--c:var(--clay);--ct:var(--clay-ink);--cbg:var(--clay-bg)">
         <p class="said">It reads one file. Then another. Then another.</p>
         <p class="fix">Every file is another round trip. This reads them all in one go.</p>
         <p class="toolrow"><span class="badge">M</span> MultiPath Read/Write <span class="arrow">→</span></p>
@@ -618,7 +618,10 @@ tool-multipathreadwrite/cmd/mrw@latest
           <q>Install the Go binary mrw from github.com/atvirokodosprendimai/tool-multipathreadwrite and check that mrw --version runs.</q>
           <div class="clients"><span>Claude Code</span><span>Codex</span><span>Cursor</span><span>or your shell</span></div>
         </div>
-        <a class="btn" href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite">GitHub →</a>
+        <div class="btns">
+          <a class="btn" href="/mrw/">The SWE-bench numbers →</a>
+          <a class="btn" href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite">GitHub →</a>
+        </div>
       </div>
     </div>
   </div>
@@ -667,7 +670,7 @@ tool-multipathreadwrite/cmd/mrw@latest
 
       <div class="srow rv" style="--c:var(--clay);--ct:var(--clay-ink);--cbg:var(--clay-bg)">
         <div>
-          <p class="who"><span class="badge">M</span> <a class="xlink" href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite">MultiPath Read/Write<span class="ext" aria-hidden="true">↗</span></a></p>
+          <p class="who"><span class="badge">M</span> <a class="xlink" href="/mrw/">MultiPath Read/Write</a></p>
           <p class="best">Best at touching many files in one pass.</p>
           <p class="caps"><span class="key">CLI, plus an MCP server</span><span>Any agent</span><span>Any shell</span></p>
         </div>
@@ -675,6 +678,7 @@ tool-multipathreadwrite/cmd/mrw@latest
           <li><span>Two calls however many files, as long as one answer holds what you read.</span></li>
           <li><span>All or nothing: one failed edit and nothing is written.</span></li>
           <li><span>A file changed behind Claude's back is refused.</span></li>
+          <li><span><a href="/mrw/">On SWE-bench Verified, Claude Code with mrw cost less per task on both models: the numbers, the bar they were judged against, and the receipts.</a> Source on <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite">GitHub<span class="ext" aria-hidden="true">↗</span></a>.</span></li>
         </ul>
       </div>
     </div>
@@ -715,7 +719,8 @@ tool-multipathreadwrite/cmd/mrw@latest
       <p class="sub rv">
         It is the only one of the three with a number behind it. The other two are measured in
         ways nobody has instrumented yet, so they make no claim here. Measured on the mrw
-        repository; yours will differ, and that is the point.
+        repository; yours will differ, and that is the point. The agent-level result, 191
+        SWE-bench Verified tasks per model run with and without mrw and paired by task, is on <a href="/mrw/">its own page</a>.
       </p>
     </div>
 
@@ -841,7 +846,7 @@ cd tool-multipathreadwrite &amp;&amp; ./scripts/measure.sh</code></pre>
       <details class="rv"><summary>What does MultiPath Read/Write do, exactly?</summary>
         <p>One binary. It reads many file ranges and applies many edits in a single call, all or nothing, with a verdict for every edit and a checksum ledger, so a file changed behind Claude's back is refused.</p>
         <p>That is two calls however many files you touch. On a change across 55 files: 2 calls against 110.</p>
-        <p>Skip it for one edit to a small file you need in full: it sends more and saves you no steps. One line in your <code>CLAUDE.md</code> routes around that case.</p>
+        <p>Skip it for one edit to a small file you need in full: it sends more and saves you no steps. One line in your <code>CLAUDE.md</code> routes around that case. The SWE-bench Verified result, with every receipt, is on <a href="/mrw/">its own page</a>.</p>
       </details>
 
       <details class="rv"><summary>Can I start in one tool and finish in another?</summary>
@@ -907,7 +912,7 @@ cd tool-multipathreadwrite &amp;&amp; ./scripts/measure.sh</code></pre>
     <span class="sp"></span>
     <a href="/quality-harness/">Quality Harness</a>
     <a href="https://aiagentmemory.dev">AI Agent Memory</a>
-    <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite">MultiPath R/W</a>
+    <a href="/mrw/">MultiPath R/W</a>
     <a href="https://atvirokodosprendimai.github.io/">↑ atvirokodosprendimai</a>
   </div>
 </footer>
@@ -1027,7 +1032,8 @@ cd tool-multipathreadwrite &amp;&amp; ./scripts/measure.sh</code></pre>
             "alternateName": "mrw",
             "applicationCategory": "DeveloperApplication",
             "operatingSystem": "macOS, Linux, Windows",
-            "url": "https://github.com/atvirokodosprendimai/tool-multipathreadwrite",
+            "url": "https://qamstack.dev/mrw/",
+            "codeRepository": "https://github.com/atvirokodosprendimai/tool-multipathreadwrite",
             "description": "A Go command. Every file Claude opens is another round trip; this reads them all in one go.",
             "offers": {
               "@type": "Offer",
