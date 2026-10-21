@@ -39,6 +39,11 @@ quadrature amplitude modulation, the telecoms signal-modulation scheme.
 - [MultiPath Read/Write](https://github.com/atvirokodosprendimai/tool-multipathreadwrite): a Go
   CLI (`mrw`). Reads many file ranges and applies many edits in one call, all or nothing, with a
   verdict per hunk and a SHA-256 read-before-modify ledger.
+  Its own page, with the SWE-bench Verified result: 191 bug-fixing tasks per model run with and
+  without mrw and paired by task, graded by the official harness against a pre-registered bar;
+  cost per task −19.4% on Opus 5.5 and −7.0% on Sonnet 5.5 (99% intervals wholly below zero),
+  fewer turns, solving unchanged within what 191 tasks can show, registered verdict INCONCLUSIVE
+  because the solved-rate bound was not met: https://qamstack.dev/mrw/
 
 ## The one measured claim
 

@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mrw on SWE-bench Verified: Claude Code costs less and finishes sooner</title>
+<meta name="description" content="191 bug-fixing tasks per model, run with and without mrw and paired by task, graded by the official SWE-bench harness against a bar registered before the first run. Cost per task −19.4% on Opus 5.5 and −7.0% on Sonnet 5.5; fewer turns; solving unchanged within what 191 tasks can show. Every receipt is in the repository.">
+<link rel="canonical" href="https://qamstack.dev/mrw/">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#faf9f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16161a" media="(prefers-color-scheme: dark)">
+<meta property="og:site_name" content="Atviro Kodo Sprendimai">
+<meta property="og:title" content="On SWE-bench Verified, Claude Code with mrw costs less and finishes sooner">
+<meta property="og:description" content="191 bug-fixing tasks per model, each run with and without mrw and paired by task, official SWE-bench harness, pre-registered bar. Cost per task −19.4% on Opus 5.5, −7.0% on Sonnet 5.5, 99% intervals wholly below zero. Receipts for every attempt.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://qamstack.dev/mrw/">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="On SWE-bench Verified, Claude Code with mrw costs less and finishes sooner">
+<meta name="twitter:description" content="Cost per task −19.4% on Opus 5.5 and −7.0% on Sonnet 5.5 across 191 tasks per model, each run with and without mrw and paired by task, graded by the official harness. Fewer turns, fewer output tokens, no measurement showed it solving less.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============ tokens: the QAM Stack page's, verbatim ============ */
+:root{
+  --bg:#faf9f5; --bg-2:#f3f1ea; --panel:#ffffff; --panel-2:#f7f5ef;
+  --line:#e6e2d7; --line-2:#d5d0c1;
+  --ink:#22222a; --ink-2:#5c5f6b; --ink-3:#686b79;
+  --sage:#7fb69a;      --sage-bg:#e8f2ec;
+  --blue:#8aa9dd;      --blue-bg:#e9eefa;
+  --clay:#dd9a72;      --clay-bg:#faeee5;
+  --rose:#d98a8a;      --rose-bg:#faecec;
+  --sage-ink:#569776; --blue-ink:#5f89d0; --clay-ink:#cf723a; --rose-ink:#d06d6d;
+  --ct:var(--ink);
+  --accent:var(--clay);
+  --shadow:0 1px 2px rgba(40,35,25,.04), 0 12px 28px -18px rgba(40,35,25,.22);
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16161a; --bg-2:#1c1c21; --panel:#1e1e24; --panel-2:#232329;
+    --line:#2e2e36; --line-2:#3d3d47;
+    --ink:#eeece6; --ink-2:#adaeb8; --ink-3:#8b8d99;
+    --sage:#8cc7aa;   --sage-bg:#1e2b25;
+    --blue:#9bb6e8;   --blue-bg:#1e2432;
+    --clay:#e6a982;   --clay-bg:#2e241d;
+    --rose:#e09a9a;   --rose-bg:#2e1f1f;
+    --sage-ink:var(--sage); --blue-ink:var(--blue);
+    --clay-ink:var(--clay); --rose-ink:var(--rose);
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 14px 30px -20px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16161a; --bg-2:#1c1c21; --panel:#1e1e24; --panel-2:#232329;
+  --line:#2e2e36; --line-2:#3d3d47;
+  --ink:#eeece6; --ink-2:#adaeb8; --ink-3:#8b8d99;
+  --sage:#8cc7aa;   --sage-bg:#1e2b25;
+  --blue:#9bb6e8;   --blue-bg:#1e2432;
+  --clay:#e6a982;   --clay-bg:#2e241d;
+  --rose:#e09a9a;   --rose-bg:#2e1f1f;
+  --sage-ink:var(--sage); --blue-ink:var(--blue);
+  --clay-ink:var(--clay); --rose-ink:var(--rose);
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 14px 30px -20px rgba(0,0,0,.7);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:17.5px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+h1,h2,h3,h4{margin:0;line-height:1.18;letter-spacing:-.015em;text-wrap:balance}
+p{margin:0}
+code{font-family:var(--mono);font-size:.88em;background:var(--bg-2);
+  padding:.1em .35em;border-radius:4px;border:1px solid var(--line)}
+.wrap{width:min(1180px,100% - clamp(1.5rem,5vw,4rem));margin-inline:auto}
+.skip{position:absolute;left:-9999px;top:0;z-index:100;background:var(--panel);
+  padding:.75rem 1.25rem;border:1px solid var(--line-2);border-radius:0 0 var(--r) 0}
+.skip:focus{left:0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:where(a,button,summary,[tabindex]):focus-visible{outline:2px solid var(--accent);
+  outline-offset:3px;border-radius:6px}
+
+/* ============ header ============ */
+header{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+  background:color-mix(in srgb,var(--bg) 85%,transparent);
+  border-bottom:1px solid transparent;transition:border-color .3s}
+header.stuck{border-bottom-color:var(--line)}
+.bar{display:flex;align-items:center;gap:1.25rem;height:62px}
+.brand{display:flex;align-items:center;gap:.55rem;font-weight:700;letter-spacing:-.02em;
+  font-size:1.02rem;text-decoration:none;margin-right:auto;white-space:nowrap}
+.dots{display:flex;gap:3px}
+.dots i{width:8px;height:8px;border-radius:2px;display:block}
+.dots i:nth-child(1){background:var(--sage)}
+.dots i:nth-child(2){background:var(--blue)}
+.dots i:nth-child(3){background:var(--clay)}
+.brand .q{font-family:var(--mono);color:var(--ink-3);font-weight:500;font-size:.9rem;margin-left:.2rem}
+nav{display:flex;gap:1.4rem;align-items:center}
+nav a{color:var(--ink-2);text-decoration:none;font-size:.89rem;font-weight:500;transition:color .18s}
+nav a:hover{color:var(--ink)}
+.nav-cta{color:var(--ink)!important;background:var(--clay-bg);border:1px solid var(--clay);
+  border-radius:999px;padding:.38rem 1rem;font-weight:600}
+@media (max-width:860px){nav .hide-sm{display:none}}
+@media (max-width:520px){.brand .q{display:none}nav{gap:1rem}}
+
+/* ============ buttons ============ */
+.btn{display:inline-flex;align-items:center;gap:.5rem;text-decoration:none;font-weight:600;
+  font-size:.93rem;padding:.72rem 1.35rem;border-radius:10px;border:1px solid var(--line-2);
+  background:var(--panel);color:var(--ink);cursor:pointer;
+  transition:transform .16s,border-color .16s,background .16s}
+.btn:hover{transform:translateY(-1px);border-color:var(--accent)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.primary:hover{background:var(--clay);border-color:var(--clay);color:#2a1a10}
+@media (prefers-reduced-motion:reduce){.btn:hover{transform:none}}
+
+/* ============ hero ============ */
+.hero{padding:clamp(3rem,7vw,6rem) 0 clamp(2.5rem,5vw,4.5rem);
+  background:linear-gradient(175deg,var(--clay-bg) 0%,transparent 55%);
+  border-bottom:1px solid var(--line)}
+.herogrid{display:grid;gap:clamp(2rem,4vw,3.5rem);align-items:start}
+@media (min-width:1000px){.herogrid{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)}}
+h1{font-family:var(--serif);font-size:clamp(1.9rem,3.8vw,2.8rem);font-weight:600;
+  margin:1.3rem 0 0;letter-spacing:-.02em;text-wrap:balance}
+h1 .lead{display:block;font-family:var(--mono);font-size:.24em;font-weight:500;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:.9rem}
+h1 em{font-style:normal;color:var(--clay-ink);
+  background:linear-gradient(180deg,transparent 46%,var(--clay-bg) 46%,var(--clay-bg) 92%,transparent 92%);
+  -webkit-box-decoration-break:clone;box-decoration-break:clone}
+.lede{margin-top:1.2rem;font-size:1.02rem;color:var(--ink-2);max-width:56ch}
+.lede a{color:var(--ink)}
+.cta-row{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.8rem;align-items:center}
+.trust{display:flex;flex-wrap:wrap;gap:.4rem 1.5rem;margin-top:2rem;font-size:.82rem;
+  color:var(--ink-3);font-family:var(--mono)}
+.trust span{display:inline-flex;align-items:center;gap:.4rem}
+.trust span::before{content:"✓";color:var(--clay)}
+
+/* The headline table, the README's first table rendered as it stands. Numbers are
+   tabular so the arrows line up down a column; the cost row is the verdict row. */
+.heroviz{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);
+  box-shadow:var(--shadow);overflow:hidden;min-width:0}
+.heroviz .cap{display:flex;align-items:center;gap:.45rem;padding:.6rem .9rem;
+  border-bottom:1px solid var(--line);background:var(--panel-2);
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3)}
+.heroviz .cap i{width:9px;height:9px;border-radius:50%;background:var(--line-2);display:block}
+.heroviz .tw{overflow-x:auto}
+.heroviz table{width:100%;border-collapse:collapse;font-size:.95rem;min-width:520px}
+.heroviz th,.heroviz td{text-align:left;vertical-align:baseline;padding:.85rem 1.1rem;border-bottom:1px solid var(--line)}
+.heroviz thead th{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:600;background:var(--panel-2)}
+.heroviz tbody th{font-weight:500;color:var(--ink-2);white-space:nowrap}
+.heroviz td{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:.88rem;color:var(--ink);white-space:nowrap}
+.heroviz td small{display:block;font-size:.76rem;color:var(--ink-3);margin-top:.15rem;white-space:nowrap}
+.heroviz tr.cost th,.heroviz tr.cost td{background:var(--clay-bg)}
+.heroviz tr.cost th{color:var(--ink);font-weight:700}
+.heroviz tr.cost td b{font-size:1.45rem;letter-spacing:-.03em;color:var(--clay-ink);line-height:1.1;font-weight:700}
+.heroviz tbody tr:last-child th,.heroviz tbody tr:last-child td{border-bottom:0}
+.heroviz .note{padding:1rem 1.1rem 1.15rem;border-top:1px solid var(--line);font-size:.86rem;color:var(--ink-2);line-height:1.6}
+.heroviz .note b{color:var(--ink);font-weight:600}
+/* On a phone the three columns fit once the labels may wrap and the arrows may break;
+   a table that scrolls sideways hides the Sonnet column, which is the one that carries
+   the caveat. */
+@media (max-width:640px){
+  .heroviz table{min-width:0;font-size:.88rem}
+  .heroviz th,.heroviz td{padding:.7rem .7rem}
+  .heroviz tbody th{white-space:normal;font-size:.84rem}
+  .heroviz td{white-space:normal;font-size:.8rem}
+  .heroviz td small{white-space:normal}
+  .heroviz tr.cost td b{font-size:1.2rem}
+}
+
+/* ============ sections ============ */
+section{padding:clamp(3.5rem,7vw,6.5rem) 0}
+.alt{background:var(--bg-2);border-block:1px solid var(--line)}
+.kicker{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+h2{font-family:var(--serif);font-size:clamp(1.6rem,3.4vw,2.15rem);font-weight:600;
+  margin-top:.7rem;max-width:24ch}
+.sub{margin-top:.9rem;color:var(--ink-2);max-width:60ch}
+.sub a{color:var(--ink)}
+.shead{display:grid;gap:.9rem}
+@media (min-width:1000px){
+  .shead{grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    gap:clamp(2rem,5vw,4.5rem);align-items:end}
+  .shead .sub{margin-top:0;padding-bottom:.4rem}
+}
+
+/* ============ code ============ */
+pre{margin:0;padding:1rem 1.1rem;overflow-x:auto;font-family:var(--mono);
+  font-size:.775rem;line-height:1.72;color:var(--ink-2);tab-size:2}
+pre code{background:none;border:0;padding:0;font-size:inherit}
+pre .c{color:var(--ink-3)}
+pre .k{color:var(--ink);font-weight:600}
+
+/* ============ the per-stage table ============ */
+.tablewrap{margin-top:clamp(2rem,4vw,3rem);overflow-x:auto;border:1px solid var(--line);
+  border-radius:var(--r);background:var(--panel);box-shadow:var(--shadow)}
+table.stages{width:100%;border-collapse:collapse;font-size:.86rem;min-width:860px}
+.stages th,.stages td{text-align:right;vertical-align:top;padding:.7rem .9rem;border-bottom:1px solid var(--line);white-space:nowrap}
+.stages th:nth-child(-n+3),.stages td:nth-child(-n+3){text-align:left}
+.stages thead th{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-3);background:var(--panel-2);font-weight:600}
+.stages td{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.stages td.cfg{font-weight:700;color:var(--ink)}
+.stages tbody tr.s5 td{color:var(--ink)}
+.stages tbody tr.b td{background:color-mix(in srgb,var(--clay-bg) 55%,transparent)}
+.stages tbody tr.gap td{border-top:2px solid var(--line-2)}
+.stages tbody tr:last-child td{border-bottom:0}
+.tabnote{margin-top:1rem;font-size:.86rem;color:var(--ink-2);max-width:78ch}
+.tabnote a{color:var(--ink)}
+
+/* ============ cards: what the numbers say ============ */
+.hows{display:grid;gap:1.15rem;margin-top:clamp(2rem,4vw,3rem);
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr))}
+.how{border:1px solid var(--line);border-top:4px solid var(--c);border-radius:var(--r);
+  background:var(--panel);box-shadow:var(--shadow);padding:clamp(1.5rem,2.5vw,1.9rem);min-width:0;
+  display:flex;flex-direction:column}
+.how .n{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ct)}
+.how h3{font-size:1.1rem;font-weight:700;margin-top:.5rem}
+.how p{margin-top:.6rem;font-size:.92rem;color:var(--ink-2)}
+.how .fig{margin-top:auto;padding-top:1rem;font-family:var(--mono);font-variant-numeric:tabular-nums;
+  font-size:.8rem;color:var(--ink-3);display:grid;gap:.25rem}
+.how .fig b{color:var(--ink);font-weight:600}
+
+/* the one-sentence summary */
+.measure{margin-top:clamp(2rem,4vw,3rem);border:1px solid var(--line);border-left:4px solid var(--clay);
+  border-radius:var(--r);background:var(--panel);box-shadow:var(--shadow);padding:clamp(1.6rem,3vw,2.2rem)}
+.measure .claim{font-family:var(--serif);font-size:clamp(1.15rem,1.8vw,1.4rem);font-weight:600;line-height:1.35;max-width:62ch;margin-top:.6rem}
+
+/* ============ how it is judged: the bar, then the verdicts ============ */
+.bar3{display:grid;gap:1.15rem;margin-top:clamp(2rem,4vw,3rem);
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+.verdict{border:1px solid var(--line);border-top:4px solid var(--c);border-radius:var(--r);background:var(--panel);
+  box-shadow:var(--shadow);padding:clamp(1.4rem,2.5vw,1.8rem);min-width:0}
+.verdict .n{font-family:var(--mono);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ct);font-weight:700}
+.verdict p{margin-top:.6rem;font-size:.92rem;color:var(--ink-2)}
+.prose{margin-top:clamp(1.6rem,3vw,2.2rem);display:grid;gap:1rem;max-width:84ch;color:var(--ink-2)}
+.prose a{color:var(--ink)}
+.prose b{color:var(--ink);font-weight:600}
+
+/* ============ evidence ============ */
+.ev{list-style:none;padding:0;margin:clamp(2rem,4vw,3rem) 0 0;display:grid;gap:1rem;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))}
+.ev li{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);box-shadow:var(--shadow);
+  padding:clamp(1.3rem,2.5vw,1.6rem);font-size:.9rem;color:var(--ink-2);min-width:0;overflow-wrap:anywhere}
+.ev li b{display:block;color:var(--ink);font-weight:700;font-size:1rem;margin-bottom:.45rem}
+.ev a{color:var(--ink)}
+.repro{margin-top:clamp(2rem,4vw,3rem);border:1px solid var(--line);border-radius:var(--r);background:var(--panel);
+  box-shadow:var(--shadow);overflow:hidden}
+.repro .cap{display:flex;align-items:center;gap:.45rem;padding:.6rem .9rem;border-bottom:1px solid var(--line);
+  background:var(--panel-2);font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.repro .cap i{width:9px;height:9px;border-radius:50%;background:var(--line-2);display:block}
+.repro pre{padding:1.2rem 1.3rem;white-space:pre;color:var(--ink)}
+.repro .after{padding:1rem 1.3rem 1.15rem;border-top:1px solid var(--line);font-size:.88rem;color:var(--ink-2)}
+.repro .after code{overflow-wrap:anywhere;white-space:normal}
+
+/* ============ question by question ============ */
+.faqgrid{display:grid;gap:1.75rem;margin-top:clamp(2rem,4vw,3rem)}
+@media (min-width:1000px){
+  .faqgrid{grid-template-columns:minmax(0,.8fr) minmax(0,1.7fr);gap:clamp(3rem,6vw,5.5rem);align-items:start}
+  .faqgrid .head{position:sticky;top:90px}
+}
+.faqgrid .head p{color:var(--ink-2);font-size:.95rem}
+.faqgrid .head p+p{margin-top:.8rem}
+.faqgrid .head a{color:var(--ink)}
+.faq{display:grid;gap:.55rem}
+details{border:1px solid var(--line);border-radius:11px;background:var(--panel);overflow:hidden}
+summary{cursor:pointer;padding:1.15rem 1.4rem;font-weight:600;font-size:1.02rem;
+  list-style:none;display:flex;align-items:center;gap:.85rem}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"+";font-family:var(--mono);color:var(--clay-ink);font-weight:700;flex:none}
+details[open] summary::before{content:"−"}
+details p{padding:0 1.4rem 1.35rem 3.1rem;color:var(--ink-2);overflow-wrap:anywhere}
+details p:not(:last-child){padding-bottom:.75rem}
+details a{color:var(--ink)}
+@media (max-width:640px){details p{padding-left:1.4rem}}
+
+/* ============ what this does not show ============ */
+.nots{list-style:none;padding:0;margin:clamp(2rem,4vw,3rem) 0 0;display:grid;gap:1rem;max-width:84ch}
+.nots li{display:grid;grid-template-columns:auto 1fr;gap:.8rem;align-items:baseline;color:var(--ink-2)}
+.nots li::before{content:"·";color:var(--clay-ink);font-family:var(--mono);font-weight:700}
+.nots b{color:var(--ink)}
+.nots a{color:var(--ink)}
+
+/* ============ install ============ */
+.steps{display:grid;gap:1.15rem;margin-top:clamp(2rem,4vw,3rem);
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+.step{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);
+  padding:clamp(1.5rem,2.5vw,1.9rem);box-shadow:var(--shadow);display:flex;flex-direction:column;min-width:0}
+.step .verb{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.step h3{font-size:1.1rem;font-weight:700;margin-top:.5rem}
+.step .t{margin-top:.55rem;font-size:.88rem;color:var(--ink-2);margin-bottom:1.1rem}
+.step .t a{color:var(--ink)}
+.step pre{background:var(--bg-2);border:1px solid var(--line);border-radius:9px;
+  margin-top:auto;font-size:.75rem;padding:1rem 1.05rem;white-space:pre-wrap;overflow-wrap:anywhere}
+.step .btns{margin-top:1.1rem;display:grid;gap:.5rem}
+.step .btn{justify-content:center;font-size:.86rem;padding:.55rem 1rem}
+.step .after{margin-top:1rem;font-size:.85rem;color:var(--ink-2)}
+.more{margin-top:1.5rem;font-size:.9rem;color:var(--ink-2);max-width:84ch}
+.more a{color:var(--ink)}
+
+/* ============ footer ============ */
+footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font-size:.86rem;margin-top:3rem}
+.foot{display:flex;flex-wrap:wrap;gap:1rem 1.5rem;align-items:center}
+.foot a{text-decoration:none;color:var(--ink-2)}
+.foot a:hover{color:var(--ink)}
+.foot .sp{margin-left:auto}
+.stamp{margin-top:1.5rem;font-size:.8rem;color:var(--ink-3);font-family:var(--mono)}
+
+/* ============ reveal ============ */
+.rv{opacity:0;transform:translateY(12px);transition:opacity .5s ease,transform .5s ease}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header id="hdr">
+  <div class="wrap bar">
+    <a class="brand" href="https://qamstack.dev/"><span class="dots"><i></i><i></i><i></i></span> QAM&nbsp;Stack <span class="q">/ mrw</span></a>
+    <nav aria-label="Primary">
+      <a class="hide-sm" href="#stages">Every stage</a>
+      <a class="hide-sm" href="#say">What the numbers say</a>
+      <a class="hide-sm" href="#judged">How it's judged</a>
+      <a class="hide-sm" href="#evidence">Evidence</a>
+      <a class="hide-sm" href="#limits">What this does not show</a>
+      <a href="#faq">Q&amp;A</a>
+      <a class="nav-cta" href="#install">Install</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ HERO: the headline and the headline table, as the README states them ============ -->
+<div class="hero">
+  <div class="wrap herogrid">
+    <div>
+      <h1><span class="lead">MultiPath Read/Write · mrw</span>On SWE-bench Verified, Claude Code with mrw <em>costs less and finishes sooner</em>.</h1>
+      <p class="lede">
+        191 bug-fixing tasks per model, each run once as A and once as B and paired by task (190 pairs
+        counted on Opus, where one attempt was excluded by the registered rule), graded by the official
+        SWE-bench harness, against a bar registered before the first run
+        (<a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/ADR-162-stage-5-runs-until-the-verdict-is-conclusive.md">ADR-162</a>).
+        A is Claude Code alone; B is Claude Code with mrw.
+      </p>
+      <div class="cta-row">
+        <a class="btn primary" href="#install">Install →</a>
+        <a class="btn" href="#evidence">Check the receipts</a>
+      </div>
+      <div class="trust">
+        <span>Free, MIT</span>
+        <span>One Go binary</span>
+        <span>Runs on your machine</span>
+        <span>No account needed</span>
+      </div>
+    </div>
+
+    <div class="heroviz rv">
+      <div class="cap"><i></i> stage 5 · per task · A → B</div>
+      <div class="tw">
+      <table>
+        <thead><tr><th scope="col"><span class="sr">measure</span></th><th scope="col">Opus 5.5</th><th scope="col">Sonnet 5.5</th></tr></thead>
+        <tbody>
+          <tr class="cost"><th scope="row">cost per task</th>
+            <td><b>−19.4%</b><small>[−25.5%, −12.7%]</small></td>
+            <td><b>−7.0%</b><small>[−12.1%, −1.8%]</small></td></tr>
+          <tr><th scope="row">turns per task</th><td>14.6 → 11.5 <small>−21%</small></td><td>7.8 → 6.8 <small>−13%</small></td></tr>
+          <tr><th scope="row">wall time per task</th><td>115 s → 68 s <small>−40%</small></td><td>36 s → 25 s <small>−30%</small></td></tr>
+          <tr><th scope="row">output tokens per task</th><td>5,489 → 3,888 <small>−29%</small></td><td>2,274 → 1,721 <small>−24%</small></td></tr>
+          <tr><th scope="row">tasks solved</th><td>167 → 166 <small>of 191</small></td><td>134 → 129 <small>of 191</small></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="note">The cost intervals are 99% and lie wholly below zero. Solving is unchanged within what
+        191 tasks can show: the registered bar asks for a solved-rate lower bound no worse than −5 points, and
+        the intervals reach −6.7 on Opus and −8.7 on Sonnet, so the recorded verdict is <b>INCONCLUSIVE</b>
+        rather than PAYS; Sonnet's −7.0% is also short of the 10% mean saving PAYS asks for. Wall time was
+        measured on a shared machine and is descriptive only.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ EVERY STAGE ============ -->
+<section id="stages" class="alt">
+  <div class="wrap">
+    <div class="shead">
+      <div>
+        <p class="kicker rv">Every SWE-bench stage, per attempt</p>
+        <h2 class="rv">Means per attempt at its final try.</h2>
+      </div>
+      <p class="sub rv">Tokens count input, output and cache tokens together. Every figure comes from the
+        receipts under <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/tree/main/docs/bench">docs/bench/</a>,
+        and every registered verdict is in
+        <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/RESULTS.md">docs/bench/RESULTS.md</a>.</p>
+    </div>
+
+    <div class="tablewrap rv">
+      <table class="stages">
+        <thead><tr>
+          <th scope="col">stage</th><th scope="col">model</th><th scope="col">config</th><th scope="col">attempts</th>
+          <th scope="col">solved</th><th scope="col">turns</th><th scope="col">wall s</th><th scope="col">$ per attempt</th>
+          <th scope="col">$ total</th><th scope="col">tokens (k)</th><th scope="col">output tokens</th>
+        </tr></thead>
+        <tbody>
+          <tr class="s5"><td>5</td><td>Opus 5.5</td><td class="cfg">A</td><td>191</td><td>167</td><td>14.6</td><td>115</td><td>0.260</td><td>49.73</td><td>223</td><td>5,489</td></tr>
+          <tr class="s5 b"><td>5</td><td>Opus 5.5</td><td class="cfg">B</td><td>191</td><td>166</td><td>11.5</td><td>68</td><td>0.200</td><td>38.20</td><td>182</td><td>3,888</td></tr>
+          <tr class="s5"><td>5</td><td>Sonnet 5.5</td><td class="cfg">A</td><td>191</td><td>134</td><td>7.8</td><td>36</td><td>0.059</td><td>11.23</td><td>82</td><td>2,274</td></tr>
+          <tr class="s5 b"><td>5</td><td>Sonnet 5.5</td><td class="cfg">B</td><td>191</td><td>129</td><td>6.8</td><td>25</td><td>0.053</td><td>10.13</td><td>91</td><td>1,721</td></tr>
+          <tr class="gap"><td>4b</td><td>Opus 5.5</td><td class="cfg">A</td><td>20</td><td>17</td><td>17.1</td><td>170</td><td>0.362</td><td>7.23</td><td>306</td><td>7,875</td></tr>
+          <tr class="b"><td>4b</td><td>Opus 5.5</td><td class="cfg">B</td><td>20</td><td>16</td><td>12.4</td><td>75</td><td>0.277</td><td>5.54</td><td>220</td><td>5,834</td></tr>
+          <tr><td>4b</td><td>Sonnet 5.5</td><td class="cfg">A</td><td>20</td><td>17</td><td>11.8</td><td>36</td><td>0.092</td><td>1.84</td><td>127</td><td>3,788</td></tr>
+          <tr class="b"><td>4b</td><td>Sonnet 5.5</td><td class="cfg">B</td><td>20</td><td>14</td><td>8.0</td><td>25</td><td>0.072</td><td>1.43</td><td>107</td><td>2,616</td></tr>
+          <tr class="gap"><td>3</td><td>Opus 5.5</td><td class="cfg">A</td><td>20</td><td>19</td><td>12.0</td><td>60</td><td>0.197</td><td>3.94</td><td>155</td><td>4,210</td></tr>
+          <tr class="b"><td>3</td><td>Opus 5.5</td><td class="cfg">B</td><td>20</td><td>19</td><td>10.4</td><td>44</td><td>0.170</td><td>3.40</td><td>137</td><td>3,452</td></tr>
+          <tr><td>3</td><td>Sonnet 5.5</td><td class="cfg">A</td><td>20</td><td>16</td><td>6.6</td><td>19</td><td>0.045</td><td>0.91</td><td>54</td><td>1,640</td></tr>
+          <tr class="b"><td>3</td><td>Sonnet 5.5</td><td class="cfg">B</td><td>20</td><td>16</td><td>5.4</td><td>18</td><td>0.039</td><td>0.78</td><td>55</td><td>1,290</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tabnote rv">A is Claude Code alone; B is Claude Code with mrw. Shaded rows are B.</p>
+  </div>
+</section>
+
+<!-- ============ WHAT THE NUMBERS SAY ============ -->
+<section id="say">
+  <div class="wrap">
+    <div class="shead">
+      <div>
+        <p class="kicker rv">What the numbers say</p>
+        <h2 class="rv">Fewer turns, lower cost, the same solving as far as 191 tasks can tell.</h2>
+      </div>
+      <p class="sub rv">Four readings of the table above. Each one is a sentence the receipts support, and
+        the last one says where the receipts stop.</p>
+    </div>
+
+    <div class="hows">
+      <div class="how rv" style="--c:var(--clay);--ct:var(--clay-ink)">
+        <p class="n">1 · turns and time</p>
+        <h3>Fewer turns, less time.</h3>
+        <p>With mrw the agent finished in fewer turns in every SWE-bench stage, on both models, and wall
+          time fell with the turns. Folding many reads and edits into one call is what mrw is built for;
+          the receipts count the turns, not which calls were folded.</p>
+        <p class="fig"><span>turns, Opus <b>14.6 → 11.5</b></span><span>turns, Sonnet <b>7.8 → 6.8</b></span></p>
+      </div>
+      <div class="how rv" style="--c:var(--sage);--ct:var(--sage-ink)">
+        <p class="n">2 · cost</p>
+        <h3>Lower cost, most on Opus.</h3>
+        <p>The saving is largest where the agent works longest: Opus takes about twice Sonnet's turns per
+          task, so there is more to fold. Stage 4b, 20 multi-hunk tasks on the same models, found the same:
+          −20.9% [−32.3%, −8.6%] on Opus and −17.0% [−26.6%, −7.6%] on Sonnet.</p>
+        <p class="fig"><span>stage 5, Opus <b>−19.4%</b></span><span>stage 5, Sonnet <b>−7.0%</b></span></p>
+      </div>
+      <div class="how rv" style="--c:var(--blue);--ct:var(--blue-ink)">
+        <p class="n">3 · tokens</p>
+        <h3>Fewer tokens written, not always fewer read.</h3>
+        <p>Output tokens fell 29% on Opus and 24% on Sonnet. Total tokens fell 18% on Opus but rose 11% on
+          Sonnet, and that rise is all cache reads (72k to 82k per attempt) while Sonnet's cache writes and
+          output fell. Cost still fell on Sonnet, because cache reads are the cheapest tokens and the output
+          that fell is priced far above them.</p>
+        <p class="fig"><span>output, Opus <b>5,489 → 3,888</b></span><span>output, Sonnet <b>2,274 → 1,721</b></span></p>
+      </div>
+      <div class="how rv" style="--c:var(--rose);--ct:var(--rose-ink)">
+        <p class="n">4 · solving</p>
+        <h3>The same solving, as far as 191 tasks can tell.</h3>
+        <p>166 against 167 on Opus, 129 against 134 on Sonnet. Neither difference is significant; neither
+          interval is narrow enough to prove there is no loss.</p>
+        <p class="fig"><span>solved, Opus <b>167 → 166</b> of 191</span><span>solved, Sonnet <b>134 → 129</b> of 191</span></p>
+      </div>
+    </div>
+
+    <div class="measure rv">
+      <p class="kicker">In short</p>
+      <p class="claim">On these bug-fixing tasks mrw made Claude Code faster and cheaper, by about a fifth on Opus,
+        and no measurement showed it solving less, though none was precise enough to show it does not.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW MRW IS JUDGED ============ -->
+<section id="judged" class="alt">
+  <div class="wrap">
+    <div class="shead">
+      <div>
+        <p class="kicker rv">How mrw is judged</p>
+        <h2 class="rv">The bar was written before the first run. The verdicts are printed, not argued.</h2>
+      </div>
+      <p class="sub rv">Every stage is paired, pre-registered and graded against the bar in
+        <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/ADR-156-whether-mrw-pays-for-itself-is-measured-on-agent-runs.md">ADR-156</a>.
+        Each verdict is recorded in
+        <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/RESULTS.md">docs/bench/RESULTS.md</a>
+        exactly as <code>bench analyze</code> printed it.</p>
+    </div>
+
+    <div class="bar3">
+      <div class="verdict rv" style="--c:var(--sage);--ct:var(--sage-ink)">
+        <p class="n">PAYS</p>
+        <p>The mean per-task cost down by 10% or more with its interval wholly below zero, <b>and</b> a
+          solved-rate lower bound no worse than −5 points.</p>
+      </div>
+      <div class="verdict rv" style="--c:var(--rose);--ct:var(--rose-ink)">
+        <p class="n">LOSES</p>
+        <p>A cost interval wholly above zero or a solved-rate interval wholly below it.</p>
+      </div>
+      <div class="verdict rv" style="--c:var(--line-2);--ct:var(--ink-2)">
+        <p class="n">INCONCLUSIVE</p>
+        <p>Anything else.</p>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p class="rv"><b>Stage 5's two verdicts</b>, both open when the stage ended at look 5 of 5: Sonnet 5.5
+        INCONCLUSIVE, cost −7.0% [−12.1%, −1.8%]; Opus 5.5 INCONCLUSIVE, cost −19.4% [−25.5%, −12.7%].</p>
+      <p class="rv">Before SWE-bench, four stages ran mrw on this project's own tasks (Stages 1, 1b, 2 and 4b,
+        24 to 40 tasks each, Sonnet and Opus): all INCONCLUSIVE, cost within ±3%. One stage went against mrw:
+        Stage 4, 24 tasks chosen where mrw's mechanism should matter, on mrw v1.66.0, LOSES at cost +17.1%
+        [+9.6%, +24.7%].
+        <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/ADR-161-instructions-lead-with-recipes.md">ADR-161</a>
+        changed what mrw teaches in reply, and the rerun on v1.68.0 as Stage 4b came out INCONCLUSIVE on both
+        models.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EVIDENCE ============ -->
+<section id="evidence">
+  <div class="wrap">
+    <div class="shead">
+      <div>
+        <p class="kicker rv">Evidence</p>
+        <h2 class="rv">For anyone who wants to check.</h2>
+      </div>
+      <p class="sub rv">One JSON per attempt, the official grader, a pre-registration with a timestamp
+        before the first attempt, and two commands that recompute the table and every verdict from a
+        checkout.</p>
+    </div>
+
+    <ul class="ev">
+      <li class="rv"><b>Receipts</b>One JSON per attempt under
+        <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/tree/main/docs/bench/stage-5">docs/bench/stage-5/</a><code>block-1</code> … <code>block-5</code>,
+        named <code>&lt;instance&gt;.&lt;config&gt;.&lt;model&gt;.&lt;repeat&gt;[.rN].receipt.json</code>; a <code>.rN</code> file is a
+        retry of a run that did not finish and supersedes its base. Each carries the model, configuration,
+        <code>num_turns</code>, <code>wall_ms</code>, <code>total_cost_usd</code>, <code>usage</code> by token kind, the harness
+        verdict (<code>oracle.harness_resolved</code>), the size of the diff the agent produced (files, insertions, deletions)
+        and the number of tool calls. The patch text was not kept: the attempt's worktree was discarded after grading.</li>
+      <li class="rv"><b>Grader</b>The official SWE-bench harness (swebench 5.0.2) on
+        <code>SWE-bench/SWE-bench_Verified</code>, split <code>test</code>, dataset revision <code>78f471bf</code>. The 191
+        instance ids and the rule that picked them are in
+        <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/bench/swe-bench/selection-adr-162.json">bench/swe-bench/selection-adr-162.json</a>.</li>
+      <li class="rv"><b>Pre-registration</b>The bar, the pool rule, the five looks and the stop rule were written in
+        <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/BACKLOG.md">docs/adr/BACKLOG.md</a>
+        (“Pre-registered for ADR-162”) and in
+        <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/ADR-162-stage-5-runs-until-the-verdict-is-conclusive.md">ADR-162</a>,
+        merged as <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/commit/1fc00bad">1fc00bad</a>
+        on 2026-10-17 at 08:42 UTC; the instance list was committed as
+        <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/commit/8b435f8f">8b435f8f</a> at 10:55 UTC;
+        the first counted attempt started at 13:21 UTC the same day (<code>started</code> in its receipt).</li>
+      <li class="rv"><b>Run setup</b><code>run.json</code> in each block: Claude Code 2.1.302, mrw v1.68.0 (975c3ba), a
+        1,200 s budget per attempt, one repeat, the same prompt and tool set for A and B. <code>canary.json</code> per
+        block proves each configuration's setup before the block; <code>exclusions.json</code> names the one excluded
+        attempt.</li>
+      <li class="rv"><b>Verdicts</b><a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/stage-5/looks/look-5.txt">docs/bench/stage-5/looks/look-5.txt</a>,
+        as <code>bench analyze</code> printed them, copied unchanged into
+        <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/RESULTS.md">RESULTS.md</a>;
+        ADR-162's acceptance fence diffs the two.</li>
+      <li class="rv"><b>Independent scoring</b>The paired rows were handed to the quality-harness project's own
+        scorer, which reads them against its own pre-registration (its ADR-106).</li>
+    </ul>
+
+    <div class="repro rv">
+      <div class="cap"><i></i> reproduce the stage 5 rows with jq alone, from a checkout</div>
+<pre><code>jq -s 'map(select(.stage=="stage5" and .config!="P"))
+  | group_by(.attempt|sub("\\.r[0-9]+$";"")) | map(max_by(.attempt))
+  | group_by([.model,.config]) | map({model:.[0].model, config:.[0].config, attempts:length,
+      solved:(map(select(.oracle.solved))|length), turns:((map(.num_turns)|add)/length),
+      wall_s:((map(.wall_ms)|add)/length/1000), cost_total:(map(.total_cost_usd)|add)})' \
+  docs/bench/stage-5/block-*/*.receipt.json</code></pre>
+      <p class="after"><code>go run ./cmd/bench analyze --selection bench/swe-bench/selection-adr-160.json --selection bench/swe-bench/selection-adr-162.json docs/bench</code>
+        recomputes every verdict and interval in RESULTS.md.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUESTION BY QUESTION: docs/bench/FAQ.md, answers verbatim ============ -->
+<section id="faq" class="alt">
+  <div class="wrap faqgrid">
+    <div class="head">
+      <p class="kicker rv">Question by question</p>
+      <h2 class="rv">The SWE-bench result, for the reader who wants to shoot at it.</h2>
+      <p class="rv" style="margin-top:.9rem">The questions a careful reader asks about “Claude Code with mrw costs less and finishes
+        sooner”, with the answer and where to check it. Numbers are Stage 5's (ADR-162, 2026-10-17 to 2026-10-21)
+        unless a stage is named.</p>
+      <p class="rv">The same text lives in the repository as
+        <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/FAQ.md">docs/bench/FAQ.md</a>.</p>
+    </div>
+
+    <div class="faq">
+      <details class="rv" id="q-what"><summary>What is mrw, in one sentence?</summary>
+        <p>A Go CLI (and MCP server) that reads many ranges across many files and applies many edits across them in one call, returns a verdict for every edit, and refuses to edit a line it has not served you. MIT, one binary, no network call except <code>mrw version --check-latest</code>.</p>
+      </details>
+      <details class="rv" id="q-compared"><summary>What exactly was compared?</summary>
+        <p>A is Claude Code 2.1.302 with its own file tools: Bash, Read, Edit, Write, Glob, Grep. B is the same CLI with Bash and Glob, mrw v1.68.0 on PATH, and <code>mrw instructions</code> appended to the system prompt. Both arms also had Skill, as Stage 5's profile gives every configuration. Same task prompt, same model, same budget (1,200 s), same machine, one attempt per task per arm. So the comparison is “Claude Code's file tools” against “mrw as the file tool”. <code>Configs</code> in <code>internal/bench/runner.go</code>, the profile in <code>internal/bench/profile.go</code>; the prompt's SHA-256 in every block's <code>run.json</code>.</p>
+      </details>
+      <details class="rv" id="q-fewer-tools"><summary>So you took tools away from B. Isn't the saving just fewer tools?</summary>
+        <p>B lost Read, Edit, Write and Grep and gained mrw; that is the substitution being measured. B could still read through the shell (<code>cat</code>, <code>grep</code>), and did: 394 shell reads on Opus and 392 on Sonnet across 191 attempts each, counted and never refused (the “B shell reads” column in <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/RESULTS.md">RESULTS.md</a>). B wrote outside mrw in three Opus attempts (11 files in all, 9 of them in one attempt) and in no Sonnet attempt; every earlier stage had none. We did not run a “Claude Code minus tools, without mrw” arm; if the saving came from having fewer tools, B would be expected to solve less, and over the counted pairs it solved 165 against A's 166 on Opus and 129 against 134 on Sonnet.</p>
+      </details>
+      <details class="rv" id="q-inconclusive"><summary>It's cheaper. Why is the verdict INCONCLUSIVE and not PAYS?</summary>
+        <p>The bar was registered before any run (<a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/BACKLOG.md">BACKLOG.md</a>, “Pre-registered for ADR-156”): PAYS needs the mean per-task relative cost (B − A)/A at −10% or lower with its interval wholly below zero, and the solved-rate difference's lower bound at −5 points or better. Opus met the cost half (−19.4% [−25.5%, −12.7%]) and missed the solved half (lower bound −6.7). Sonnet missed both (−7.0%, lower bound −8.7). 191 tasks give a solved-rate interval about ±7 points wide; a bound at −5 needs a narrower interval, which means more tasks. We report the verdict the bar gives, not the one we would like.</p>
+      </details>
+      <details class="rv" id="q-multi-hunk"><summary>Why multi-hunk tasks? That is cherry-picking for mrw.</summary>
+        <p>The pool rule was registered before the run: the 191 ids with the lowest <code>sha256("adr-162:" + id)</code> among SWE-bench Verified instances whose gold patch has at least two hunks, minus the ids earlier stages had used (<a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/bench/swe-bench/selection-adr-162.json">bench/swe-bench/selection-adr-162.json</a>, with the rule in the file). Multi-hunk is where mrw's one-call mechanism should matter, and the pre-registration says so. Stage 3, 20 random Verified instances with no hunk filter, also came out cheaper (−5.3% Opus, −6.1% Sonnet, n = 20, INCONCLUSIVE).</p>
+      </details>
+      <details class="rv" id="q-prereg"><summary>Show me the pre-registration.</summary>
+        <p>ADR-162 and its BACKLOG entry merged as commit <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/commit/1fc00bad"><code>1fc00bad</code></a> on 2026-10-17 at 08:42 UTC; the instance list as <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/commit/8b435f8f"><code>8b435f8f</code></a> at 10:55 UTC; the first counted attempt started at 13:21 UTC (<code>started</code> in its receipt). The five looks, the stop rule, the 99% level and the exclusion rule are in that commit.</p>
+      </details>
+      <details class="rv" id="q-graded"><summary>Who graded the patches?</summary>
+        <p>The official SWE-bench harness (swebench 5.0.2) with its Docker images, run locally on every attempt. Each counted attempt's receipt carries <code>oracle.harness_resolved</code>, the harness's own verdict, beside the size of the diff the agent produced (files, insertions, deletions). The patch text itself was not kept: the attempt's worktree was discarded after grading. Nothing was graded by a model or by us.</p>
+      </details>
+      <details class="rv" id="q-tests"><summary>Could the agent run the tests?</summary>
+        <p>No. The checkouts the agent worked in had the code but not the test dependencies, so neither arm could check its own work; the harness graded afterwards in its own image. This holds for A and B alike, and it is the main limit of this stage: it measures bug-fixing without a feedback loop. Stage 6 (<a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/ADR-163-the-plugin-is-measured-in-checkouts-that-run-their-tests.md">ADR-163</a>) keeps the agent on the host and routes its Python and test commands through shims into a container of the instance's image, where the tests run.</p>
+      </details>
+      <details class="rv" id="q-167"><summary>Opus solving 167 of 191 looks high.</summary>
+        <p>It is the single-attempt, no-test-run rate of Claude Code with Opus 5.5 on a multi-hunk subset; it is not a leaderboard number and we make no claim about it. The result is the paired difference: over the 190 counted pairs, 165 against 166 (166 against 167 over all 191 attempts).</p>
+      </details>
+      <details class="rv" id="q-cost"><summary>What is “cost”?</summary>
+        <p><code>total_cost_usd</code> as Claude Code reports it per attempt, at October 2026 prices, cache tokens included. The runs were made on a Claude Code subscription, so no bill was paid per run; the figure is the CLI's own computed cost. Stage 5's A and B attempts together come to $109; every stage's A and B attempts, $228 ($245 with the pilots). The raw token counts (input, output, cache read, cache write) are in every receipt.</p>
+      </details>
+      <details class="rv" id="q-sonnet-tokens"><summary>Why did Sonnet's total tokens go up?</summary>
+        <p>Cache reads rose from 72k to 82k per attempt, while output fell 24% and cache writes fell. Our reading: mrw's appended instructions and its batched reads add to the context each call re-reads. Cache reads are the cheapest tokens; the output that fell is priced far above them, so cost fell 7% while the token count rose 11%. Opus fell on every kind.</p>
+      </details>
+      <details class="rv" id="q-turns"><summary>Is “fewer turns” a real saving or an artefact?</summary>
+        <p>A turn is <code>num_turns</code> as Claude Code reports it for the run. Opus 14.6 to 11.5, Sonnet 7.8 to 6.8. Our reading: each turn re-reads the context, so fewer turns is where the cost saving comes from; the receipts count the turns, not what each one did.</p>
+      </details>
+      <details class="rv" id="q-wall"><summary>Wall time fell 40%. Is that real?</summary>
+        <p>It fell with the turns (40% on Opus, 30% on Sonnet), but it was measured on one shared Apple Silicon machine, the SWE-bench images under amd64 emulation, beside other work, and it was not pre-registered. Treat it as descriptive. No verdict reads it.</p>
+      </details>
+      <details class="rv" id="q-excluded"><summary>What was excluded, and who decided?</summary>
+        <p>The registered admission rule (<a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/BACKLOG.md">BACKLOG.md</a>, “Pre-registered for ADR-156”) allows two exclusions only: an attempt that died before its first tool call with an authentication, rate-limit or CLI start error, re-queued at most twice; and an attempt bench could not set up or grade. In A and B, one Sonnet attempt was excluded that way and re-queued (its <code>.r1</code> receipt counted). One Opus A attempt (pytest-10051) was ended by the machine going to sleep; Zy ruled it infrastructure before the next look, and the ruling with the <code>pmset</code> log is in <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/stage-5/exclusions.json"><code>docs/bench/stage-5/exclusions.json</code></a>, which is why Opus counts 190 pairs. Every excluded receipt stays on disk. An agent that gives up or runs past the 1,200 s budget is unsolved with its cost counted; three attempts (sympy-16597 in A and in B, django-16032 in B) were killed at the budget before the CLI reported any cost, so they count as unsolved and those two tasks leave the cost comparison, as <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/stage-5/looks/look-5.txt"><code>look-5.txt</code></a> says. Nothing else was dropped.</p>
+      </details>
+      <details class="rv" id="q-one-run"><summary>One run per task. Isn't that noise?</summary>
+        <p>Yes, one attempt per task per arm; the pairing by task and 191 tasks are what give the interval its width. The intervals are 99% because the stage was read at five looks (ADR-162, Decision 5).</p>
+      </details>
+      <details class="rv" id="q-other-agents"><summary>Does this hold for other agents or models?</summary>
+        <p>Not measured. mrw runs under any shell, any MCP host and opencode; the numbers are for Claude Code 2.1.302 with Opus 5.5 and Sonnet 5.5 only.</p>
+      </details>
+      <details class="rv" id="q-earlier"><summary>Earlier stages were worse. Why?</summary>
+        <p>They are all published (<a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/RESULTS.md">RESULTS.md</a>). Stage 4, 24 of this project's own tasks on v1.66.0, LOSES: +17.1%, driven by wide renames at +33%. ADR-161 changed what mrw teaches in reply (recipes first), and the rerun on v1.68.0 came out INCONCLUSIVE, cost within ±3%. The own-task stages have 24 to 40 tasks and nearly every task solved in both arms, so they could never show much.</p>
+      </details>
+      <details class="rv" id="q-p"><summary>RESULTS.md has a third configuration, P, that LOSES badly. What is it?</summary>
+        <p>P is Claude Code with our quality-harness plugin, measured in the same stage: cost +49% on Opus and +70% on Sonnet, solved within one task of A (Opus 33 against 33 of 39, Sonnet 25 against 26 of 40), closed at the first look. The plugin is built for multi-step, recorded work with tests running; Stage 5 had neither, and its Stop hook kept attempts going in checkouts that could not run a test. It is a result about that plugin in that setting, and Stage 6 measures it where tests run.</p>
+      </details>
+      <details class="rv" id="q-reproduce"><summary>How do I reproduce the table?</summary>
+        <p>From a checkout, the jq command in the <a href="#evidence">Evidence</a> section regenerates the Stage 5 rows from the receipts; <code>go run ./cmd/bench analyze --selection bench/swe-bench/selection-adr-160.json --selection bench/swe-bench/selection-adr-162.json docs/bench</code> recomputes every verdict and interval. A full rerun needs Claude Code, Docker, the SWE-bench images (about 10 GB each), four days on one machine and about $110 of computed cost for A and B; <code>bench run</code> and ADR-162 describe it.</p>
+      </details>
+      <details class="rv" id="q-who"><summary>Who are you?</summary>
+        <p>Atviro kodo sprendimai (Lithuanian for “open-source solutions”), the company behind this repository. mrw is new and has few users; that is why the evidence is laid out rather than asserted.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHAT THIS DOES NOT SHOW ============ -->
+<section id="limits">
+  <div class="wrap">
+    <div class="shead">
+      <div>
+        <p class="kicker rv">What this does not show</p>
+        <h2 class="rv">One agent, two models, one kind of work.</h2>
+      </div>
+      <p class="sub rv">The claims above stop where the measurement stops. These are the edges.</p>
+    </div>
+
+    <ul class="nots">
+      <li class="rv"><span><b>One agent, Claude Code 2.1.302, and two models.</b> Nothing here says what mrw does for
+        another agent or another model.</span></li>
+      <li class="rv"><span><b>One kind of work:</b> a one-shot bug fix from an issue text, with no human in the loop and
+        a 1,200 s budget. Long sessions, refactors and greenfield work were not measured on SWE-bench.</span></li>
+      <li class="rv"><span><b>The agent could not run the repository's tests in Stage 5:</b> the checkouts carry the
+        code but not the test dependencies, so every solve was graded afterwards by the harness, and neither A
+        nor B could check its own work.
+        <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/ADR-163-the-plugin-is-measured-in-checkouts-that-run-their-tests.md">ADR-163</a>
+        is the next stage, in containers where the tests run.</span></li>
+      <li class="rv"><span><b>Solving is not proven equal.</b> 191 tasks per model put the solved-rate interval at about
+        ±7 points; the registered bar wanted the lower bound at −5 or better, and it was not met.</span></li>
+      <li class="rv"><span><b>Wall time is descriptive.</b> The attempts ran on one shared Apple Silicon machine, with the
+        SWE-bench images under amd64 emulation, beside other work.</span></li>
+      <li class="rv"><span><b>Cost is what Claude Code reported per attempt</b> (<code>total_cost_usd</code>), at the prices
+        in force in October 2026.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ INSTALL ============ -->
+<section id="install" class="alt">
+  <div class="wrap">
+    <div class="shead">
+      <div>
+        <p class="kicker rv">Install</p>
+        <h2 class="rv">One binary. No daemon, no account.</h2>
+      </div>
+      <p class="sub rv">One call reads many ranges across many files; one call applies many edits across them,
+        each with its own verdict. A plan that fails validation writes nothing, because a write that changed
+        nothing is invisible.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step rv">
+        <p class="verb">Drop in a binary</p>
+        <h3>Download the release</h3>
+        <p class="t">Linux and macOS. Windows: <code>mrw-windows-amd64.exe</code>. Every release also carries
+          archives (<code>mrw_&lt;os&gt;_&lt;arch&gt;.tar.gz</code> / <code>.zip</code>) and a <code>SHA256SUMS.txt</code>.</p>
+<pre><code>OS=$(uname -s | tr '[:upper:]' '[:lower:]')   <span class="c"># linux | darwin</span>
+ARCH=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
+curl -fsSL -o mrw \
+  "https://github.com/atvirokodosprendimai/tool-multipathreadwrite/releases/latest/download/mrw-${OS}-${ARCH}"
+chmod +x mrw &amp;&amp; ./mrw version</code></pre>
+        <div class="btns">
+          <a class="btn" href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/releases/latest">Latest release →</a>
+          <a class="btn" href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite">GitHub →</a>
+        </div>
+      </div>
+      <div class="step rv">
+        <p class="verb">Then</p>
+        <h3>Start with the recipes <code>mrw instructions</code> prints first</h3>
+        <p class="t">The same change at many sites is one command with nothing in your context, and the
+          others count before reading, rewrite by syntax, license without printing (<code>read --quiet</code>)
+          and narrow any command's output (<code>cmd | mrw read --grep P -</code>).
+          <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/AGENTS.md#using-mrw--read-this-before-you-edit-anything">AGENTS.md</a>
+          lists all nine. Any MCP host: <code>mrw mcp</code>.</p>
+<pre><code>mrw write --grep '\bOld\b' --sub 'New' .</code></pre>
+        <p class="after"><b>Status: stable at v1.69.1 (2026-10-21)</b>, the tag cut from <code>42a203b</code>. Break
+          campaign for it:
+          <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/break/campaign-v1.69.1.txt">docs/break/campaign-v1.69.1.txt</a>,
+          59 probes, exit codes identical to v1.69.0. A rebuild on Go 1.26.10 (GO-2026-6809, crypto/x509); mrw's
+          behaviour is v1.69.0's.</p>
+      </div>
+    </div>
+
+    <p class="more rv">Latency and shape numbers for the engine itself are in
+      <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/measure.md">docs/measure.md</a>,
+      the six-guarantee comparison in
+      <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/comparison.md">docs/comparison.md</a>,
+      and model × score readings in
+      <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/model-benches.md">docs/model-benches.md</a>.
+      Decisions: <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/tree/main/docs/adr">docs/adr/</a>.
+      It is one of three tools on the <a href="https://qamstack.dev/">QAM Stack</a> page; each installs on its own.</p>
+    <p class="stamp rv">figures from the README of tool-multipathreadwrite · stage 5 ended at look 5 of 5 · page published 2026-10-21</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="https://qamstack.dev/" style="margin-right:0"><span class="dots"><i></i><i></i><i></i></span> QAM&nbsp;Stack</a>
+    <span>by <a href="https://github.com/atvirokodosprendimai">Atviro Kodo Sprendimai</a> · MIT</span>
+    <span class="sp"></span>
+    <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite">mrw on GitHub</a>
+    <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/RESULTS.md">Every verdict</a>
+    <a href="https://qamstack.dev/">← QAM Stack</a>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://qamstack.dev/mrw/#app",
+      "name": "MultiPath Read/Write",
+      "alternateName": "mrw",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "macOS, Linux, Windows",
+      "isAccessibleForFree": true,
+      "license": "https://opensource.org/licenses/MIT",
+      "softwareVersion": "1.69.1",
+      "url": "https://qamstack.dev/mrw/",
+      "codeRepository": "https://github.com/atvirokodosprendimai/tool-multipathreadwrite",
+      "downloadUrl": "https://github.com/atvirokodosprendimai/tool-multipathreadwrite/releases/latest",
+      "description": "A Go command that reads many file ranges and applies many edits in one call, all or nothing, with a verdict per hunk. On SWE-bench Verified, Claude Code with mrw cost −19.4% per task on Opus 5.5 and −7.0% on Sonnet 5.5 across 191 tasks per model, each run with and without mrw and paired by task, graded by the official harness.",
+      "author": { "@id": "https://atvirokodosprendimai.github.io/#org" },
+      "publisher": { "@id": "https://atvirokodosprendimai.github.io/#org" }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://atvirokodosprendimai.github.io/#org",
+      "name": "Atviro Kodo Sprendimai",
+      "url": "https://atvirokodosprendimai.github.io/"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://qamstack.dev/mrw/#page",
+      "url": "https://qamstack.dev/mrw/",
+      "name": "mrw on SWE-bench Verified: Claude Code costs less and finishes sooner",
+      "datePublished": "2026-10-21",
+      "isPartOf": { "@id": "https://qamstack.dev/#site" },
+      "about": { "@id": "https://qamstack.dev/mrw/#app" },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Atviro Kodo Sprendimai", "item": "https://atvirokodosprendimai.github.io/" },
+        { "@type": "ListItem", "position": 2, "name": "QAM Stack", "item": "https://qamstack.dev/" },
+        { "@type": "ListItem", "position": 3, "name": "MultiPath Read/Write", "item": "https://qamstack.dev/mrw/" }
+      ]
+    }
+  ]
+}
+</script>
+
+<script>
+(function () {
+  var els = document.querySelectorAll('.rv');
+  if (!('IntersectionObserver' in window)) { els.forEach(function (el) { el.classList.add('in'); }); return; }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (!e.isIntersecting) return; e.target.classList.add('in'); io.unobserve(e.target); });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  els.forEach(function (el) { io.observe(el); });
+})();
+(function () {
+  var hdr = document.getElementById('hdr');
+  var onScroll = function () { hdr.classList.toggle('stuck', window.scrollY > 8); };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+})();
+// A link to a collapsed Q&A entry scrolls to it but leaves it shut; open it.
+(function () {
+  var openTarget = function () {
+    var el = location.hash && document.getElementById(location.hash.slice(1));
+    if (el && el.tagName === 'DETAILS') el.open = true;
+  };
+  openTarget();
+  window.addEventListener('hashchange', openTarget);
+})();
+</script>
+</body>
+</html>
