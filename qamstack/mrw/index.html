@@ -270,11 +270,10 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
   <div class="wrap bar">
     <a class="brand" href="https://qamstack.dev/"><span class="dots"><i></i><i></i><i></i></span> QAM&nbsp;Stack <span class="q">/ mrw</span></a>
     <nav aria-label="Primary">
-      <a class="hide-sm" href="#stages">Every stage</a>
+      <a class="hide-sm" href="#stages">Per attempt</a>
       <a class="hide-sm" href="#say">What the numbers say</a>
       <a class="hide-sm" href="#judged">How it's judged</a>
       <a class="hide-sm" href="#evidence">Evidence</a>
-      <a class="hide-sm" href="#limits">What this does not show</a>
       <a href="#faq">Q&amp;A</a>
       <a class="nav-cta" href="#install">Install</a>
     </nav>
@@ -317,12 +316,6 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         </tbody>
       </table>
       </div>
-      <p class="note">The cost intervals are 99% and lie wholly below zero. Solving is unchanged within what
-        191 tasks can show: the registered bar asks for a solved-rate lower bound no worse than −5 points, and
-        the intervals reach −6.7 on Opus and −8.7 on Sonnet, so the recorded verdict is
-        <span class="tag inc">INCONCLUSIVE</span> rather than <span class="tag pays">PAYS</span>; Sonnet's −7.0%
-        is also short of the 10% mean saving PAYS asks for. Wall time was measured on a shared machine and is
-        descriptive only.</p>
     </div>
   </div>
 </div>
@@ -332,18 +325,18 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
   <div class="wrap">
     <div class="shead">
       <div>
-        <p class="kicker rv">Every SWE-bench stage, per attempt</p>
+        <p class="kicker rv">Stage 5, per attempt</p>
         <h2 class="rv">Means per attempt at its final try.</h2>
       </div>
       <p class="sub rv">Tokens count input, output and cache tokens together. Every figure comes from the
         receipts under <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/tree/main/docs/bench">docs/bench/</a>,
         and every registered verdict is in
         <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/RESULTS.md">docs/bench/RESULTS.md</a>.
-        Shaded rows are B.</p>
+        Shaded rows are B; the earlier stages are in the same file.</p>
     </div>
 
     <div class="panel rv">
-      <div class="cap"><i></i> stages 5 · 4b · 3</div>
+      <div class="cap"><i></i> stage 5</div>
       <div class="tw">
       <table class="stages">
         <thead><tr>
@@ -356,14 +349,6 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
           <tr class="s5 b"><td>5</td><td>Opus 5.5</td><td class="cfg">B</td><td>191</td><td>166</td><td>11.5</td><td>68</td><td>0.200</td><td>38.20</td><td>182</td><td>3,888</td></tr>
           <tr class="s5"><td>5</td><td>Sonnet 5.5</td><td class="cfg">A</td><td>191</td><td>134</td><td>7.8</td><td>36</td><td>0.059</td><td>11.23</td><td>82</td><td>2,274</td></tr>
           <tr class="s5 b"><td>5</td><td>Sonnet 5.5</td><td class="cfg">B</td><td>191</td><td>129</td><td>6.8</td><td>25</td><td>0.053</td><td>10.13</td><td>91</td><td>1,721</td></tr>
-          <tr class="gap"><td>4b</td><td>Opus 5.5</td><td class="cfg">A</td><td>20</td><td>17</td><td>17.1</td><td>170</td><td>0.362</td><td>7.23</td><td>306</td><td>7,875</td></tr>
-          <tr class="b"><td>4b</td><td>Opus 5.5</td><td class="cfg">B</td><td>20</td><td>16</td><td>12.4</td><td>75</td><td>0.277</td><td>5.54</td><td>220</td><td>5,834</td></tr>
-          <tr><td>4b</td><td>Sonnet 5.5</td><td class="cfg">A</td><td>20</td><td>17</td><td>11.8</td><td>36</td><td>0.092</td><td>1.84</td><td>127</td><td>3,788</td></tr>
-          <tr class="b"><td>4b</td><td>Sonnet 5.5</td><td class="cfg">B</td><td>20</td><td>14</td><td>8.0</td><td>25</td><td>0.072</td><td>1.43</td><td>107</td><td>2,616</td></tr>
-          <tr class="gap"><td>3</td><td>Opus 5.5</td><td class="cfg">A</td><td>20</td><td>19</td><td>12.0</td><td>60</td><td>0.197</td><td>3.94</td><td>155</td><td>4,210</td></tr>
-          <tr class="b"><td>3</td><td>Opus 5.5</td><td class="cfg">B</td><td>20</td><td>19</td><td>10.4</td><td>44</td><td>0.170</td><td>3.40</td><td>137</td><td>3,452</td></tr>
-          <tr><td>3</td><td>Sonnet 5.5</td><td class="cfg">A</td><td>20</td><td>16</td><td>6.6</td><td>19</td><td>0.045</td><td>0.91</td><td>54</td><td>1,640</td></tr>
-          <tr class="b"><td>3</td><td>Sonnet 5.5</td><td class="cfg">B</td><td>20</td><td>16</td><td>5.4</td><td>18</td><td>0.039</td><td>0.78</td><td>55</td><td>1,290</td></tr>
         </tbody>
       </table>
       </div>
@@ -462,6 +447,15 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         <li class="row">
           <div class="k">Stage 5, Sonnet 5.5</div>
           <div class="v"><span class="tag inc">INCONCLUSIVE</span> <span class="num">cost −7.0% [−12.1%, −1.8%]</span></div>
+        </li>
+        <li class="row">
+          <div class="k">Why not PAYS</div>
+          <div class="v">The cost intervals are 99% and lie wholly below zero. Solving is unchanged within what
+            191 tasks can show: the registered bar asks for a solved-rate lower bound no worse than −5 points, and
+            the intervals reach −6.7 on Opus and −8.7 on Sonnet, so the recorded verdict is
+            <span class="tag inc">INCONCLUSIVE</span> rather than <span class="tag pays">PAYS</span>; Sonnet's −7.0%
+            is also short of the 10% mean saving PAYS asks for. Wall time was measured on a shared machine and is
+            descriptive only.</div>
         </li>
         <li class="row">
           <div class="k">Before SWE-bench</div>
@@ -566,12 +560,12 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         <h2 class="rv">The SWE-bench result, question by question.</h2>
       </div>
       <p class="sub rv">Numbers are Stage 5's (ADR-162, 2026-10-17 to 2026-10-21) unless a stage is named.
-        The same text lives in the repository as
+        Also in the repository:
         <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/FAQ.md">docs/bench/FAQ.md</a>.</p>
     </div>
 
     <div class="panel rv">
-      <div class="cap"><i></i> 20 questions</div>
+      <div class="cap"><i></i> 21 questions</div>
       <details id="q-what"><summary>What is mrw, in one sentence?</summary>
         <p>A Go CLI (and MCP server) that reads many ranges across many files and applies many edits across them in one call, returns a verdict for every edit, and refuses to edit a line it has not served you. MIT, one binary, no network call except <code>mrw version --check-latest</code>.</p>
       </details>
@@ -620,6 +614,9 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
       <details id="q-other-agents"><summary>Does this hold for other agents or models?</summary>
         <p>Not measured. mrw runs under any shell, any MCP host and opencode; the numbers are for Claude Code 2.1.302 with Opus 5.5 and Sonnet 5.5 only.</p>
       </details>
+      <details id="q-work"><summary>What kind of work was measured?</summary>
+        <p>One kind of work: a one-shot bug fix from an issue text, with no human in the loop and a 1,200 s budget. Long sessions, refactors and greenfield work were not measured on SWE-bench.</p>
+      </details>
       <details id="q-earlier"><summary>Earlier stages were worse. Why?</summary>
         <p>They are all published (<a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/RESULTS.md">RESULTS.md</a>). Stage 4, 24 of this project's own tasks on v1.66.0, LOSES: +17.1%, driven by wide renames at +33%. ADR-161 changed what mrw teaches in reply (recipes first), and the rerun on v1.68.0 came out INCONCLUSIVE, cost within ±3%. The own-task stages have 24 to 40 tasks and nearly every task solved in both arms, so they could never show much.</p>
       </details>
@@ -636,53 +633,8 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
   </div>
 </section>
 
-<!-- ============ WHAT THIS DOES NOT SHOW ============ -->
-<section id="limits">
-  <div class="wrap">
-    <div class="shead">
-      <div>
-        <p class="kicker rv">What this does not show</p>
-        <h2 class="rv">One agent, two models, one kind of work.</h2>
-      </div>
-    </div>
-
-    <div class="panel rv">
-      <div class="cap"><i></i> not measured</div>
-      <ul class="rows">
-        <li class="row one">
-          <div class="v"><b>One agent, Claude Code 2.1.302, and two models.</b> Nothing here says what mrw does for
-            another agent or another model.</div>
-        </li>
-        <li class="row one">
-          <div class="v"><b>One kind of work:</b> a one-shot bug fix from an issue text, with no human in the loop and
-            a 1,200 s budget. Long sessions, refactors and greenfield work were not measured on SWE-bench.</div>
-        </li>
-        <li class="row one">
-          <div class="v"><b>The agent could not run the repository's tests in Stage 5:</b> the checkouts carry the
-            code but not the test dependencies, so every solve was graded afterwards by the harness, and neither A
-            nor B could check its own work.
-            <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/ADR-163-the-plugin-is-measured-in-checkouts-that-run-their-tests.md">ADR-163</a>
-            is the next stage, in containers where the tests run.</div>
-        </li>
-        <li class="row one">
-          <div class="v"><b>Solving is not proven equal.</b> 191 tasks per model put the solved-rate interval at about
-            ±7 points; the registered bar wanted the lower bound at −5 or better, and it was not met.</div>
-        </li>
-        <li class="row one">
-          <div class="v"><b>Wall time is descriptive.</b> The attempts ran on one shared Apple Silicon machine, with the
-            SWE-bench images under amd64 emulation, beside other work.</div>
-        </li>
-        <li class="row one">
-          <div class="v"><b>Cost is what Claude Code reported per attempt</b> (<code>total_cost_usd</code>), at the prices
-            in force in October 2026.</div>
-        </li>
-      </ul>
-    </div>
-  </div>
-</section>
-
 <!-- ============ INSTALL ============ -->
-<section id="install" class="alt">
+<section id="install">
   <div class="wrap">
     <div class="shead">
       <div>
