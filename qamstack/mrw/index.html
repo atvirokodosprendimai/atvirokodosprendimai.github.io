@@ -648,7 +648,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
 
     <div class="grid2">
       <div class="panel rv">
-        <div class="cap"><i></i> download the release · v1.71.0 · MIT</div>
+        <div class="cap"><i></i> download the release · v1.71.1 · MIT</div>
         <div class="body">
           <p>Linux and macOS. Windows: <code>mrw-windows-amd64.exe</code>. Every release also carries
             archives (<code>mrw_&lt;os&gt;_&lt;arch&gt;.tar.gz</code> / <code>.zip</code>) and a <code>SHA256SUMS.txt</code>.</p>
@@ -671,12 +671,12 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
             and narrow any command's output (<code>cmd | mrw read --grep P -</code>).
             <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/AGENTS.md#using-mrw--read-this-before-you-edit-anything">AGENTS.md</a>
             lists all nine. Any MCP host: <code>mrw mcp</code>.</p>
-          <p><b>Status: stable at v1.71.0 (2026-10-21)</b>, the tag cut from <code>827491f</code>. Break
+          <p><b>Status: stable at v1.71.1 (2026-10-22)</b>, the tag cut from <code>dd8a818</code>. Break
             campaign for it:
-            <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/break/campaign-v1.71.0.txt">docs/break/campaign-v1.71.0.txt</a>,
-            59 probes, exit codes identical to v1.70.0 but one, by design: <code>[unwritable-state-home]</code> 2 → 0.
-            New: a read whose state directory cannot be written serves and says nothing was recorded, on the CLI
-            and <code>mrw_read</code> (ADR-166).</p>
+            <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/break/campaign-v1.71.1.txt">docs/break/campaign-v1.71.1.txt</a>,
+            59 probes, exit codes identical to v1.71.0. New: what a twelve-session field test found — withheld
+            ranges named, the <code>--root</code> command printed for a file outside the root, a file in the way of
+            the state directory named, CLI <code>--json</code> keeps <code>&lt;&gt;&amp;</code> (#496).</p>
         </div>
 <pre class="wrap-ok"><code><span class="k">$</span> mrw write --grep '\bOld\b' --sub 'New' .</code></pre>
       </div>
@@ -718,7 +718,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
       "operatingSystem": "macOS, Linux, Windows",
       "isAccessibleForFree": true,
       "license": "https://opensource.org/licenses/MIT",
-      "softwareVersion": "1.71.0",
+      "softwareVersion": "1.71.1",
       "url": "https://qamstack.dev/mrw/",
       "codeRepository": "https://github.com/atvirokodosprendimai/tool-multipathreadwrite",
       "downloadUrl": "https://github.com/atvirokodosprendimai/tool-multipathreadwrite/releases/latest",
