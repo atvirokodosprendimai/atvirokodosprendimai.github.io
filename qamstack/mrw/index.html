@@ -648,12 +648,30 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
 
     <div class="grid2">
       <div class="panel rv">
-        <div class="cap"><i></i> download the release · v1.71.1 · MIT</div>
+        <div class="cap"><i></i> Homebrew · Mac and Linux · v1.77.1</div>
         <div class="body">
-          <p>Linux and macOS. Windows: <code>mrw-windows-amd64.exe</code>. Every release also carries
-            archives (<code>mrw_&lt;os&gt;_&lt;arch&gt;.tar.gz</code> / <code>.zip</code>) and a <code>SHA256SUMS.txt</code>.</p>
+          <p>The easiest way in. The last line checks you got this version, not an older copy
+            installed some other way.</p>
           <div class="btns">
-            <a class="btn" href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/releases/latest">Latest release →</a>
+            <a class="btn" href="https://github.com/atvirokodosprendimai/homebrew-tap/blob/main/Formula/mrw.rb">Formula →</a>
+          </div>
+        </div>
+<pre class="wrap-ok"><code><span class="k">$</span> brew tap atvirokodosprendimai/tap
+<span class="k">$</span> brew install atvirokodosprendimai/tap/mrw
+<span class="k">$</span> "$(brew --prefix)/bin/mrw" version
+v1.77.1 (926aaba)
+
+<span class="c"># to update later</span>
+<span class="k">$</span> brew update
+<span class="k">$</span> brew upgrade atvirokodosprendimai/tap/mrw</code></pre>
+      </div>
+      <div class="panel rv">
+        <div class="cap"><i></i> or download · v1.77.1 · MIT</div>
+        <div class="body">
+          <p>One file, nothing else to install. Windows: <code>mrw-windows-amd64.exe</code>. It passes
+            our automated tests, but testing of the downloaded file itself isn't finished.</p>
+          <div class="btns">
+            <a class="btn" href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/releases/tag/v1.77.1">v1.77.1 release →</a>
             <a class="btn" href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite">GitHub →</a>
           </div>
         </div>
@@ -663,22 +681,49 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
   "https://github.com/atvirokodosprendimai/tool-multipathreadwrite/releases/latest/download/mrw-${OS}-${ARCH}"
 <span class="k">$</span> chmod +x mrw &amp;&amp; ./mrw version</code></pre>
       </div>
+    </div>
+
+    <div class="grid2">
       <div class="panel rv">
-        <div class="cap"><i></i> then: the recipes mrw instructions prints first</div>
+        <div class="cap"><i></i> new in v1.77 · less noise for your agent</div>
         <div class="body">
-          <p>The same change at many sites is one command with nothing in your context, and the
-            others count before reading, rewrite by syntax, license without printing (<code>read --quiet</code>)
-            and narrow any command's output (<code>cmd | mrw read --grep P -</code>).
-            <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/AGENTS.md#using-mrw--read-this-before-you-edit-anything">AGENTS.md</a>
-            lists all nine. Any MCP host: <code>mrw mcp</code>.</p>
-          <p><b>Status: stable at v1.71.1 (2026-10-22)</b>, the tag cut from <code>dd8a818</code>. Break
-            campaign for it:
-            <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/break/campaign-v1.71.1.txt">docs/break/campaign-v1.71.1.txt</a>,
-            59 probes, exit codes identical to v1.71.0. New: what a twelve-session field test found — withheld
-            ranges named, the <code>--root</code> command printed for a file outside the root, a file in the way of
-            the state directory named, CLI <code>--json</code> keeps <code>&lt;&gt;&amp;</code> (#496).</p>
+          <p>A test run can print thousands of lines. Now your agent gets a short summary instead, and
+            the full output waits in a file if it needs it. Note that <code>mrw run</code> runs the command
+            as you, with your permissions.</p>
         </div>
-<pre class="wrap-ok"><code><span class="k">$</span> mrw write --grep '\bOld\b' --sub 'New' .</code></pre>
+<pre class="wrap-ok"><code><span class="c"># a short summary instead of the whole output</span>
+<span class="k">$</span> mrw run 'go test ./...'
+
+<span class="c"># only the values you ask for</span>
+<span class="k">$</span> mrw read --json-path '$.name,$.scripts.build' package.json
+
+<span class="c"># a file's outline before its contents</span>
+<span class="k">$</span> mrw read --outline cmd/mrw/main.go README.md</code></pre>
+      </div>
+      <div class="panel rv">
+        <div class="cap"><i></i> new in v1.77 · shorter answers</div>
+        <div class="body">
+          <p>Skip repeated lines, comments and very long lines. What was skipped stays safe: the agent
+            has to read it properly before it can change it.</p>
+        </div>
+<pre class="wrap-ok"><code><span class="c"># fold repeats, stop after 20 matches</span>
+<span class="k">$</span> mrw read --grep TODO --fold --max-matches 20 .
+
+<span class="c"># skip comments, shorten long lines</span>
+<span class="k">$</span> MRW_MAX_COLS=160 mrw read --no-comments main.go
+
+<span class="c"># a shorter result when an edit succeeds</span>
+<span class="k">$</span> mrw write --terse plan.mrw</code></pre>
+      </div>
+    </div>
+
+    <div class="panel rv">
+      <div class="cap"><i></i> also</div>
+      <div class="body">
+        <p><b>Stable at v1.77.1</b>, released 2026-10-28. If mrw rejects an edit plan, the plan is kept, so
+          the agent fixes it instead of writing it again. Other AI tools can use mrw too:
+          <code>mrw mcp --enable</code>. Every detail is in the
+          <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/README.md">README</a>.</p>
       </div>
     </div>
 
@@ -718,7 +763,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
       "operatingSystem": "macOS, Linux, Windows",
       "isAccessibleForFree": true,
       "license": "https://opensource.org/licenses/MIT",
-      "softwareVersion": "1.71.1",
+      "softwareVersion": "1.77.1",
       "url": "https://qamstack.dev/mrw/",
       "codeRepository": "https://github.com/atvirokodosprendimai/tool-multipathreadwrite",
       "downloadUrl": "https://github.com/atvirokodosprendimai/tool-multipathreadwrite/releases/latest",
