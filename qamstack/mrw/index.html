@@ -3,22 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>mrw on SWE-bench Verified: Claude Code costs less and finishes sooner</title>
-<meta name="description" content="191 bug-fixing tasks per model, run with and without mrw and paired by task, graded by the official SWE-bench harness against a bar registered before the first run. Cost per task −19.4% on Opus 5.5 and −7.0% on Sonnet 5.5; fewer turns; solving unchanged within what 191 tasks can show. Every receipt is in the repository.">
+<title>mrw: the guarantee layer for coding agents</title>
+<meta name="description" content="A free CLI and MCP server for coding agents: edits across many files land whole or not at all, only lines the agent was shown can change, and every edit gets its own result. Measured on Claude Code 2.1.302 with Opus 5.5 and Sonnet 5.5 on SWE-bench Verified: 19% and 7% lower cost; the registered verdict is inconclusive.">
 <link rel="canonical" href="https://qamstack.dev/mrw/">
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#faf9f5" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#16161a" media="(prefers-color-scheme: dark)">
 <meta property="og:site_name" content="Atviro Kodo Sprendimai">
-<meta property="og:title" content="On SWE-bench Verified, Claude Code with mrw costs less and finishes sooner">
-<meta property="og:description" content="191 bug-fixing tasks per model, each run with and without mrw and paired by task, official SWE-bench harness, pre-registered bar. Cost per task −19.4% on Opus 5.5, −7.0% on Sonnet 5.5, 99% intervals wholly below zero. Receipts for every attempt.">
+<meta property="og:title" content="mrw: the guarantee layer for coding agents">
+<meta property="og:description" content="A free CLI and MCP server for coding agents: edits across many files land whole or not at all, only lines the agent was shown can change, and every edit gets its own result. Measured on Claude Code 2.1.302 with Opus 5.5 and Sonnet 5.5 on SWE-bench Verified: 19% and 7% lower cost; the registered verdict is inconclusive.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://qamstack.dev/mrw/">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="On SWE-bench Verified, Claude Code with mrw costs less and finishes sooner">
-<meta name="twitter:description" content="Cost per task −19.4% on Opus 5.5 and −7.0% on Sonnet 5.5 across 191 tasks per model, each run with and without mrw and paired by task, graded by the official harness. Fewer turns, fewer output tokens, no measurement showed it solving less.">
+<meta name="twitter:title" content="mrw: the guarantee layer for coding agents">
+<meta name="twitter:description" content="A free CLI and MCP server for coding agents: edits across many files land whole or not at all, only lines the agent was shown can change, and every edit gets its own result. Measured on Claude Code 2.1.302 with Opus 5.5 and Sonnet 5.5 on SWE-bench Verified: 19% and 7% lower cost; the registered verdict is inconclusive.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -270,8 +270,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
   <div class="wrap bar">
     <a class="brand" href="https://qamstack.dev/"><span class="dots"><i></i><i></i><i></i></span> QAM&nbsp;Stack <span class="q">/ mrw</span></a>
     <nav aria-label="Primary">
-      <a class="hide-sm" href="#stages">Per attempt</a>
-      <a class="hide-sm" href="#say">What the numbers say</a>
+      <a class="hide-sm" href="#claude">Measured on Claude</a>
       <a class="hide-sm" href="#judged">How it's judged</a>
       <a class="hide-sm" href="#evidence">Evidence</a>
       <a href="#faq">Q&amp;A</a>
@@ -282,26 +281,64 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
 
 <main id="main">
 
-<!-- ============ HERO: the headline and the headline table, as the README states them ============ -->
+<!-- ============ HERO: what mrw guarantees ============ -->
 <div class="hero">
   <div class="wrap herogrid">
     <div>
-      <h1><span class="lead">MultiPath Read/Write · mrw</span>On SWE-bench Verified, Claude Code with mrw <em>costs less and finishes sooner</em>.</h1>
+      <h1><span class="lead">MultiPath Read/Write · mrw</span>The guarantee layer for <em>coding agents</em>.</h1>
       <p class="lede">
-        191 bug-fixing tasks per model, each run once as A and once as B and paired by task (190 pairs
-        counted on Opus, where one attempt was excluded by the registered rule), graded by the official
-        SWE-bench harness, against a bar registered before the first run
-        (<a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/ADR-162-stage-5-runs-until-the-verdict-is-conclusive.md">ADR-162</a>).
-        A is Claude Code alone; B is Claude Code with mrw.
+        Your agent reads and edits files through mrw. A batch of edits lands whole or not at all, it can
+        only change lines it was shown, and every edit comes back with a result. One free binary, for any
+        shell or MCP host.
       </p>
       <div class="cta-row">
         <a class="btn primary" href="#install">Install →</a>
-        <a class="btn" href="#evidence">Evidence</a>
+        <a class="btn" href="#claude">Measured on Claude</a>
       </div>
     </div>
 
     <div class="panel rv" style="margin-top:0">
-      <div class="cap"><i></i> stage 5 · per task · A → B</div>
+      <div class="cap"><i></i> four guarantees</div>
+      <ul class="rows">
+        <li class="row">
+          <div class="k">All or nothing</div>
+          <div class="v">Edits across many files land together, or none of them do.</div>
+        </li>
+        <li class="row">
+          <div class="k">Only lines it was shown</div>
+          <div class="v">mrw refuses to change a line the agent hasn't been shown, unless the edit quotes it
+            exactly or you override with <code>--force</code>. It keeps track line by line, not file by file.</div>
+        </li>
+        <li class="row">
+          <div class="k">A result for every edit</div>
+          <div class="v">Each edit reports on its own whether it applied.</div>
+        </li>
+        <li class="row">
+          <div class="k">Paths that resolve</div>
+          <div class="v">mrw works only on files under the folder you point it at. A path, link or Windows
+            junction that leads outside is refused, it won't write inside <code>.git</code>, and when it can't find
+            a file it says which path it looked for.</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MEASURED ON CLAUDE: Stage 5, look 5, as registered ============ -->
+<section id="claude" class="alt">
+  <div class="wrap">
+    <div class="shead">
+      <div>
+        <p class="kicker rv">Measured on Claude</p>
+        <h2 class="rv">It also cost less. Whether solving held up is not settled.</h2>
+      </div>
+      <p class="sub rv">On SWE-bench Verified with Claude Opus 5.5 and Sonnet 5.5, mrw cost 19% and 7% less than
+        the native tools at 99% confidence. The pre-registered test could not rule out a small drop in
+        solving, so the registered verdict is inconclusive.</p>
+    </div>
+
+    <div class="panel rv">
+      <div class="cap"><i></i> SWE-bench Verified · 191 tasks · Claude Code 2.1.302 · mrw v1.68.0 · one run per arm</div>
       <div class="tw">
       <table class="head-t">
         <thead><tr><th scope="col"><span class="sr">measure</span></th><th scope="col">Opus 5.5</th><th scope="col">Sonnet 5.5</th></tr></thead>
@@ -309,113 +346,36 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
           <tr class="cost"><th scope="row">cost per task</th>
             <td><b>−19.4%</b><small>[−25.5%, −12.7%]</small></td>
             <td><b>−7.0%</b><small>[−12.1%, −1.8%]</small></td></tr>
-          <tr><th scope="row">turns per task</th><td>14.6 → 11.5 <small>−21%</small></td><td>7.8 → 6.8 <small>−13%</small></td></tr>
-          <tr><th scope="row">wall time per task</th><td>115 s → 68 s <small>−40%</small></td><td>36 s → 25 s <small>−30%</small></td></tr>
-          <tr><th scope="row">output tokens per task</th><td>5,489 → 3,888 <small>−29%</small></td><td>2,274 → 1,721 <small>−24%</small></td></tr>
-          <tr><th scope="row">tasks solved</th><td>167 → 166 <small>of 191</small></td><td>134 → 129 <small>of 191</small></td></tr>
+          <tr><th scope="row">tasks solved</th><td>167 → 166 <small>−0.5 pt [−6.7, +5.5]</small></td><td>134 → 129 <small>−2.6 pt [−8.7, +2.8]</small></td></tr>
+          <tr><th scope="row">turns per task</th><td>14.6 → 11.5</td><td>7.8 → 6.8</td></tr>
+          <tr><th scope="row">output tokens per task</th><td>5,489 → 3,888</td><td>2,274 → 1,721</td></tr>
+          <tr><th scope="row">registered verdict</th><td><span class="tag inc">INCONCLUSIVE</span></td><td><span class="tag inc">INCONCLUSIVE</span></td></tr>
         </tbody>
       </table>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- ============ EVERY STAGE ============ -->
-<section id="stages" class="alt">
-  <div class="wrap">
-    <div class="shead">
-      <div>
-        <p class="kicker rv">Stage 5, per attempt</p>
-        <h2 class="rv">Means per attempt at its final try.</h2>
-      </div>
-      <p class="sub rv">Tokens count input, output and cache tokens together. Every figure comes from the
-        receipts under <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/tree/main/docs/bench">docs/bench/</a>,
-        and every registered verdict is in
-        <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/RESULTS.md">docs/bench/RESULTS.md</a>.
-        Shaded rows are B; the earlier stages are in the same file.</p>
-    </div>
-
-    <div class="panel rv">
-      <div class="cap"><i></i> stage 5</div>
-      <div class="tw">
-      <table class="stages">
-        <thead><tr>
-          <th scope="col">stage</th><th scope="col">model</th><th scope="col">config</th><th scope="col">attempts</th>
-          <th scope="col">solved</th><th scope="col">turns</th><th scope="col">wall s</th><th scope="col">$ per attempt</th>
-          <th scope="col">$ total</th><th scope="col">tokens (k)</th><th scope="col">output tokens</th>
-        </tr></thead>
-        <tbody>
-          <tr class="s5"><td>5</td><td>Opus 5.5</td><td class="cfg">A</td><td>191</td><td>167</td><td>14.6</td><td>115</td><td>0.260</td><td>49.73</td><td>223</td><td>5,489</td></tr>
-          <tr class="s5 b"><td>5</td><td>Opus 5.5</td><td class="cfg">B</td><td>191</td><td>166</td><td>11.5</td><td>68</td><td>0.200</td><td>38.20</td><td>182</td><td>3,888</td></tr>
-          <tr class="s5"><td>5</td><td>Sonnet 5.5</td><td class="cfg">A</td><td>191</td><td>134</td><td>7.8</td><td>36</td><td>0.059</td><td>11.23</td><td>82</td><td>2,274</td></tr>
-          <tr class="s5 b"><td>5</td><td>Sonnet 5.5</td><td class="cfg">B</td><td>191</td><td>129</td><td>6.8</td><td>25</td><td>0.053</td><td>10.13</td><td>91</td><td>1,721</td></tr>
-        </tbody>
-      </table>
-      </div>
-    </div>
+    <p class="more rv">Each task ran once with Claude Code's own file tools and once with mrw instead, and the
+      two runs were compared task by task. Intervals are 99%. The saving comes from fewer turns and less
+      output per turn. Nothing was measured on any other agent, so this page makes no cost claim for one.</p>
   </div>
 </section>
 
-<!-- ============ WHAT THE NUMBERS SAY ============ -->
-<section id="say">
+<!-- ============ HOW IT'S JUDGED ============ -->
+<section id="judged">
   <div class="wrap">
     <div class="shead">
       <div>
-        <p class="kicker rv">What the numbers say</p>
-        <h2 class="rv">Fewer turns, lower cost, the same solving as far as 191 tasks can tell.</h2>
+        <p class="kicker rv">How it's judged</p>
+        <h2 class="rv">A bar set before the first run.</h2>
       </div>
-    </div>
-
-    <div class="panel rv">
-      <div class="cap"><i></i> four readings</div>
-      <ul class="rows">
-        <li class="row">
-          <div class="k">Fewer turns, less time.</div>
-          <div class="v">With mrw the agent finished in fewer turns in every SWE-bench stage, on both models, and wall
-            time fell with the turns. Folding many reads and edits into one call is what mrw is built for;
-            the receipts count the turns, not which calls were folded.</div>
-        </li>
-        <li class="row">
-          <div class="k">Lower cost, most on Opus.</div>
-          <div class="v">The saving is largest where the agent works longest: Opus takes about twice Sonnet's turns per
-            task, so there is more to fold. Stage 4b, 20 multi-hunk tasks on the same models, found the same:
-            −20.9% [−32.3%, −8.6%] on Opus and −17.0% [−26.6%, −7.6%] on Sonnet.</div>
-        </li>
-        <li class="row">
-          <div class="k">Fewer tokens written, not always fewer read.</div>
-          <div class="v">Output tokens fell 29% on Opus and 24% on Sonnet. Total tokens fell 18% on Opus but rose 11% on
-            Sonnet, and that rise is all cache reads (72k to 82k per attempt) while Sonnet's cache writes and
-            output fell. Cost still fell on Sonnet, because cache reads are the cheapest tokens and the output
-            that fell is priced far above them.</div>
-        </li>
-        <li class="row">
-          <div class="k">The same solving, as far as 191 tasks can tell.</div>
-          <div class="v">166 against 167 on Opus, 129 against 134 on Sonnet. Neither difference is significant; neither
-            interval is narrow enough to prove there is no loss.</div>
-        </li>
-        <li class="row hi">
-          <div class="k">In short</div>
-          <div class="v">On these bug-fixing tasks mrw made Claude Code faster and cheaper, by about a fifth on Opus,
-            and no measurement showed it solving less, though none was precise enough to show it does not.</div>
-        </li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- ============ HOW MRW IS JUDGED ============ -->
-<section id="judged" class="alt">
-  <div class="wrap">
-    <div class="shead">
-      <div>
-        <p class="kicker rv">How mrw is judged</p>
-        <h2 class="rv">The bar, and the verdicts against it.</h2>
-      </div>
-      <p class="sub rv">Every stage is paired, pre-registered and graded against the bar in
-        <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/ADR-156-whether-mrw-pays-for-itself-is-measured-on-agent-runs.md">ADR-156</a>.
-        Each verdict is recorded in
-        <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/RESULTS.md">docs/bench/RESULTS.md</a>
-        exactly as <code>bench analyze</code> printed it.</p>
+      <p class="sub rv">The bar is in
+        <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/ADR-156-whether-mrw-pays-for-itself-is-measured-on-agent-runs.md">ADR-156</a>,
+        with 95% intervals; Stage 5 applies it at 99%, at each of five looks
+        (<a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/ADR-162-stage-5-runs-until-the-verdict-is-conclusive.md">ADR-162</a>);
+        every verdict is in
+        <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/RESULTS.md">RESULTS.md</a>,
+        exactly as the analysis printed it.</p>
     </div>
 
     <div class="panel rv">
@@ -423,50 +383,27 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
       <ul class="rows">
         <li class="row">
           <div class="k"><span class="tag pays">PAYS</span></div>
-          <div class="v">The mean per-task cost down by 10% or more with its interval wholly below zero, <b>and</b> a
-            solved-rate lower bound no worse than −5 points.</div>
+          <div class="v">Cost down 10% or more, its interval wholly below zero, <b>and</b> solving no more than
+            5 points worse at the interval's low end.</div>
         </li>
         <li class="row">
           <div class="k"><span class="tag loses">LOSES</span></div>
-          <div class="v">A cost interval wholly above zero or a solved-rate interval wholly below it.</div>
+          <div class="v">Cost's interval wholly above zero, or solving's interval wholly below zero. Where PAYS
+            and LOSES both hold, LOSES wins.</div>
         </li>
         <li class="row">
           <div class="k"><span class="tag inc">INCONCLUSIVE</span></div>
           <div class="v">Anything else.</div>
         </li>
-      </ul>
-    </div>
-
-    <div class="panel rv">
-      <div class="cap"><i></i> the verdicts</div>
-      <ul class="rows">
-        <li class="row">
-          <div class="k">Stage 5, Opus 5.5</div>
-          <div class="v"><span class="tag inc">INCONCLUSIVE</span> <span class="num">cost −19.4% [−25.5%, −12.7%]</span></div>
-        </li>
-        <li class="row">
-          <div class="k">Stage 5, Sonnet 5.5</div>
-          <div class="v"><span class="tag inc">INCONCLUSIVE</span> <span class="num">cost −7.0% [−12.1%, −1.8%]</span></div>
-        </li>
-        <li class="row">
+        <li class="row hi">
           <div class="k">Why not PAYS</div>
-          <div class="v">The cost intervals are 99% and lie wholly below zero. Solving is unchanged within what
-            191 tasks can show: the registered bar asks for a solved-rate lower bound no worse than −5 points, and
-            the intervals reach −6.7 on Opus and −8.7 on Sonnet, so the recorded verdict is
-            <span class="tag inc">INCONCLUSIVE</span> rather than <span class="tag pays">PAYS</span>; Sonnet's −7.0%
-            is also short of the 10% mean saving PAYS asks for. Wall time was measured on a shared machine and is
-            descriptive only.</div>
+          <div class="v">Both cost intervals lie wholly below zero. But solving's interval reaches −6.7 points on
+            Opus and −8.7 on Sonnet, past the −5 the bar allows, and Sonnet's −7.0% is short of the 10% saving.</div>
         </li>
         <li class="row">
-          <div class="k">Before SWE-bench</div>
-          <div class="v">Both Stage 5 verdicts were open when the stage ended at look 5 of 5. Before SWE-bench, four
-            stages ran mrw on this project's own tasks (Stages 1, 1b, 2 and 4b, 24 to 40 tasks each, Sonnet and
-            Opus): all <span class="tag inc">INCONCLUSIVE</span>, cost within ±3%. One stage went against mrw:
-            Stage 4, 24 tasks chosen where mrw's mechanism should matter, on mrw v1.66.0,
-            <span class="tag loses">LOSES</span> at cost +17.1% [+9.6%, +24.7%].
-            <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/ADR-161-instructions-lead-with-recipes.md">ADR-161</a>
-            changed what mrw teaches in reply, and the rerun on v1.68.0 as Stage 4b came out
-            <span class="tag inc">INCONCLUSIVE</span> on both models.</div>
+          <div class="k">Earlier stages</div>
+          <div class="v">On this project's own tasks, every stage was <span class="tag inc">INCONCLUSIVE</span> except
+            Stage 4 (Sonnet, mrw v1.66.0), which <span class="tag loses">LOSES</span> at cost +17.1% [+9.6%, +24.7%].</div>
         </li>
       </ul>
     </div>
@@ -474,7 +411,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
 </section>
 
 <!-- ============ EVIDENCE ============ -->
-<section id="evidence">
+<section id="evidence" class="alt">
   <div class="wrap">
     <div class="shead">
       <div>
@@ -488,153 +425,106 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
       <ul class="rows">
         <li class="row">
           <div class="k">Receipts</div>
-          <div class="v">One JSON per attempt under
-            <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/tree/main/docs/bench/stage-5">docs/bench/stage-5/</a><code>block-1</code> … <code>block-5</code>,
-            named <code>&lt;instance&gt;.&lt;config&gt;.&lt;model&gt;.&lt;repeat&gt;[.rN].receipt.json</code>; a <code>.rN</code> file is a
-            retry of a run that did not finish and supersedes its base. Each carries the model, configuration,
-            <code>num_turns</code>, <code>wall_ms</code>, <code>total_cost_usd</code>, <code>usage</code> by token kind, the harness
-            verdict (<code>oracle.harness_resolved</code>), the size of the diff the agent produced (files, insertions, deletions)
-            and the number of tool calls. The patch text was not kept: the attempt's worktree was discarded after grading.</div>
+          <div class="v">One JSON file per attempt under
+            <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/tree/main/docs/bench/stage-5">docs/bench/stage-5/</a>,
+            with the model, turns, time, cost, tokens and the grader's verdict.</div>
         </li>
         <li class="row">
           <div class="k">Grader</div>
-          <div class="v">The official SWE-bench harness (swebench 5.0.2) on
-            <code>SWE-bench/SWE-bench_Verified</code>, split <code>test</code>, dataset revision <code>78f471bf</code>. The 191
-            instance ids and the rule that picked them are in
-            <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/bench/swe-bench/selection-adr-162.json">bench/swe-bench/selection-adr-162.json</a>.</div>
+          <div class="v">The official SWE-bench harness (swebench 5.0.2), dataset revision <code>78f471bf</code>.
+            Nothing was graded by a model or by us. The 191 tasks and the rule that picked them:
+            <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/bench/swe-bench/selection-adr-162.json">selection-adr-162.json</a>.</div>
         </li>
         <li class="row">
           <div class="k">Pre-registration</div>
-          <div class="v">The bar, the pool rule, the five looks and the stop rule were written in
-            <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/BACKLOG.md">docs/adr/BACKLOG.md</a>
-            (“Pre-registered for ADR-162”) and in
-            <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/ADR-162-stage-5-runs-until-the-verdict-is-conclusive.md">ADR-162</a>,
+          <div class="v"><a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/ADR-162-stage-5-runs-until-the-verdict-is-conclusive.md">ADR-162</a>,
             merged as <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/commit/1fc00bad"><code>1fc00bad</code></a>
-            on 2026-10-17 at 08:42 UTC; the instance list was committed as
-            <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/commit/8b435f8f"><code>8b435f8f</code></a> at 10:55 UTC;
-            the first counted attempt started at 13:21 UTC the same day (<code>started</code> in its receipt).</div>
-        </li>
-        <li class="row">
-          <div class="k">Run setup</div>
-          <div class="v"><code>run.json</code> in each block: Claude Code 2.1.302, mrw v1.68.0 (975c3ba), a
-            1,200 s budget per attempt, one repeat, the same prompt and tool set for A and B. <code>canary.json</code> per
-            block proves each configuration's setup before the block; <code>exclusions.json</code> names the one excluded
-            attempt.</div>
+            on 2026-10-17 at 08:42 UTC, before the first counted attempt at 13:21 UTC.</div>
         </li>
         <li class="row">
           <div class="k">Verdicts</div>
-          <div class="v"><a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/stage-5/looks/look-5.txt">docs/bench/stage-5/looks/look-5.txt</a>,
-            as <code>bench analyze</code> printed them, copied unchanged into
-            <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/RESULTS.md">RESULTS.md</a>;
-            ADR-162's acceptance fence diffs the two.</div>
-        </li>
-        <li class="row">
-          <div class="k">Independent scoring</div>
-          <div class="v">The paired rows were handed to the quality-harness project's own
-            scorer, which reads them against its own pre-registration (its ADR-106).</div>
+          <div class="v"><a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/stage-5/looks/look-5.txt">look-5.txt</a>,
+            copied unchanged into
+            <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/RESULTS.md">RESULTS.md</a>.</div>
         </li>
       </ul>
     </div>
 
     <div class="panel rv">
-      <div class="cap"><i></i> reproduce the stage 5 rows with jq alone, from a checkout</div>
-<pre><code><span class="k">$</span> jq -s 'map(select(.stage=="stage5" and .config!="P"))
-  | group_by(.attempt|sub("\\.r[0-9]+$";"")) | map(max_by(.attempt))
-  | group_by([.model,.config]) | map({model:.[0].model, config:.[0].config, attempts:length,
-      solved:(map(select(.oracle.solved))|length), turns:((map(.num_turns)|add)/length),
-      wall_s:((map(.wall_ms)|add)/length/1000), cost_total:(map(.total_cost_usd)|add)})' \
-  docs/bench/stage-5/block-*/*.receipt.json</code></pre>
-      <div class="cap" style="border-top:1px solid var(--line);border-bottom:0"><i></i> recompute every verdict and interval in RESULTS.md</div>
+      <div class="cap"><i></i> recompute every verdict and interval, from a checkout</div>
 <pre class="wrap-ok"><code><span class="k">$</span> go run ./cmd/bench analyze --selection bench/swe-bench/selection-adr-160.json \
     --selection bench/swe-bench/selection-adr-162.json docs/bench</code></pre>
     </div>
   </div>
 </section>
 
-<!-- ============ QUESTION BY QUESTION: docs/bench/FAQ.md, answers verbatim ============ -->
-<section id="faq" class="alt">
+<!-- ============ QUESTIONS ============ -->
+<section id="faq">
   <div class="wrap">
     <div class="shead">
       <div>
         <p class="kicker rv">Q&amp;A</p>
-        <h2 class="rv">The SWE-bench result, question by question.</h2>
+        <h2 class="rv">Questions people ask.</h2>
       </div>
-      <p class="sub rv">Numbers are Stage 5's (ADR-162, 2026-10-17 to 2026-10-21) unless a stage is named.
-        Also in the repository:
+      <p class="sub rv">Every question about the benchmark, answered in full:
         <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/FAQ.md">docs/bench/FAQ.md</a>.</p>
     </div>
 
     <div class="panel rv">
-      <div class="cap"><i></i> 21 questions</div>
-      <details id="q-what"><summary>What is mrw, in one sentence?</summary>
-        <p>A Go CLI (and MCP server) that reads many ranges across many files and applies many edits across them in one call, returns a verdict for every edit, and refuses to edit a line it has not served you. MIT, one binary, no network call except <code>mrw version --check-latest</code>.</p>
+      <div class="cap"><i></i> 9 questions</div>
+      <details id="q-what"><summary>What is mrw?</summary>
+        <p>A free command-line tool, and MCP server, that your coding agent uses to read and edit files. It
+          reads many parts of many files in one call and applies many edits in one call, all or nothing, with a
+          result for every edit. MIT licence, one binary, no network call except <code>mrw version --check-latest</code>.</p>
+      </details>
+      <details id="q-shown"><summary>“Only lines it was shown”: what exactly does that cover?</summary>
+        <p>mrw remembers which lines it showed the agent, and refuses an edit to any other line. Lines a
+          read hid or cut short count as not shown. The exceptions: a file mrw just wrote is known in full;
+          an edit that quotes the old lines exactly is checked against the file instead; a pattern rewrite
+          (<code>--grep --sub</code> or <code>--ast-grep --rewrite</code>) covers the lines it plans; with the optional read hook, lines the host's own Read tool showed count
+          too; and <code>--force</code> overrides the refusal. One known gap is open:
+          <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/issues/602">issue #602</a>.</p>
+      </details>
+      <details id="q-unique"><summary>Don't other tools do all-or-nothing edits too?</summary>
+        <p>Yes, several now do. What we haven't found elsewhere, in any tool or paper, is the line-by-line
+          read check: the guards we know of track whole files, by timestamp or fingerprint.</p>
       </details>
       <details id="q-compared"><summary>What exactly was compared?</summary>
-        <p>A is Claude Code 2.1.302 with its own file tools: Bash, Read, Edit, Write, Glob, Grep. B is the same CLI with Bash and Glob, mrw v1.68.0 on PATH, and <code>mrw instructions</code> appended to the system prompt. Both arms also had Skill, as Stage 5's profile gives every configuration. Same task prompt, same model, same budget (1,200 s), same machine, one attempt per task per arm. So the comparison is “Claude Code's file tools” against “mrw as the file tool”. <code>Configs</code> in <code>internal/bench/runner.go</code>, the profile in <code>internal/bench/profile.go</code>; the prompt's SHA-256 in every block's <code>run.json</code>.</p>
+        <p>A is Claude Code 2.1.302 with its own file tools (Bash, Read, Edit, Write, Glob, Grep). B is the
+          same CLI with Bash, Glob and mrw v1.68.0 in place of Read, Edit, Write and Grep; both also had Skill.
+          Same prompt, model, machine and 1,200-second budget, one attempt per task each.</p>
       </details>
-      <details id="q-fewer-tools"><summary>So you took tools away from B. Isn't the saving just fewer tools?</summary>
-        <p>B lost Read, Edit, Write and Grep and gained mrw; that is the substitution being measured. B could still read through the shell (<code>cat</code>, <code>grep</code>), and did: 394 shell reads on Opus and 392 on Sonnet across 191 attempts each, counted and never refused (the “B shell reads” column in <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/RESULTS.md">RESULTS.md</a>). B wrote outside mrw in three Opus attempts (11 files in all, 9 of them in one attempt) and in no Sonnet attempt; every earlier stage had none. We did not run a “Claude Code minus tools, without mrw” arm; if the saving came from having fewer tools, B would be expected to solve less, and over the counted pairs it solved 165 against A's 166 on Opus and 129 against 134 on Sonnet.</p>
+      <details id="q-inconclusive"><summary>It's cheaper. Why is the verdict inconclusive?</summary>
+        <p>The bar, set before any run, asks for two things: a cost saving, and no more than a small drop in
+          solving. Both cost savings are clear. But 191 tasks can't measure solving precisely enough to rule
+          out a drop of a few points, so the test can't say “pays”. We report the verdict the bar gives, not
+          the one we'd like.</p>
       </details>
-      <details id="q-inconclusive"><summary>It's cheaper. Why is the verdict INCONCLUSIVE and not PAYS?</summary>
-        <p>The bar was registered before any run (<a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/BACKLOG.md">BACKLOG.md</a>, “Pre-registered for ADR-156”): PAYS needs the mean per-task relative cost (B − A)/A at −10% or lower with its interval wholly below zero, and the solved-rate difference's lower bound at −5 points or better. Opus met the cost half (−19.4% [−25.5%, −12.7%]) and missed the solved half (lower bound −6.7). Sonnet missed both (−7.0%, lower bound −8.7). 191 tasks give a solved-rate interval about ±7 points wide; a bound at −5 needs a narrower interval, which means more tasks. We report the verdict the bar gives, not the one we would like.</p>
-      </details>
-      <details id="q-multi-hunk"><summary>Why multi-hunk tasks? That is cherry-picking for mrw.</summary>
-        <p>The pool rule was registered before the run: the 191 ids with the lowest <code>sha256("adr-162:" + id)</code> among SWE-bench Verified instances whose gold patch has at least two hunks, minus the ids earlier stages had used (<a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/bench/swe-bench/selection-adr-162.json">bench/swe-bench/selection-adr-162.json</a>, with the rule in the file). Multi-hunk is where mrw's one-call mechanism should matter, and the pre-registration says so. Stage 3, 20 random Verified instances with no hunk filter, also came out cheaper (−5.3% Opus, −6.1% Sonnet, n = 20, INCONCLUSIVE).</p>
-      </details>
-      <details id="q-prereg"><summary>Show me the pre-registration.</summary>
-        <p>ADR-162 and its BACKLOG entry merged as commit <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/commit/1fc00bad"><code>1fc00bad</code></a> on 2026-10-17 at 08:42 UTC; the instance list as <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/commit/8b435f8f"><code>8b435f8f</code></a> at 10:55 UTC; the first counted attempt started at 13:21 UTC (<code>started</code> in its receipt). The five looks, the stop rule, the 99% level and the exclusion rule are in that commit.</p>
-      </details>
-      <details id="q-graded"><summary>Who graded the patches?</summary>
-        <p>The official SWE-bench harness (swebench 5.0.2) with its Docker images, run locally on every attempt. Each counted attempt's receipt carries <code>oracle.harness_resolved</code>, the harness's own verdict, beside the size of the diff the agent produced (files, insertions, deletions). The patch text itself was not kept: the attempt's worktree was discarded after grading. Nothing was graded by a model or by us.</p>
+      <details id="q-other-agents"><summary>Does the saving hold for Codex, Cursor or other agents?</summary>
+        <p>Not measured, so we make no claim. mrw runs under any shell or MCP host, but the numbers are for
+          Claude Code 2.1.302 with Opus 5.5 and Sonnet 5.5 only, and the same tool change can lower cost for
+          one agent and raise it for another.</p>
       </details>
       <details id="q-tests"><summary>Could the agent run the tests?</summary>
-        <p>No. The checkouts the agent worked in had the code but not the test dependencies, so neither arm could check its own work; the harness graded afterwards in its own image. This holds for A and B alike, and it is the main limit of this stage: it measures bug-fixing without a feedback loop. Stage 6 (<a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/ADR-163-the-plugin-is-measured-in-checkouts-that-run-their-tests.md">ADR-163</a>) keeps the agent on the host and routes its Python and test commands through shims into a container of the instance's image, where the tests run.</p>
+        <p>No, in either arm. The checkouts had the code but not the test dependencies, so the agent fixed
+          each bug from the issue text alone and the harness graded it afterwards. That is the main limit of
+          this measurement.</p>
       </details>
-      <details id="q-167"><summary>Opus solving 167 of 191 looks high.</summary>
-        <p>It is the single-attempt, no-test-run rate of Claude Code with Opus 5.5 on a multi-hunk subset; it is not a leaderboard number and we make no claim about it. The result is the paired difference: over the 190 counted pairs, 165 against 166 (166 against 167 over all 191 attempts).</p>
+      <details id="q-shell"><summary>Does mrw sandbox the commands it runs?</summary>
+        <p>No. <code>mrw run</code> and <code>--then-sh</code> run shell commands as you, with your permissions.
+          Allowing mrw in your agent allows that too.</p>
       </details>
-      <details id="q-cost"><summary>What is “cost”?</summary>
-        <p><code>total_cost_usd</code> as Claude Code reports it per attempt, at October 2026 prices, cache tokens included. The runs were made on a Claude Code subscription, so no bill was paid per run; the figure is the CLI's own computed cost. Stage 5's A and B attempts together come to $109; every stage's A and B attempts, $228 ($245 with the pilots). The raw token counts (input, output, cache read, cache write) are in every receipt.</p>
-      </details>
-      <details id="q-sonnet-tokens"><summary>Why did Sonnet's total tokens go up?</summary>
-        <p>Cache reads rose from 72k to 82k per attempt, while output fell 24% and cache writes fell. Our reading: mrw's appended instructions and its batched reads add to the context each call re-reads. Cache reads are the cheapest tokens; the output that fell is priced far above them, so cost fell 7% while the token count rose 11%. Opus fell on every kind.</p>
-      </details>
-      <details id="q-turns"><summary>Is “fewer turns” a real saving or an artefact?</summary>
-        <p>A turn is <code>num_turns</code> as Claude Code reports it for the run. Opus 14.6 to 11.5, Sonnet 7.8 to 6.8. Our reading: each turn re-reads the context, so fewer turns is where the cost saving comes from; the receipts count the turns, not what each one did.</p>
-      </details>
-      <details id="q-wall"><summary>Wall time fell 40%. Is that real?</summary>
-        <p>It fell with the turns (40% on Opus, 30% on Sonnet), but it was measured on one shared Apple Silicon machine, the SWE-bench images under amd64 emulation, beside other work, and it was not pre-registered. Treat it as descriptive. No verdict reads it.</p>
-      </details>
-      <details id="q-excluded"><summary>What was excluded, and who decided?</summary>
-        <p>The registered admission rule (<a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/BACKLOG.md">BACKLOG.md</a>, “Pre-registered for ADR-156”) allows two exclusions only: an attempt that died before its first tool call with an authentication, rate-limit or CLI start error, re-queued at most twice; and an attempt bench could not set up or grade. In A and B, one Sonnet attempt was excluded that way and re-queued (its <code>.r1</code> receipt counted). One Opus A attempt (pytest-10051) was ended by the machine going to sleep; Zy ruled it infrastructure before the next look, and the ruling with the <code>pmset</code> log is in <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/stage-5/exclusions.json"><code>docs/bench/stage-5/exclusions.json</code></a>, which is why Opus counts 190 pairs. Every excluded receipt stays on disk. An agent that gives up or runs past the 1,200 s budget is unsolved with its cost counted; three attempts (sympy-16597 in A and in B, django-16032 in B) were killed at the budget before the CLI reported any cost, so they count as unsolved and those two tasks leave the cost comparison, as <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/stage-5/looks/look-5.txt"><code>look-5.txt</code></a> says. Nothing else was dropped.</p>
-      </details>
-      <details id="q-one-run"><summary>One run per task. Isn't that noise?</summary>
-        <p>Yes, one attempt per task per arm; the pairing by task and 191 tasks are what give the interval its width. The intervals are 99% because the stage was read at five looks (ADR-162, Decision 5).</p>
-      </details>
-      <details id="q-other-agents"><summary>Does this hold for other agents or models?</summary>
-        <p>Not measured. mrw runs under any shell, any MCP host and opencode; the numbers are for Claude Code 2.1.302 with Opus 5.5 and Sonnet 5.5 only.</p>
-      </details>
-      <details id="q-work"><summary>What kind of work was measured?</summary>
-        <p>One kind of work: a one-shot bug fix from an issue text, with no human in the loop and a 1,200 s budget. Long sessions, refactors and greenfield work were not measured on SWE-bench.</p>
-      </details>
-      <details id="q-earlier"><summary>Earlier stages were worse. Why?</summary>
-        <p>They are all published (<a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/RESULTS.md">RESULTS.md</a>). Stage 4, 24 of this project's own tasks on v1.66.0, LOSES: +17.1%, driven by wide renames at +33%. ADR-161 changed what mrw teaches in reply (recipes first), and the rerun on v1.68.0 came out INCONCLUSIVE, cost within ±3%. The own-task stages have 24 to 40 tasks and nearly every task solved in both arms, so they could never show much.</p>
-      </details>
-      <details id="q-p"><summary>RESULTS.md has a third configuration, P, that LOSES badly. What is it?</summary>
-        <p>P is Claude Code with our quality-harness plugin, measured in the same stage: cost +49% on Opus and +70% on Sonnet, solved within one task of A (Opus 33 against 33 of 39, Sonnet 25 against 26 of 40), closed at the first look. The plugin is built for multi-step, recorded work with tests running; Stage 5 had neither, and its Stop hook kept attempts going in checkouts that could not run a test. It is a result about that plugin in that setting, and Stage 6 measures it where tests run.</p>
-      </details>
-      <details id="q-reproduce"><summary>How do I reproduce the table?</summary>
-        <p>From a checkout, the jq command in the <a href="#evidence">Evidence</a> section regenerates the Stage 5 rows from the receipts; <code>go run ./cmd/bench analyze --selection bench/swe-bench/selection-adr-160.json --selection bench/swe-bench/selection-adr-162.json docs/bench</code> recomputes every verdict and interval. A full rerun needs Claude Code, Docker, the SWE-bench images (about 10 GB each), four days on one machine and about $110 of computed cost for A and B; <code>bench run</code> and ADR-162 describe it.</p>
-      </details>
-      <details id="q-who"><summary>Who are you?</summary>
-        <p>Atviro kodo sprendimai (Lithuanian for “open-source solutions”), the company behind this repository. mrw is new: its first tag is from 2026-08-31, and the releases page lists every version since. That is why the evidence is laid out rather than asserted.</p>
+      <details id="q-who"><summary>Who makes it?</summary>
+        <p>Atviro kodo sprendimai (Lithuanian for “open-source solutions”). mrw is new: its first release is
+          from 2026-08-31, and the releases page lists every version since. That is why the evidence is laid
+          out rather than asserted.</p>
       </details>
     </div>
   </div>
 </section>
 
 <!-- ============ INSTALL ============ -->
-<section id="install">
+<section id="install" class="alt">
   <div class="wrap">
     <div class="shead">
       <div>
@@ -648,7 +538,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
 
     <div class="grid2">
       <div class="panel rv">
-        <div class="cap"><i></i> Homebrew · Mac and Linux · v1.77.1</div>
+        <div class="cap"><i></i> Homebrew · Mac and Linux · v1.83.0</div>
         <div class="body">
           <p>The easiest way in. The last line checks you got this version, not an older copy
             installed some other way.</p>
@@ -659,19 +549,19 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
 <pre class="wrap-ok"><code><span class="k">$</span> brew tap atvirokodosprendimai/tap
 <span class="k">$</span> brew install atvirokodosprendimai/tap/mrw
 <span class="k">$</span> "$(brew --prefix)/bin/mrw" version
-v1.77.1 (926aaba)
+v1.83.0 (3a97083)
 
 <span class="c"># to update later</span>
 <span class="k">$</span> brew update
 <span class="k">$</span> brew upgrade atvirokodosprendimai/tap/mrw</code></pre>
       </div>
       <div class="panel rv">
-        <div class="cap"><i></i> or download · v1.77.1 · MIT</div>
+        <div class="cap"><i></i> or download · v1.83.0 · MIT</div>
         <div class="body">
           <p>One file, nothing else to install. Windows: <code>mrw-windows-amd64.exe</code>. It passes
             our automated tests, but testing of the downloaded file itself isn't finished.</p>
           <div class="btns">
-            <a class="btn" href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/releases/tag/v1.77.1">v1.77.1 release →</a>
+            <a class="btn" href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/releases/tag/v1.83.0">v1.83.0 release →</a>
             <a class="btn" href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite">GitHub →</a>
           </div>
         </div>
@@ -685,7 +575,7 @@ v1.77.1 (926aaba)
 
     <div class="grid2">
       <div class="panel rv">
-        <div class="cap"><i></i> new in v1.77 · less noise for your agent</div>
+        <div class="cap"><i></i> since v1.77 · less noise for your agent</div>
         <div class="body">
           <p>A test run can print thousands of lines. Now your agent gets a short summary instead, and
             the full output waits in a file if it needs it. Note that <code>mrw run</code> runs the command
@@ -701,7 +591,7 @@ v1.77.1 (926aaba)
 <span class="k">$</span> mrw read --outline cmd/mrw/main.go README.md</code></pre>
       </div>
       <div class="panel rv">
-        <div class="cap"><i></i> new in v1.77 · shorter answers</div>
+        <div class="cap"><i></i> since v1.77 · shorter answers</div>
         <div class="body">
           <p>Skip repeated lines, comments and very long lines. What was skipped stays safe: the agent
             has to read it properly before it can change it.</p>
@@ -720,8 +610,8 @@ v1.77.1 (926aaba)
     <div class="panel rv">
       <div class="cap"><i></i> also</div>
       <div class="body">
-        <p><b>Stable at v1.77.1</b>, released 2026-10-28. If mrw rejects an edit plan, the plan is kept, so
-          the agent fixes it instead of writing it again. Other AI tools can use mrw too:
+        <p><b>Stable at v1.83.0</b>, released 2026-11-03. If mrw rejects a plan sent on standard input
+          (<code>mrw write -</code>), it keeps the plan, so the agent fixes it instead of writing it again. Other AI tools can use mrw too:
           <code>mrw mcp --enable</code>. Every detail is in the
           <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/README.md">README</a>.</p>
       </div>
@@ -763,11 +653,11 @@ v1.77.1 (926aaba)
       "operatingSystem": "macOS, Linux, Windows",
       "isAccessibleForFree": true,
       "license": "https://opensource.org/licenses/MIT",
-      "softwareVersion": "1.77.1",
+      "softwareVersion": "1.83.0",
       "url": "https://qamstack.dev/mrw/",
       "codeRepository": "https://github.com/atvirokodosprendimai/tool-multipathreadwrite",
       "downloadUrl": "https://github.com/atvirokodosprendimai/tool-multipathreadwrite/releases/latest",
-      "description": "A Go command that reads many file ranges and applies many edits in one call, all or nothing, with a verdict per hunk. On SWE-bench Verified, Claude Code with mrw cost −19.4% per task on Opus 5.5 and −7.0% on Sonnet 5.5 across 191 tasks per model, each run with and without mrw and paired by task, graded by the official harness.",
+      "description": "A free CLI and MCP server for coding agents: edits across many files land whole or not at all, only lines the agent was shown can change, and every edit gets its own result. Measured on Claude Code 2.1.302 with Opus 5.5 and Sonnet 5.5 on SWE-bench Verified: 19% and 7% lower cost; the registered verdict is inconclusive.",
       "author": { "@id": "https://atvirokodosprendimai.github.io/#org" },
       "publisher": { "@id": "https://atvirokodosprendimai.github.io/#org" }
     },
@@ -781,8 +671,9 @@ v1.77.1 (926aaba)
       "@type": "WebPage",
       "@id": "https://qamstack.dev/mrw/#page",
       "url": "https://qamstack.dev/mrw/",
-      "name": "mrw on SWE-bench Verified: Claude Code costs less and finishes sooner",
+      "name": "mrw: the guarantee layer for coding agents",
       "datePublished": "2026-10-21",
+      "dateModified": "2026-11-03",
       "isPartOf": { "@id": "https://qamstack.dev/#site" },
       "about": { "@id": "https://qamstack.dev/mrw/#app" },
       "inLanguage": "en"
