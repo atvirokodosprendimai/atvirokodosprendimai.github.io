@@ -370,7 +370,9 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         <h2 class="rv">A bar set before the first run.</h2>
       </div>
       <p class="sub rv">The bar is in
-        <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/ADR-156-whether-mrw-pays-for-itself-is-measured-on-agent-runs.md">ADR-156</a>;
+        <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/ADR-156-whether-mrw-pays-for-itself-is-measured-on-agent-runs.md">ADR-156</a>,
+        with 95% intervals; Stage 5 applies it at 99%, at each of five looks
+        (<a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/adr/ADR-162-stage-5-runs-until-the-verdict-is-conclusive.md">ADR-162</a>);
         every verdict is in
         <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/docs/bench/RESULTS.md">RESULTS.md</a>,
         exactly as the analysis printed it.</p>
@@ -386,7 +388,8 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         </li>
         <li class="row">
           <div class="k"><span class="tag loses">LOSES</span></div>
-          <div class="v">Cost clearly up, or solving clearly down.</div>
+          <div class="v">Cost's interval wholly above zero, or solving's interval wholly below zero. Where PAYS
+            and LOSES both hold, LOSES wins.</div>
         </li>
         <li class="row">
           <div class="k"><span class="tag inc">INCONCLUSIVE</span></div>
@@ -400,7 +403,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
         <li class="row">
           <div class="k">Earlier stages</div>
           <div class="v">On this project's own tasks, every stage was <span class="tag inc">INCONCLUSIVE</span> except
-            Stage 4 on mrw v1.66.0, which <span class="tag loses">LOSES</span> at cost +17.1% [+9.6%, +24.7%].</div>
+            Stage 4 (Sonnet, mrw v1.66.0), which <span class="tag loses">LOSES</span> at cost +17.1% [+9.6%, +24.7%].</div>
         </li>
       </ul>
     </div>
@@ -477,19 +480,19 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--ink-3);font
       <details id="q-shown"><summary>“Only lines it was shown”: what exactly does that cover?</summary>
         <p>mrw remembers which lines it showed the agent, and refuses an edit to any other line. Lines a
           read hid or cut short count as not shown. The exceptions: a file mrw just wrote is known in full;
-          an edit that quotes the old lines exactly is checked against the file instead; a search-and-replace
-          covers the lines it plans; with the optional read hook, lines the host's own Read tool showed count
+          an edit that quotes the old lines exactly is checked against the file instead; a pattern rewrite
+          (<code>--grep --sub</code> or <code>--ast-grep --rewrite</code>) covers the lines it plans; with the optional read hook, lines the host's own Read tool showed count
           too; and <code>--force</code> overrides the refusal. One known gap is open:
           <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/issues/602">issue #602</a>.</p>
       </details>
       <details id="q-unique"><summary>Don't other tools do all-or-nothing edits too?</summary>
         <p>Yes, several now do. What we haven't found elsewhere, in any tool or paper, is the line-by-line
-          read check: the guards we know of only notice whether a whole file changed, by its timestamp.</p>
+          read check: the guards we know of track whole files, by timestamp or fingerprint.</p>
       </details>
       <details id="q-compared"><summary>What exactly was compared?</summary>
         <p>A is Claude Code 2.1.302 with its own file tools (Bash, Read, Edit, Write, Glob, Grep). B is the
-          same CLI with Bash, Glob and mrw v1.68.0 in place of Read, Edit, Write and Grep. Same prompt, model,
-          machine and 1,200-second budget, one attempt per task each.</p>
+          same CLI with Bash, Glob and mrw v1.68.0 in place of Read, Edit, Write and Grep; both also had Skill.
+          Same prompt, model, machine and 1,200-second budget, one attempt per task each.</p>
       </details>
       <details id="q-inconclusive"><summary>It's cheaper. Why is the verdict inconclusive?</summary>
         <p>The bar, set before any run, asks for two things: a cost saving, and no more than a small drop in
@@ -607,8 +610,8 @@ v1.83.0 (3a97083)
     <div class="panel rv">
       <div class="cap"><i></i> also</div>
       <div class="body">
-        <p><b>Stable at v1.83.0</b>, released 2026-11-03. If mrw rejects an edit plan, the plan is kept, so
-          the agent fixes it instead of writing it again. Other AI tools can use mrw too:
+        <p><b>Stable at v1.83.0</b>, released 2026-11-03. If mrw rejects a plan sent on standard input
+          (<code>mrw write -</code>), it keeps the plan, so the agent fixes it instead of writing it again. Other AI tools can use mrw too:
           <code>mrw mcp --enable</code>. Every detail is in the
           <a href="https://github.com/atvirokodosprendimai/tool-multipathreadwrite/blob/main/README.md">README</a>.</p>
       </div>
